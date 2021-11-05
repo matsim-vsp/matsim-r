@@ -11,3 +11,5 @@ Description: Initial MATSim support for R, work in progress
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/matsim-vsp/matsim-r
+BugReports: https://github.com/matsim-vsp/matsim-r/issues
