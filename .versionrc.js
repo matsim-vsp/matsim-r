@@ -1,7 +1,7 @@
 const yaml = require("yaml");
 
 module.exports = {
-  packageFiles: [
+  bumpFiles: [
     {
       filename: "DESCRIPTION",
       updater: {
@@ -12,7 +12,7 @@ module.exports = {
         writeVersion: (contents, version) => {
           const yamlFile = yaml.parse(contents, "utf8")
           yamlFile.version = version
-          return yaml.stringify(yamlFile, "utf8")
+          return yaml.stringify(yamlFile, "utf8", options= { indent: 4})
         }
       }
     }

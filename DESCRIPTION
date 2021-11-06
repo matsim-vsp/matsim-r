@@ -1,27 +1,21 @@
 Package: matsim
 Type: Package
 Title: R library for interfacing with MATSim agent-based microsimulation model
-Version: 0.1.0
+Version: 0.1.5
 Author: Billy Charlton
 Maintainer: Billy Charlton <charlton@vsp.tu-berlin.de>
-Description: MATSim support package for R. MATSim <https://matsim.org> is an
+Description: >-
+    asdfasd MATSim support package for R. MATSim <https://matsim.org> is an
     agent-based microsimulation package for large-scale transport simulations.
     This package mimics the functionality of the Python matsim-tools package,
     and thus supports reading standard MATSim networks, plans, and events.
-    
-    This package is developed with support from Technische Universität Berlin,
-    Transport Planning and Transport Telematics department, one of the
-    primary creators of the MATSim microsimulation framework.
-    
+
+    This package is developed with support from Technische Universität Berlin, Transport Planning and Transport Telematics department, one of the primary creators of the MATSim microsimulation framework.
+
     This work is ongoing and submissions are welcome!
 License: GPL (>= 3)
 Encoding: UTF-8
-Depends:
-    dplyr,
-    purrr,
-    readr,
-    tidyr,
-    xml2
+Depends: dplyr, purrr, readr, tidyr, xml2
 LazyData: true
 URL: https://github.com/matsim-vsp/matsim-r
 BugReports: https://github.com/matsim-vsp/matsim-r/issues
