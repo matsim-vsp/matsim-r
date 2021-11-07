@@ -28,9 +28,13 @@ utils::globalVariables(c("name"))
 
 #' Load MATSim network into memory
 #'
-#' Loads a MATSim XML network file, merging node, link, and attribute elements
-#' into a nodes tibble and a consolidated links tibble which contains
-#' joined columns from attributes and nodes such as coordinates.
+#' Loads a MATSim XML network file, creating a nodes tibble and a links tibble.
+#' Any node and link attribute records in the network are stored as
+#' additional columns in the respective node and link tibbles.
+#'
+#' The links table is automatically joined with the nodes table so that
+#' node x/y coordinates (and any other node attributes) are available on the
+#' links table without additional processing.
 #'
 #' @param filename File to load. Can be XML or gzipped XML
 #'
@@ -123,8 +127,30 @@ loadNetwork <- function(filename) {
     links <- links %>% left_join(linkAttributes, by="id", suffix=c(".link", ".attr"))
   }
 
+  # Top-level network attributes
+  networkAttributes = NULL
+
+  allNetworkAttributes <- network %>% xml_find_all("./attributes/attribute")
+  if (length(allNetworkAttributes)) {
+    networkAttributes <- tibble(
+      name = allNetworkAttributes %>% xml_attr("name"),
+      class = allNetworkAttributes %>% xml_attr("class"),
+      value = allNetworkAttributes %>% xml_text(),
+    )
+    # which columns should be converted to numeric?
+    types <- networkAttributes %>% select(name,class) %>% distinct()
+    convert = filter(types,class=="java.lang.Double")$name
+
+    # convert to a format we can join to the links
+    networkAttributes <- (networkAttributes
+                       %>% select(-class)
+                       %>% pivot_wider(names_from="name", values_from="value")
+                       %>% mutate_at(vars(one_of(convert)), as.double)
+    )
+  }
+
   cat("Done!\n")
 
-  list("nodes" = nodes,"links" = links)
+  list("nodes" = nodes, "links" = links, "attributes" = networkAttributes)
 }
 

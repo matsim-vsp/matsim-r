@@ -13,7 +13,12 @@ loadNetwork(filename)
 "nodes" and "links" tibbles in a list object.
 }
 \description{
-Loads a MATSim XML network file, merging node, link, and attribute elements
-into a nodes tibble and a consolidated links tibble which contains
-joined columns from attributes and nodes such as coordinates.
+Loads a MATSim XML network file, creating a nodes tibble and a links tibble.
+Any node and link attribute records in the network are stored as
+additional columns in the respective node and link tibbles.
+}
+\details{
+The links table is automatically joined with the nodes table so that
+node x/y coordinates (and any other node attributes) are available on the
+links table without additional processing.
 }
