@@ -8,6 +8,12 @@ Currently network files are supported.
 
 This work is ongoing and submissions are welcome!
 
+## Install
+
+You can install the package right now using:
+devtools::install_github("matsim-vsp/matsim-r")
+  # if you don't already have devtools:  install.packages("devtools") first!
+
 ## Build instructions
 
 `devtools::document()` builds docs and NAMESPACE
