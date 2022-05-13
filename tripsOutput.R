@@ -14,8 +14,10 @@ readTripsTable <- function (pathToMATSimOutputDirectory){
   }else{ # if Directory doesn't contain trips_output, then nothing to read
     return(NULL)
   }
-  
-  
 }
 
-
+plotModalSplitPieChart<-function(tripsTable){
+  ggplot(tripsTable %>% group_by(main_mode), aes(x = main_mode))+
+    geom_bar()+
+    coord_polar("x", start=0)
+}
