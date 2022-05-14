@@ -17,10 +17,26 @@ readTripsTable <- function (pathToMATSimOutputDirectory){
 }
 
 plotModalSplitPieChart<-function(tripsTable){
-  tripsTabbleCount <- tripsTable %>% count(main_mode)
-  ggplot(tripsTabbleCount,aes(x="",y = n,fill = main_mode))+
+  tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100)
+
+  ggplot(tripsTableCount,aes(x="",y = n,fill = main_mode))+
          geom_bar(stat="identity",width = 1)+
          coord_polar("y",start = 0)+
-         theme_void()
+         geom_text(aes(label = round(n,digits = 1)),
+                    position=position_stack(vjust = 0.5),
+                    show.legend = FALSE,size = 2)+
+         theme_minimal()
+}
+
+plotModalSplitBarChart<-function(tripsTable){
+  tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100) %>% arrange(desc(n))
+  
+  ggplot(tripsTableCount,aes(x=main_mode,y = n))+
+    geom_bar(stat="identity")+
+    geom_text(aes(label = round(n,digits = 1)),
+              position=position_stack(vjust = 0.5),
+              show.legend = FALSE,size = 2)+
+    theme_minimal()+
+    coord_flip()
 }
 
