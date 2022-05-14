@@ -15,8 +15,10 @@ readTripsTable <- function (pathToMATSimOutputDirectory){
     return(NULL)
   }
 }
-
+#Plots the main_mode percentage in PieChart
+#question: it is reasonable maybe to unite all the comerial vehicle to one
 plotModalSplitPieChart<-function(tripsTable){
+  
   tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100)
 
   ggplot(tripsTableCount,aes(x="",y = n,fill = main_mode))+
@@ -27,7 +29,8 @@ plotModalSplitPieChart<-function(tripsTable){
                     show.legend = FALSE,size = 2)+
          theme_minimal()
 }
-
+#Plots the Bar Chart for the percentage of used main_mode
+#also: unite commercial transport?
 plotModalSplitBarChart<-function(tripsTable){
   tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100) %>% arrange(desc(n))
   
@@ -38,5 +41,11 @@ plotModalSplitBarChart<-function(tripsTable){
               show.legend = FALSE,size = 2)+
     theme_minimal()+
     coord_flip()
+}
+git
+#Check the alluvial plots or sankey diagram
+#question: downloading packages is allowed?
+plotModalShift<-function(tripsTable1,tripsTable2){
+  
 }
 
