@@ -42,7 +42,6 @@ plotModalSplitBarChart<-function(tripsTable){
     theme_minimal()+
     coord_flip()
 }
-git
 #Check the alluvial plots or sankey diagram
 #question: downloading packages is allowed?
 plotModalShift<-function(tripsTable1,tripsTable2){
