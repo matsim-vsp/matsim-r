@@ -49,37 +49,33 @@ plotModalSplitBarChart<-function(tripsTable){
 }
 #Check the alluvial plots or sankey diagram
 #question: downloading packages is allowed?
-plotModalShift<-function(tripsTable1,tripsTable2){
-  joined <- as_tibble(merge(tripsTable1,tripsTable2 %>% 
-                    select(trip_id,main_mode),by = "trip_id") %>% rename(base_mode = main_mode.x,policy_mode = main_mode.y))
-  joined <- joined %>% group_by(base_mode,policy_mode)%>%count()
+#maybe we can insert optiona variable that checks if commercial should be joined (unite.commercials)
+plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.commercials = FALSE){
+  
+  if(show.changes == TRUE){
+    joined <- as_tibble(merge(tripsTable1,tripsTable2 %>% 
+                                select(trip_id,main_mode),by = "trip_id") %>% rename(base_mode = main_mode.x,policy_mode = main_mode.y))
+    joined <- joined %>% filter(base_mode!=policy_mode)%>% group_by(base_mode,policy_mode)%>%count()
+  }else{
+    joined <- as_tibble(merge(tripsTable1,tripsTable2 %>% 
+                                select(trip_id,main_mode),by = "trip_id") %>% rename(base_mode = main_mode.x,policy_mode = main_mode.y))
+    joined <- joined %>% group_by(base_mode,policy_mode)%>%count()
+  }
+  
   
   # Not sure if joining commercial under 1 type is needed
-  joined$base_mode[grep("commercial",joined$base_mode)] = "commercial"
-  joined$policy_mode[grep("commercial",joined$policy_mode)] = "commercial"
+  if(unite.commercials == TRUE){
+    joined$base_mode[grep("commercial",joined$base_mode)] = "commercial"
+    joined$policy_mode[grep("commercial",joined$policy_mode)] = "commercial"
+  }
+  
   
   ggplot(joined,aes(y = n,axis1 = base_mode,axis2 = policy_mode))+
     geom_alluvium(aes(fill = base_mode),width = 1/15)+
     geom_stratum(width = 1/10, fill = "black", color = "grey")+
     geom_label(stat = "stratum", aes(label = after_stat(stratum)))+
-    scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))+
-    scale_fill_brewer(type = "qual", palette = "Set1")
+    scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))
 }
 
 
-test_alluvia_plot <- function(tripsTable){
-  f <- factor(tripsTable$main_mode)
-  tripsTable$new_main_mode <- sample(levels(f),size = nrow(tripsTable),replace= TRUE)
-  tripsModalShift <- tripsTable %>% select(trip_id,main_mode,new_main_mode) %>% group_by(main_mode,new_main_mode) %>% count()
-  tripsModalShift$main_mode[grep("commercial",tripsModalShift$main_mode)] = "commercial"
-  tripsModalShift$new_main_mode[grep("commercial",tripsModalShift$new_main_mode)] = "commercial"
-  
-  ggplot(tripsModalShift,aes(y = n,axis1 = main_mode,axis2 = new_main_mode))+
-    geom_alluvium(aes(fill = main_mode),width = 1/15)+
-    geom_stratum(width = 1/12, fill = "black", color = "grey")+
-    geom_label(stat = "stratum", aes(label = after_stat(stratum)))+
-    scale_x_discrete(limits = c("Old Mode", "New Mode"), expand = c(.05, .05))+
-    scale_fill_brewer(type = "qual", palette = "Set1")
-    
-    
-}
+
