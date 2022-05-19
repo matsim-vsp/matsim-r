@@ -1,5 +1,5 @@
 library("tidyverse")
-
+library("sf") #Geography library
 #Reading of Output_Trips from directory 
 readTripsTable <- function (pathToMATSimOutputDirectory){
   #Get the file names, output_trips should be there
@@ -16,7 +16,7 @@ readTripsTable <- function (pathToMATSimOutputDirectory){
   }
 }
 #Plots the main_mode percentage in PieChart
-#question: it is reasonable maybe to unite all the comercial vehicle to one
+#unite commercial transport?
 plotModalSplitPieChart<-function(tripsTable){
   
   tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100)
@@ -32,7 +32,7 @@ plotModalSplitPieChart<-function(tripsTable){
 }
 #Plots the Bar Chart for the percentage of used main_mode
 #unite commercial transport?
-#use of external libraries, e.g.:ggrepel ?
+#use of external libraries, e.g.:ggrepel?
 plotModalSplitBarChart<-function(tripsTable){
   tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100) %>% arrange(desc(n))
   
@@ -48,8 +48,8 @@ plotModalSplitBarChart<-function(tripsTable){
     coord_flip()
 }
 #Check the alluvial plots or sankey diagram
-#question: downloading packages is allowed?
-#maybe we can insert optiona variable that checks if commercial should be joined (unite.commercials)
+#using ggaluval CRAN Package
+#maybe we can insert optional variable that checks if commercial should be joined (unite.commercials)
 plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.commercials = FALSE){
   
   if(show.changes == TRUE){
@@ -77,5 +77,10 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.com
     scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))
 }
 
+#cordinate system?
+#split tripsToInclude to 2 different bools(start,end)
+filterByRegion <- function(tripsTable, shapeFile,tripsToInclude){
+  
+}
 
 
