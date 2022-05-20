@@ -28,7 +28,7 @@ readTripsTable <- function (pathToMATSimOutputDirectory = "."){
 }
 #Plots the main_mode percentage in PieChart
 #unite commercial transport?
-plotModalSplitPieChart<-function(tripsTable ){
+plotModalSplitPieChart<-function(tripsTable){
   
   tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100)
 
@@ -86,6 +86,17 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.com
     geom_stratum(width = 1/10, fill = "black", color = "grey")+
     geom_label(stat = "stratum", aes(label = after_stat(stratum)))+
     scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))
+}
+
+transformToSf <- function(table, crs = 25832){
+  table <- table %>% 
+    mutate(wkt = paste("MULTIPOINT((", start_x, " ", start_y, "),(", end_x, " ", end_y, "))", sep =""))
+  table<- st_as_sf(table,wkt = "wkt")
+  table <- table %>% select(-start_x,-start_y,-end_x,-end_y)
+  st_crs(table) <- crs
+  return(table)
+  
+  
 }
 
 #cordinate system?
