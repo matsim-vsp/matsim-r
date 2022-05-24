@@ -88,13 +88,27 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.com
     scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))
 }
 
-transformToSf <- function(table, crs = 25832){
-  table <- table %>% 
-    mutate(wkt = paste("MULTIPOINT((", start_x, " ", start_y, "),(", end_x, " ", end_y, "))", sep =""))
-  table<- st_as_sf(table,wkt = "wkt")
-  table <- table %>% select(-start_x,-start_y,-end_x,-end_y)
-  st_crs(table) <- crs
-  return(table)
+#Use parameter for defining the point_representation
+#start_wkt - Point and end_wkt - Point
+#or
+#start_end_wkt - Multipoint(start,end)
+
+transformToSf <- function(table, crs = 25832, geometry.type = st_point()){
+  table1 <- table %>% 
+    #mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep =""))
+    mutate(start_wkt = paste("POINT(", start_x, " ", start_y,")", sep =""))
+  table2 <- table %>% 
+    mutate(end_wkt = paste("POINT(", end_x, " ", end_y,")", sep =""))
+
+  
+  
+  table1_wkt<- st_as_sf(table1,wkt = "start_wkt")%>% select(-start_x,-start_y,-end_x,-end_y)
+  table2_wkt<- st_as_sf(table2,wkt = "end_wkt")%>% select(-start_x,-start_y,-end_x,-end_y)
+  
+  
+  result_table<- table1_wkt %>% mutate(end_wkt = table2_wkt$end_wkt)
+  st_crs(result_table) <- crs
+  return(result_table)
   
   
 }
@@ -102,6 +116,23 @@ transformToSf <- function(table, crs = 25832){
 #cordinate system?
 #split tripsToInclude to 2 different bools(start,end)
 filterByRegion <- function(tripsTable, shapeFile,tripsToInclude){
+  shapeTable <- st_read(shapeFile)
+  
+  sf_table <-  transformToSf(tripsTable,crs = st_crs(shapeTable))
+  st_geometry(sf_table)<-"start_wkt"       # Set start_wkt as an active geometry
+  cont1 = st_contains(shapeTable,sf_table) # Indexes of rows where start point is in shapefile
+  st_geometry(sf_table)<-"end_wkt"         # Set end_wkt as and active geometry
+  cont2 = st_contains(shapeTable,sf_table) # Indexes of rows where end point is in shapefile
+  
+  cont_union = intersect(cont1[[1]],cont2[[2]])
+  
+  return(tripsTable[cont_union,])
+  
+  #get geometry of table
+  
+  #find intersections of geometries
+  
+  #choose intersected rows
   
 }
 
