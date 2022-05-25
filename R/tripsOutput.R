@@ -13,6 +13,7 @@ library("sf") #Geography library
 #Reading of Output_Trips from directory 
 readTripsTable <- function (pathToMATSimOutputDirectory = "."){
   #Get the file names, output_trips should be there
+  options(digits = 12)
   
   files = list.files(pathToMATSimOutputDirectory,full.names = TRUE)
   
@@ -155,12 +156,12 @@ transformToSf <- function(table, crs = 25832, geometry.type = st_point()){
 #I think that it will be better to give shape_table(not the file name) as a parameter
 filterByRegion <- function(tripsTable, shapeFile,start.inshape = TRUE,end.inshape = TRUE){
   shapeTable <- st_read(shapeFile)
-  
-  sf_table <-  transformToSf(tripsTable,crs = st_crs(shapeTable))
+  union_shape<-st_union(shapeTable)
+  sf_table <-  transformToSf(tripsTable,crs = st_crs(union_shape))
   st_geometry(sf_table)<-"start_wkt"       # Set start_wkt as an active geometry
-  cont1 = st_contains(shapeTable,sf_table)[[1]] # Indexes of rows where start point is in shapefile
+  cont1 = st_contains(union_shape,sf_table)[[1]] # Indexes of rows where start point is in shapefile
   st_geometry(sf_table)<-"end_wkt"         # Set end_wkt as and active geometry
-  cont2 = st_contains(shapeTable,sf_table)[[1]] # Indexes of rows where end point is in shapefile
+  cont2 = st_contains(union_shape,sf_table)[[1]] # Indexes of rows where end point is in shapefile
   
   if(start.inshape && end.inshape){
     cont_union = intersect(cont1,cont2) 
