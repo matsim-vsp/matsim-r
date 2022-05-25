@@ -1,11 +1,19 @@
+#Adding libraries
 library("tidyverse")
 install.packages("ggalluvial")
 library("ggalluvial")
 library("sf") #Geography library
+
+#geometry.type is one of the c(st_point(),st_multipoint(),st_linestring())
+
+
+
+
+
 #Reading of Output_Trips from directory 
 readTripsTable <- function (pathToMATSimOutputDirectory = "."){
   #Get the file names, output_trips should be there
-  options(digits = 12) # it corrects the cast from character to double
+  
   files = list.files(pathToMATSimOutputDirectory,full.names = TRUE)
   
   #output_trips is contained as output_trips.csv.gz
@@ -26,8 +34,8 @@ readTripsTable <- function (pathToMATSimOutputDirectory = "."){
     return(NULL)
   }
 }
+
 #Plots the main_mode percentage in PieChart
-#unite commercial transport?
 plotModalSplitPieChart<-function(tripsTable){
   
   tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100)
@@ -41,9 +49,8 @@ plotModalSplitPieChart<-function(tripsTable){
          ggtitle("Distribution of transport type")+
          theme_void()
 }
+
 #Plots the Bar Chart for the percentage of used main_mode
-#unite commercial transport?
-#use of external libraries, e.g.:ggrepel?
 plotModalSplitBarChart<-function(tripsTable){
   tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100) %>% arrange(desc(n))
   
@@ -58,10 +65,9 @@ plotModalSplitBarChart<-function(tripsTable){
     theme(legend.position = "none")+
     coord_flip()
 }
-#Check the alluvial plots or sankey diagram
+
 #using ggaluval CRAN Package
-#maybe could be inserted optional variable that checks if commercial should be joined (unite.commercials)
-plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.commercials = FALSE){
+plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.prefix = FALSE){
   
   if(show.changes == TRUE){
     joined <- as_tibble(inner_join(tripsTable1,tripsTable2 %>% 
@@ -89,50 +95,88 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.com
 }
 
 #Use parameter for defining the point_representation
-#start_wkt - Point and end_wkt - Point
+#column start_wkt - POINT and column end_wkt - POINT
 #or
-#start_end_wkt - Multipoint(start,end)
-
+#column wkt - MULTIPOINT(start,end)
+#or
+#column wkt - LINESTRING
+#geometry.type is also a attribute for the point representation
 transformToSf <- function(table, crs = 25832, geometry.type = st_point()){
-  table1 <- table %>% 
-    #mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep =""))
-    mutate(start_wkt = paste("POINT(", start_x, " ", start_y,")", sep =""))
-  table2 <- table %>% 
-    mutate(end_wkt = paste("POINT(", end_x, " ", end_y,")", sep =""))
+  
+  if(class(geometry.type)[2] == "POINT"){
+    table1 <- table %>% 
+      #mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep =""))
+      mutate(start_wkt = paste("POINT(", start_x, " ", start_y,")", sep =""))
+    table2 <- table %>% 
+      mutate(end_wkt = paste("POINT(", end_x, " ", end_y,")", sep =""))
+    attr(table,"geometry.type")<-"POINT"
+    
+    
+    table1_wkt<- st_as_sf(table1,wkt = "start_wkt")%>% select(-start_x,-start_y,-end_x,-end_y)
+    table2_wkt<- st_as_sf(table2,wkt = "end_wkt")%>% select(-start_x,-start_y,-end_x,-end_y)
+    
+    
+    result_table<- table1_wkt %>% mutate(end_wkt = table2_wkt$end_wkt)
+    st_geometry(result_table)<-"start_wkt"
+    st_crs(result_table) <- crs
+    st_geometry(result_table)<-"end_wkt"
+    st_crs(result_table) <- crs
+    st_geometry(result_table)<-"start_wkt"
+    return(result_table)
+    
+  }else if(class(geometry.type)[2] == "MULTIPOINT"){
+    
+    table <- table %>% 
+      mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep =""))
+    attr(table,"geometry.type")<-"MULTIPOINT"
+    
+    
+    result_table<- st_as_sf(table,wkt = "wkt")%>% select(-start_x,-start_y,-end_x,-end_y)
 
-  
-  
-  table1_wkt<- st_as_sf(table1,wkt = "start_wkt")%>% select(-start_x,-start_y,-end_x,-end_y)
-  table2_wkt<- st_as_sf(table2,wkt = "end_wkt")%>% select(-start_x,-start_y,-end_x,-end_y)
-  
-  
-  result_table<- table1_wkt %>% mutate(end_wkt = table2_wkt$end_wkt)
-  st_crs(result_table) <- crs
-  return(result_table)
-  
-  
+    st_crs(result_table) <- crs
+    return(result_table)
+  }else if(class(geometry.type)[2] == "LINESTRING"){
+    
+    table <- table %>% 
+      mutate(wkt = paste("LINESTRING(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep =""))
+    attr(table,"geometry.type")<-"LINESTRING"
+    
+    
+    result_table<- st_as_sf(table,wkt = "wkt")%>% select(-start_x,-start_y,-end_x,-end_y)
+    
+    st_crs(result_table) <- crs
+    return(result_table)
+  }
+  else{
+    return(NA)
+  }
 }
 
-#cordinate system?
-#split tripsToInclude to 2 different bools(start,end)
-filterByRegion <- function(tripsTable, shapeFile,tripsToInclude){
+#I think that it will be better to give shape_table(not the file name) as a parameter
+filterByRegion <- function(tripsTable, shapeFile,start.inshape = TRUE,end.inshape = TRUE){
   shapeTable <- st_read(shapeFile)
   
   sf_table <-  transformToSf(tripsTable,crs = st_crs(shapeTable))
   st_geometry(sf_table)<-"start_wkt"       # Set start_wkt as an active geometry
-  cont1 = st_contains(shapeTable,sf_table) # Indexes of rows where start point is in shapefile
+  cont1 = st_contains(shapeTable,sf_table)[[1]] # Indexes of rows where start point is in shapefile
   st_geometry(sf_table)<-"end_wkt"         # Set end_wkt as and active geometry
-  cont2 = st_contains(shapeTable,sf_table) # Indexes of rows where end point is in shapefile
+  cont2 = st_contains(shapeTable,sf_table)[[1]] # Indexes of rows where end point is in shapefile
   
-  cont_union = intersect(cont1[[1]],cont2[[2]])
+  if(start.inshape && end.inshape){
+    cont_union = intersect(cont1,cont2) 
+  }else if(start.inshape == TRUE && end.inshape == FALSE){
+    cont_union = cont1
+  }
+  else if(start.inshape == FALSE && end.inshape == TRUE){
+    cont_union = cont2
+  }else{
+    cont_union = 1:nrow(table)
+  }
+  
   
   return(tripsTable[cont_union,])
   
-  #get geometry of table
-  
-  #find intersections of geometries
-  
-  #choose intersected rows
+
   
 }
 
