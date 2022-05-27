@@ -1,14 +1,19 @@
+#' Works and analyses with trips_output file from MatSim
+#' Starting point of the workflow is readTripsTable
+#' Plotting is based on main_mode attr of trips_output
+#' 
+#' transformToSf changes representation of trips_output to geographical with geometry
+#' filterByRegion takes location of shapeFile and filters the trips_output excluding trips out of shapeFile
+
+
+
+
+
 #Adding libraries
 library("tidyverse")
 install.packages("ggalluvial")
 library("ggalluvial")
 library("sf") #Geography library
-
-#geometry.type is one of the c(st_point(),st_multipoint(),st_linestring())
-
-
-
-
 
 #Reading of Output_Trips from directory 
 readTripsTable <- function (pathToMATSimOutputDirectory = "."){
@@ -173,10 +178,10 @@ transformToSf <- function(table, crs = 25832, geometry.type = st_point()){
 filterByRegion <- function(tripsTable, shapeFile,start.inshape = TRUE,end.inshape = TRUE){
   shapeTable <- st_read(shapeFile)
   union_shape<-st_union(shapeTable)
-  sf_table <-  transformToSf(tripsTable,crs = st_crs(union_shape))
-  st_geometry(sf_table)<-"start_wkt"       # Set start_wkt as an active geometry
+  sf_table <-  transformToSf(tripsTable,crs = st_crs(union_shape),geometry.type = st_point())
+  st_geometry(sf_table)<-"start_wkt"             # Set start_wkt as an active geometry
   cont1 = st_contains(union_shape,sf_table)[[1]] # Indexes of rows where start point is in shapefile
-  st_geometry(sf_table)<-"end_wkt"         # Set end_wkt as and active geometry
+  st_geometry(sf_table)<-"end_wkt"               # Set end_wkt as and active geometry
   cont2 = st_contains(union_shape,sf_table)[[1]] # Indexes of rows where end point is in shapefile
   
   if(start.inshape && end.inshape){
