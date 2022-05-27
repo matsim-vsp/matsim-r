@@ -37,10 +37,18 @@ readTripsTable <- function (pathToMATSimOutputDirectory = "."){
 }
 
 #Plots the main_mode percentage in PieChart
-plotModalSplitPieChart<-function(tripsTable){
+plotModalSplitPieChart<-function(tripsTable,unite.columns = character(0)){
   
+  #If some columns should be united
+  if(length(unite.columns)!=0){
+    tripsTable$main_mode[grep(paste(unite.columns,collapse = "|"),tripsTable$main_mode)] = "united"
+  }
+  
+  #tripsTableCount gives percentage representation out
   tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100)
-
+  
+  
+  #plotting
   ggplot(tripsTableCount,aes(x="",y = n,fill = main_mode))+
          geom_bar(stat="identity",width = 1)+
          coord_polar("y",start = 0)+
@@ -52,7 +60,13 @@ plotModalSplitPieChart<-function(tripsTable){
 }
 
 #Plots the Bar Chart for the percentage of used main_mode
-plotModalSplitBarChart<-function(tripsTable){
+plotModalSplitBarChart<-function(tripsTable,unite.columns = character(0)){
+  
+  #If some columns should be united
+  if(length(unite.columns)!=0){
+    tripsTable$main_mode[grep(paste(unite.columns,collapse = "|"),tripsTable$main_mode)] = "united"
+  }
+  
   tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100) %>% arrange(desc(n))
   
   ggplot(tripsTableCount,aes(x=main_mode,y = n,fill= main_mode))+
@@ -68,11 +82,13 @@ plotModalSplitBarChart<-function(tripsTable){
 }
 
 #using ggaluval CRAN Package
-plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.prefix = FALSE){
+plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.columns = character(0)){
+  
   
   if(show.changes == TRUE){
     joined <- as_tibble(inner_join(tripsTable1,tripsTable2 %>% 
-                                select(trip_id,main_mode),by = "trip_id") %>% rename(base_mode = main_mode.x,policy_mode = main_mode.y))
+                                select(trip_id,main_mode),by = "trip_id") %>% 
+                          rename(base_mode = main_mode.x,policy_mode = main_mode.y))
     joined <- joined %>% filter(base_mode!=policy_mode)%>% group_by(base_mode,policy_mode)%>%count()
   }else{
     joined <- as_tibble(inner_join(tripsTable1,tripsTable2 %>% 
@@ -82,9 +98,9 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.pre
   
   
   # If the unite.commercials flag is set to TRUE, then join all commercials under 1 name commercial
-  if(unite.commercials == TRUE){
-    joined$base_mode[grep("commercial",joined$base_mode)] = "commercial"
-    joined$policy_mode[grep("commercial",joined$policy_mode)] = "commercial"
+  if(length(unite.columns) != 0){
+    joined$base_mode[grep(paste(unite.columns,collapse = "|"),joined$base_mode)] = "united"
+    joined$policy_mode[grep(paste(unite.columns,collapse = "|"),joined$policy_mode)] = "united"
   }
   
   
@@ -101,7 +117,7 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.pre
 #column wkt - MULTIPOINT(start,end)
 #or
 #column wkt - LINESTRING
-#geometry.type is also a attribute for the point representation
+#geometry.type is also a attribute for the point representation. What variant is better
 transformToSf <- function(table, crs = 25832, geometry.type = st_point()){
   
   if(class(geometry.type)[2] == "POINT"){
@@ -176,13 +192,8 @@ filterByRegion <- function(tripsTable, shapeFile,start.inshape = TRUE,end.inshap
   
   
   return(tripsTable[cont_union,])
-  
 
-  
 }
 
-#helping function to create table with changed main_mode
-set_random_mode <- function(column, modes){
-  column <- modes[sample(1:10,1)]
-}
+
 
