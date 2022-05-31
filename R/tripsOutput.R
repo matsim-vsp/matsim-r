@@ -16,6 +16,7 @@ library("ggalluvial")
 library("sf") #Geography library
 
 #Reading of Output_Trips from directory 
+#urls?
 readTripsTable <- function (pathToMATSimOutputDirectory = "."){
   #Get the file names, output_trips should be there
   options(digits = 12)
@@ -46,7 +47,7 @@ plotModalSplitPieChart<-function(tripsTable,unite.columns = character(0)){
   
   #If some columns should be united
   if(length(unite.columns)!=0){
-    tripsTable$main_mode[grep(paste(unite.columns,collapse = "|"),tripsTable$main_mode)] = "united"
+    tripsTable$main_mode[grep(paste0(unite.columns,collapse = "|"),tripsTable$main_mode)] = "united"
   }
   
   #tripsTableCount gives percentage representation out
@@ -69,7 +70,7 @@ plotModalSplitBarChart<-function(tripsTable,unite.columns = character(0)){
   
   #If some columns should be united
   if(length(unite.columns)!=0){
-    tripsTable$main_mode[grep(paste(unite.columns,collapse = "|"),tripsTable$main_mode)] = "united"
+    tripsTable$main_mode[grep(paste0(unite.columns,collapse = "|"),tripsTable$main_mode)] = "united"
   }
   
   tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100) %>% arrange(desc(n))
@@ -104,8 +105,8 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.col
   
   # If the unite.commercials flag is set to TRUE, then join all commercials under 1 name commercial
   if(length(unite.columns) != 0){
-    joined$base_mode[grep(paste(unite.columns,collapse = "|"),joined$base_mode)] = "united"
-    joined$policy_mode[grep(paste(unite.columns,collapse = "|"),joined$policy_mode)] = "united"
+    joined$base_mode[grep(paste0(unite.columns,collapse = "|"),joined$base_mode)] = "united"
+    joined$policy_mode[grep(paste0(unite.columns,collapse = "|"),joined$policy_mode)] = "united"
   }
   
   
