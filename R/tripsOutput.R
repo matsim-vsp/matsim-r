@@ -13,23 +13,43 @@
 library("tidyverse")
 install.packages("ggalluvial")
 library("ggalluvial")
+library("xml2")
 library("sf") #Geography library
 
 #Reading of Output_Trips from directory 
-#urls?
+
 readTripsTable <- function (pathToMATSimOutputDirectory = "."){
   #Get the file names, output_trips should be there
   options(digits = 12)
+  #Read from URL
+  if(grepl("http",pathToMATSimOutputDirectory) == TRUE){
+    trips_output_table = read_delim(pathToMATSimOutputDirectory,delim = ";",
+                                    col_types = cols(start_x = col_character(),
+                                                    start_y = col_character(),                                                       end_x = col_character(),
+                                                    end_y = col_character(),
+                                                    end_link = col_character(),
+                                                    start_link = col_character()))
+    
+    trips_output_table <- trips_output_table %>% mutate(start_x = as.double(start_x),
+                                                        start_y = as.double(start_y),
+                                                        end_x = as.double(end_x),
+                                                        end_y = as.double(end_y))
+    
+    return(trips_output_table)
+    
+  }
   
   files = list.files(pathToMATSimOutputDirectory,full.names = TRUE)
-  
+  #Read from global/local directory
   #output_trips is contained as output_trips.csv.gz
   if(length(grep("output_trips.csv.gz$",files)) !=0){
     trips_output_table = read_csv2(files[grep("output_trips.csv.gz$",files)],
                                    col_types = cols(start_x = col_character(),
                                                     start_y = col_character(),
                                                     end_x = col_character(),
-                                                    end_y = col_character()))
+                                                    end_y = col_character(),
+                                                    end_link = col_character(),
+                                                    start_link = col_character()))
                                             # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
                                             # doesn't reads coordinates correctly
     trips_output_table <- trips_output_table %>% mutate(start_x = as.double(start_x),
@@ -37,17 +57,21 @@ readTripsTable <- function (pathToMATSimOutputDirectory = "."){
                                                         end_x = as.double(end_x),
                                                         end_y = as.double(end_y))
     return(trips_output_table)
+    
   }else{ # if Directory doesn't contain trips_output, then nothing to read
     return(NULL)
   }
 }
 
 #Plots the main_mode percentage in PieChart
-plotModalSplitPieChart<-function(tripsTable,unite.columns = character(0)){
+#larger numbers
+#ggrepel
+#parameter for the united column
+plotModalSplitPieChart<-function(tripsTable, unite.columns = character(0),united.name = "united"){
   
   #If some columns should be united
   if(length(unite.columns)!=0){
-    tripsTable$main_mode[grep(paste0(unite.columns,collapse = "|"),tripsTable$main_mode)] = "united"
+    tripsTable$main_mode[grep(paste0(unite.columns,collapse = "|"),tripsTable$main_mode)] = united.name
   }
   
   #tripsTableCount gives percentage representation out
@@ -55,14 +79,14 @@ plotModalSplitPieChart<-function(tripsTable,unite.columns = character(0)){
   
   
   #plotting
-  ggplot(tripsTableCount,aes(x="",y = n,fill = main_mode))+
+  return(ggplot(tripsTableCount,aes(x="",y = n,fill = main_mode))+
          geom_bar(stat="identity",width = 1)+
          coord_polar("y",start = 0)+
          geom_text(aes(label = round(n,digits = 1)),
                     position=position_stack(vjust = 0.5),
                     show.legend = FALSE,size = 2)+
          ggtitle("Distribution of transport type")+
-         theme_void()
+         theme_void())
 }
 
 #Plots the Bar Chart for the percentage of used main_mode
@@ -88,10 +112,11 @@ plotModalSplitBarChart<-function(tripsTable,unite.columns = character(0)){
 }
 
 #using ggaluval CRAN Package
-plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.columns = character(0)){
+#warning messages deprecated
+plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite.columns = character(0)){
   
   
-  if(show.changes == TRUE){
+  if(show.onlyChanges == TRUE){
     joined <- as_tibble(inner_join(tripsTable1,tripsTable2 %>% 
                                 select(trip_id,main_mode),by = "trip_id") %>% 
                           rename(base_mode = main_mode.x,policy_mode = main_mode.y))
@@ -124,7 +149,10 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.changes = FALSE, unite.col
 #or
 #column wkt - LINESTRING
 #geometry.type is also a attribute for the point representation. What variant is better
-transformToSf <- function(table, crs = 25832, geometry.type = st_point()){
+
+#Find crs from network?
+#take defalt crs from function
+transformToSf <- function(table, crs, geometry.type = st_multipoint()){
   
   if(class(geometry.type)[2] == "POINT"){
     table1 <- table %>% 
@@ -176,16 +204,27 @@ transformToSf <- function(table, crs = 25832, geometry.type = st_point()){
 }
 
 #I think that it will be better to give shape_table(not the file name) as a parameter
-filterByRegion <- function(tripsTable, shapeFile,start.inshape = TRUE,end.inshape = TRUE){
+#crs of the tripsTable (network CRS) have to be given
+#change logic of the implementation
+filterByRegion <- function(tripsTable,shapeFile,crs,start.inshape = TRUE,end.inshape = TRUE){
+  
   shapeTable <- st_read(shapeFile)
-  union_shape<-st_union(shapeTable)
-  sf_table <-  transformToSf(tripsTable,crs = st_crs(union_shape),geometry.type = st_point())
+  st_crs(shapeTable)<-crs
+  sf_table <-  transformToSf(tripsTable,crs = crs,geometry.type = st_point())
+  shapeTable <- st_transform(shapeTable,crs = crs)
+  #shapeTable isn't table - shape
+  
+  union_shape<-st_union(shapeTable) # transforms the crs back to the previous in the file
+  union_shape<- st_transform(union_shape,crs = st_crs(shapeTable))
+  
+  
   st_geometry(sf_table)<-"start_wkt"             # Set start_wkt as an active geometry
   cont1 = st_contains(union_shape,sf_table)[[1]] # Indexes of rows where start point is in shapefile
+  
   st_geometry(sf_table)<-"end_wkt"               # Set end_wkt as and active geometry
   cont2 = st_contains(union_shape,sf_table)[[1]] # Indexes of rows where end point is in shapefile
   
-  if(start.inshape && end.inshape){
+  if(start.inshape== TRUE && end.inshape == TRUE){
     cont_union = intersect(cont1,cont2) 
   }else if(start.inshape == TRUE && end.inshape == FALSE){
     cont_union = cont1
@@ -193,12 +232,25 @@ filterByRegion <- function(tripsTable, shapeFile,start.inshape = TRUE,end.inshap
   else if(start.inshape == FALSE && end.inshape == TRUE){
     cont_union = cont2
   }else{
-    cont_union = 1:nrow(table)
+    cont_union = 1:nrow(table)  # Give back trips that are neither starting and ending outside the area
   }
   
   
   return(tripsTable[cont_union,])
 
+}
+plotMapWithTrips <- function(table,shapePath,crs,start.inshape = TRUE,end.inshape = TRUE){
+  table = table[1:15000,]
+  table_sf = transformToSf(table,crs = crs)
+  filtered = filterByRegion(table,shapePath,crs = crs, start.inshape, end.inshape)
+  
+  filtered_sf = transformToSf(filtered,crs = crs)
+  shape = st_read(shapePath)
+  shape = st_transform(shape,crs = crs)
+  ggplot()+
+    geom_sf(data = shape)+
+    geom_sf(data = table_sf,color = "black",size = 0.01)+
+    geom_sf(data = filtered_sf,color = "red",size = 0.01)
 }
 
 
