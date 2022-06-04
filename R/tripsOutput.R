@@ -10,14 +10,15 @@
 
 
 #Adding libraries
-library("tidyverse")
+library("tidyverse")              
 install.packages("ggalluvial")
-library("ggalluvial")
-library("xml2")
-library("sf") #Geography library
+library("ggalluvial")             #Alluvial plots for plotModalShift
+install.packages("ggrepel")       #To make text for pie chart beautiful
+library("ggrepel")
+library("sf")                     #Geography library
+
 
 #Reading of Output_Trips from directory 
-
 readTripsTable <- function (pathToMATSimOutputDirectory = "."){
   #Get the file names, output_trips should be there
   options(digits = 12)
@@ -64,9 +65,7 @@ readTripsTable <- function (pathToMATSimOutputDirectory = "."){
 }
 
 #Plots the main_mode percentage in PieChart
-#larger numbers
 #ggrepel
-#parameter for the united column
 plotModalSplitPieChart<-function(tripsTable, unite.columns = character(0),united.name = "united"){
   
   #If some columns should be united
@@ -77,28 +76,36 @@ plotModalSplitPieChart<-function(tripsTable, unite.columns = character(0),united
   #tripsTableCount gives percentage representation out
   tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100)
   
+  #getthe positions
+  positions <- tripsTableCount %>% 
+    mutate(csum = rev(cumsum(rev(n))), 
+           pos = n/2 + lead(csum, 1),
+           pos = if_else(is.na(pos), n/2, pos))
   
   #plotting
   return(ggplot(tripsTableCount,aes(x="",y = n,fill = main_mode))+
          geom_bar(stat="identity",width = 1)+
          coord_polar("y",start = 0)+
-         geom_text(aes(label = round(n,digits = 1)),
-                    position=position_stack(vjust = 0.5),
-                    show.legend = FALSE,size = 2)+
+         #geom_text(aes(label = round(n,digits = 1)),
+                    #position=position_stack(vjust = 0.5),
+                    #show.legend = FALSE,size = 4)+
+         geom_label_repel(data = positions,
+                            aes(y = pos, label = paste0(round(n,digits = 1), "%")),
+                            size = 4.5, nudge_x = 1, show.legend = FALSE) +
          ggtitle("Distribution of transport type")+
          theme_void())
 }
 
 #Plots the Bar Chart for the percentage of used main_mode
-plotModalSplitBarChart<-function(tripsTable,unite.columns = character(0)){
+plotModalSplitBarChart<-function(tripsTable,unite.columns = character(0),united.name = "united"){
   
   #If some columns should be united
   if(length(unite.columns)!=0){
-    tripsTable$main_mode[grep(paste0(unite.columns,collapse = "|"),tripsTable$main_mode)] = "united"
+    tripsTable$main_mode[grep(paste0(unite.columns,collapse = "|"),tripsTable$main_mode)] = united.name
   }
-  
+  #Get percentage
   tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100) %>% arrange(desc(n))
-  
+  #plotting
   ggplot(tripsTableCount,aes(x=main_mode,y = n,fill= main_mode))+
     geom_bar(stat="identity")+
     geom_text(aes(label = round(n,digits = 1)),
@@ -112,7 +119,7 @@ plotModalSplitBarChart<-function(tripsTable,unite.columns = character(0)){
 }
 
 #using ggaluval CRAN Package
-#warning messages deprecated
+#deprecate warning message options(warn = -1)
 plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite.columns = character(0)){
   
   
@@ -240,7 +247,7 @@ filterByRegion <- function(tripsTable,shapeFile,crs,start.inshape = TRUE,end.ins
 
 }
 plotMapWithTrips <- function(table,shapePath,crs,start.inshape = TRUE,end.inshape = TRUE){
-  table = table[1:15000,]
+  
   table_sf = transformToSf(table,crs = crs)
   filtered = filterByRegion(table,shapePath,crs = crs, start.inshape, end.inshape)
   
