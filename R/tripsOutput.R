@@ -212,7 +212,6 @@ transformToSf <- function(table, crs, geometry.type = st_multipoint()){
 
 #I think that it will be better to give shape_table(not the file name) as a parameter
 #crs of the tripsTable (network CRS) have to be given
-#change logic of the implementation
 filterByRegion <- function(tripsTable,shapeTable,crs,start.inshape = TRUE,end.inshape = TRUE){
   
   #shapeTable <- st_read(shapeFile)
