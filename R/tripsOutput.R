@@ -213,10 +213,13 @@ transformToSf <- function(table, crs, geometry.type = st_multipoint()){
 #I think that it will be better to give shape_table(not the file name) as a parameter
 #crs of the tripsTable (network CRS) have to be given
 #change logic of the implementation
-filterByRegion <- function(tripsTable,shapeFile,crs,start.inshape = TRUE,end.inshape = TRUE){
+filterByRegion <- function(tripsTable,shapeTable,crs,start.inshape = TRUE,end.inshape = TRUE){
   
-  shapeTable <- st_read(shapeFile)
-  st_crs(shapeTable)<-crs
+  #shapeTable <- st_read(shapeFile)
+  if(st_crs(shapeTable) == NA){
+    st_crs(shapeTable)<-crs
+  }
+  
   sf_table <-  transformToSf(tripsTable,crs = crs,geometry.type = st_point())
   shapeTable <- st_transform(shapeTable,crs = crs)
   #shapeTable isn't table - shape
@@ -231,33 +234,45 @@ filterByRegion <- function(tripsTable,shapeFile,crs,start.inshape = TRUE,end.ins
   st_geometry(sf_table)<-"end_wkt"               # Set end_wkt as and active geometry
   cont2 = st_contains(union_shape,sf_table)[[1]] # Indexes of rows where end point is in shapefile
   
+  #get trips that ended outside of shape
+  cont_end_outside = setdiff(1:nrow(sf_table),cont2)
+  
+  #get trips that started outside of shape
+  cont_start_outside = setdiff(1:nrow(sf_table),cont1)
+  
   if(start.inshape== TRUE && end.inshape == TRUE){
     cont_union = intersect(cont1,cont2) 
   }else if(start.inshape == TRUE && end.inshape == FALSE){
-    cont_union = cont1
+    
+    cont_union = intersect(cont1,cont_end_outside)
   }
   else if(start.inshape == FALSE && end.inshape == TRUE){
-    cont_union = cont2
+    cont_union = intersect(cont2,cont_start_outside)
   }else{
-    cont_union = 1:nrow(table)  # Give back trips that are neither starting and ending outside the area
+    cont_union = intersect(cont_start_outside,cont_end_outside)  # Give back trips that are neither starting and ending outside the area
   }
   
   
   return(tripsTable[cont_union,])
 
 }
-plotMapWithTrips <- function(table,shapePath,crs,start.inshape = TRUE,end.inshape = TRUE){
-  
+plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.inshape = TRUE){
+  table = table[1:5000,]
   table_sf = transformToSf(table,crs = crs)
-  filtered = filterByRegion(table,shapePath,crs = crs, start.inshape, end.inshape)
+  filtered = filterByRegion(table,shapeTable,crs = crs, start.inshape, end.inshape)
   
-  filtered_sf = transformToSf(filtered,crs = crs)
-  shape = st_read(shapePath)
-  shape = st_transform(shape,crs = crs)
+  filtered_sf = transformToSf(filtered,crs = crs,geometry.type = st_point())
+  filtered_sf_start = filtered_sf
+  st_geometry(filtered_sf_start) = "start_wkt"
+  filtered_sf_end = filtered_sf
+  st_geometry(filtered_sf_end) = "end_wkt"
+  #shape = st_read(shapePath)
+  shapeTable = st_transform(shapeTable,crs = crs)
   ggplot()+
-    geom_sf(data = shape)+
-    geom_sf(data = table_sf,color = "black",size = 0.01)+
-    geom_sf(data = filtered_sf,color = "red",size = 0.01)
+    geom_sf(data = shapeTable)+
+    #geom_sf(data = )
+    geom_sf(data = filtered_sf_start,color = "green",size = 1,shape = 5)+
+    geom_sf(data = filtered_sf_end,color = "red",size = 1,shape = 3)
 }
 
 
