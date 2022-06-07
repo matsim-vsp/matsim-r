@@ -278,7 +278,8 @@ plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.insha
     geom_sf(data = shapeTable)+
     #geom_sf(data = )
     geom_sf(data = filtered_sf_start,aes(color = "Start"),size = 1,shape = 5)+
-    geom_sf(data = filtered_sf_end,aes(color ="End"),size = 1,shape = 3)
+    geom_sf(data = filtered_sf_end,aes(color ="End"),size = 1,shape = 3)+
+    labs(color = "Type")
 }
 plotMapWithTripsType <- function(table,shapeTable,crs){
   table = table[1:5000,]
@@ -307,7 +308,8 @@ plotMapWithTripsType <- function(table,shapeTable,crs){
     geom_sf(data = filtered_sf_inside,aes(color = "inside"),size = 0.6,alpha = 0.4)+
     geom_sf(data = filtered_sf_origin,aes(color = "origin"),size = 0.6,alpha = 0.4)+
     geom_sf(data = filtered_sf_destination,aes(color = "destination"),size = 0.6,alpha = 0.4)+
-    geom_sf(data = filtered_sf_transit,aes(color ="transit"),size = 0.6,alpha = 0.4)
+    geom_sf(data = filtered_sf_transit,aes(color ="transit"),size = 0.6,alpha = 0.4)+
+    labs(color = "Type")
 }
 #Mb Create analytical functions/plots of trips_type(Transit,indide,destination,origin) distribution
 
