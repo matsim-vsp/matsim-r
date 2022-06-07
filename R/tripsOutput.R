@@ -158,7 +158,6 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite
 #geometry.type is also a attribute for the point representation. What variant is better
 
 #Find crs from network?
-#take defalt crs from function
 transformToSf <- function(table, crs, geometry.type = st_multipoint()){
   
   if(class(geometry.type)[2] == "POINT"){
@@ -210,8 +209,6 @@ transformToSf <- function(table, crs, geometry.type = st_multipoint()){
   }
 }
 
-#I think that it will be better to give shape_table(not the file name) as a parameter
-#crs of the tripsTable (network CRS) have to be given
 filterByRegion <- function(tripsTable,shapeTable,crs,start.inshape = TRUE,end.inshape = TRUE){
   
   #shapeTable <- st_read(shapeFile)
@@ -255,6 +252,7 @@ filterByRegion <- function(tripsTable,shapeTable,crs,start.inshape = TRUE,end.in
   return(tripsTable[cont_union,])
 
 }
+#bug if filtered_set is empty, then handle the mistake
 plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.inshape = TRUE){
   table = table[1:5000,]
   #table_sf = transformToSf(table,crs = crs)
@@ -279,10 +277,12 @@ plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.insha
     #geom_sf(data = )
     geom_sf(data = filtered_sf_start,aes(color = "Start"),size = 1,shape = 5)+
     geom_sf(data = filtered_sf_end,aes(color ="End"),size = 1,shape = 3)+
-    labs(color = "Type")
+    labs(color = "Type")+
+    scale_colour_manual(values=colors)
 }
+#bug if filtered_set is empty, then handle the mistake
 plotMapWithTripsType <- function(table,shapeTable,crs){
-  table = table[1:5000,]
+  table = table[1:200,]
   #table_sf = transformToSf(table,crs = crs)
   filtered_inside = filterByRegion(table,shapeTable,crs = crs, start.inshape = TRUE, end.inshape = TRUE)
   filtered_origin = filterByRegion(table,shapeTable,crs = crs, start.inshape = TRUE, end.inshape = FALSE)
@@ -305,11 +305,12 @@ plotMapWithTripsType <- function(table,shapeTable,crs){
   ggplot()+
     geom_sf(data = shapeTable)+
     #geom_sf(data = )
-    geom_sf(data = filtered_sf_inside,aes(color = "inside"),size = 0.6,alpha = 0.4)+
-    geom_sf(data = filtered_sf_origin,aes(color = "origin"),size = 0.6,alpha = 0.4)+
-    geom_sf(data = filtered_sf_destination,aes(color = "destination"),size = 0.6,alpha = 0.4)+
-    geom_sf(data = filtered_sf_transit,aes(color ="transit"),size = 0.6,alpha = 0.4)+
-    labs(color = "Type")
+    geom_sf(data = filtered_sf_inside,aes(color = "inside"),size = 3,alpha = 0.5)+
+    geom_sf(data = filtered_sf_origin,aes(color = "origin"),size = 3,alpha = 0.4)+
+    geom_sf(data = filtered_sf_destination,aes(color = "destination"),size = 3,alpha = 0.3)+
+    geom_sf(data = filtered_sf_transit,aes(color ="transit"),size = 2,alpha = 0.1)+
+    labs(color = "Type")+
+    scale_colour_manual(values=colors)
 }
-#Mb Create analytical functions/plots of trips_type(Transit,indide,destination,origin) distribution
+#Mb Create analytical functions/plots of trips_type(Transit,indide,destination,origin) distribution(like for modal)
 
