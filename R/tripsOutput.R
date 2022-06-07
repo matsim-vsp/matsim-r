@@ -257,7 +257,7 @@ filterByRegion <- function(tripsTable,shapeTable,crs,start.inshape = TRUE,end.in
 }
 plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.inshape = TRUE){
   table = table[1:5000,]
-  table_sf = transformToSf(table,crs = crs)
+  #table_sf = transformToSf(table,crs = crs)
   filtered = filterByRegion(table,shapeTable,crs = crs, start.inshape, end.inshape)
   
   filtered_sf = transformToSf(filtered,crs = crs,geometry.type = st_point())
@@ -266,13 +266,48 @@ plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.insha
   filtered_sf_end = filtered_sf
   st_geometry(filtered_sf_end) = "end_wkt"
   #shape = st_read(shapePath)
+  if(st_crs(shapeTable) == NA){
+    ct_crs(shapeTable) = crs
+  }
   shapeTable = st_transform(shapeTable,crs = crs)
+  
+  colors  = c("Start" = "green","End" = "red")
+  shapes  = c("Start" = 5,"End" = 3)
+  
   ggplot()+
     geom_sf(data = shapeTable)+
     #geom_sf(data = )
-    geom_sf(data = filtered_sf_start,color = "green",size = 1,shape = 5)+
-    geom_sf(data = filtered_sf_end,color = "red",size = 1,shape = 3)
+    geom_sf(data = filtered_sf_start,aes(color = "Start"),size = 1,shape = 5)+
+    geom_sf(data = filtered_sf_end,aes(color ="End"),size = 1,shape = 3)
 }
-
-
+plotMapWithTripsType <- function(table,shapeTable,crs){
+  table = table[1:5000,]
+  #table_sf = transformToSf(table,crs = crs)
+  filtered_inside = filterByRegion(table,shapeTable,crs = crs, start.inshape = TRUE, end.inshape = TRUE)
+  filtered_origin = filterByRegion(table,shapeTable,crs = crs, start.inshape = TRUE, end.inshape = FALSE)
+  filtered_destination = filterByRegion(table,shapeTable,crs = crs, start.inshape = FALSE, end.inshape = TRUE)
+  filtered_transit = filterByRegion(table,shapeTable,crs = crs, start.inshape = FALSE, end.inshape = FALSE)
+  
+  filtered_sf_inside = transformToSf(filtered_inside,crs = crs,geometry.type = st_multipoint())
+  filtered_sf_origin = transformToSf(filtered_origin,crs = crs,geometry.type = st_multipoint())
+  filtered_sf_destination = transformToSf(filtered_destination,crs = crs,geometry.type = st_multipoint())
+  filtered_sf_transit = transformToSf(filtered_transit,crs = crs,geometry.type = st_multipoint())
+  
+  if(st_crs(shapeTable) == NA){
+    ct_crs(shapeTable) = crs
+  }
+  shapeTable = st_transform(shapeTable,crs = crs)
+  
+  colors  = c("inside" = "green","origin" = "red","destination" = "orange","transit" = "blue")
+  shapes  = c("Start" = 5,"End" = 3)
+  
+  ggplot()+
+    geom_sf(data = shapeTable)+
+    #geom_sf(data = )
+    geom_sf(data = filtered_sf_inside,aes(color = "inside"),size = 0.6,alpha = 0.4)+
+    geom_sf(data = filtered_sf_origin,aes(color = "origin"),size = 0.6,alpha = 0.4)+
+    geom_sf(data = filtered_sf_destination,aes(color = "destination"),size = 0.6,alpha = 0.4)+
+    geom_sf(data = filtered_sf_transit,aes(color ="transit"),size = 0.6,alpha = 0.4)
+}
+#Mb Create analytical functions/plots of trips_type(Transit,indide,destination,origin) distribution
 
