@@ -9,16 +9,15 @@
 
 
 
-#Adding libraries
-#library("tidyverse")
-#install.packages("ggalluvial")
-#library("ggalluvial")             #Alluvial plots for plotModalShift
-#install.packages("ggrepel")       #To make text for pie chart beautiful
-#library("ggrepel")
-#library("sf")                     #Geography library
+#' @import tidyverse
+#' @import sf
+#' @import ggalluvial
+#' @import ggrepel
+#' @import tidyr
 
 
 #Reading of Output_Trips from directory
+#' @export
 readTripsTable <- function (pathToMATSimOutputDirectory = "."){
   #Get the file names, output_trips should be there
   options(digits = 12)
