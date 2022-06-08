@@ -1,7 +1,7 @@
 #' Works and analyses with trips_output file from MatSim
 #' Starting point of the workflow is readTripsTable
 #' Plotting is based on main_mode attr of trips_output
-#' 
+#'
 #' transformToSf changes representation of trips_output to geographical with geometry
 #' filterByRegion takes location of shapeFile and filters the trips_output excluding trips out of shapeFile
 
@@ -10,15 +10,15 @@
 
 
 #Adding libraries
-library("tidyverse")              
-install.packages("ggalluvial")
-library("ggalluvial")             #Alluvial plots for plotModalShift
-install.packages("ggrepel")       #To make text for pie chart beautiful
-library("ggrepel")
-library("sf")                     #Geography library
+#library("tidyverse")
+#install.packages("ggalluvial")
+#library("ggalluvial")             #Alluvial plots for plotModalShift
+#install.packages("ggrepel")       #To make text for pie chart beautiful
+#library("ggrepel")
+#library("sf")                     #Geography library
 
 
-#Reading of Output_Trips from directory 
+#Reading of Output_Trips from directory
 readTripsTable <- function (pathToMATSimOutputDirectory = "."){
   #Get the file names, output_trips should be there
   options(digits = 12)
@@ -30,16 +30,16 @@ readTripsTable <- function (pathToMATSimOutputDirectory = "."){
                                                     end_y = col_character(),
                                                     end_link = col_character(),
                                                     start_link = col_character()))
-    
+
     trips_output_table <- trips_output_table %>% mutate(start_x = as.double(start_x),
                                                         start_y = as.double(start_y),
                                                         end_x = as.double(end_x),
                                                         end_y = as.double(end_y))
-    
+
     return(trips_output_table)
-    
+
   }
-  
+
   files = list.files(pathToMATSimOutputDirectory,full.names = TRUE)
   #Read from global/local directory
   #output_trips is contained as output_trips.csv.gz
@@ -58,7 +58,7 @@ readTripsTable <- function (pathToMATSimOutputDirectory = "."){
                                                         end_x = as.double(end_x),
                                                         end_y = as.double(end_y))
     return(trips_output_table)
-    
+
   }else{ # if Directory doesn't contain trips_output, then nothing to read
     return(NULL)
   }
@@ -67,21 +67,21 @@ readTripsTable <- function (pathToMATSimOutputDirectory = "."){
 #Plots the main_mode percentage in PieChart
 #ggrepel
 plotModalSplitPieChart<-function(tripsTable, unite.columns = character(0),united.name = "united"){
-  
+
   #If some columns should be united
   if(length(unite.columns)!=0){
     tripsTable$main_mode[grep(paste0(unite.columns,collapse = "|"),tripsTable$main_mode)] = united.name
   }
-  
+
   #tripsTableCount gives percentage representation out
   tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100)
-  
+
   #getthe positions
-  positions <- tripsTableCount %>% 
-    mutate(csum = rev(cumsum(rev(n))), 
+  positions <- tripsTableCount %>%
+    mutate(csum = rev(cumsum(rev(n))),
            pos = n/2 + lead(csum, 1),
            pos = if_else(is.na(pos), n/2, pos))
-  
+
   #plotting
   return(ggplot(tripsTableCount,aes(x="",y = n,fill = main_mode))+
          geom_bar(stat="identity",width = 1)+
@@ -98,7 +98,7 @@ plotModalSplitPieChart<-function(tripsTable, unite.columns = character(0),united
 
 #Plots the Bar Chart for the percentage of used main_mode
 plotModalSplitBarChart<-function(tripsTable,unite.columns = character(0),united.name = "united"){
-  
+
   #If some columns should be united
   if(length(unite.columns)!=0){
     tripsTable$main_mode[grep(paste0(unite.columns,collapse = "|"),tripsTable$main_mode)] = united.name
@@ -121,27 +121,27 @@ plotModalSplitBarChart<-function(tripsTable,unite.columns = character(0),united.
 #using ggaluval CRAN Package
 #deprecate warning message options(warn = -1)
 plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite.columns = character(0)){
-  
-  
+
+
   if(show.onlyChanges == TRUE){
-    joined <- as_tibble(inner_join(tripsTable1,tripsTable2 %>% 
-                                select(trip_id,main_mode),by = "trip_id") %>% 
+    joined <- as_tibble(inner_join(tripsTable1,tripsTable2 %>%
+                                select(trip_id,main_mode),by = "trip_id") %>%
                           rename(base_mode = main_mode.x,policy_mode = main_mode.y))
     joined <- joined %>% filter(base_mode!=policy_mode)%>% group_by(base_mode,policy_mode)%>%count()
   }else{
-    joined <- as_tibble(inner_join(tripsTable1,tripsTable2 %>% 
+    joined <- as_tibble(inner_join(tripsTable1,tripsTable2 %>%
                                 select(trip_id,main_mode),by = "trip_id") %>% rename(base_mode = main_mode.x,policy_mode = main_mode.y))
     joined <- joined %>% group_by(base_mode,policy_mode)%>%count()
   }
-  
-  
+
+
   # If the unite.commercials flag is set to TRUE, then join all commercials under 1 name commercial
   if(length(unite.columns) != 0){
     joined$base_mode[grep(paste0(unite.columns,collapse = "|"),joined$base_mode)] = "united"
     joined$policy_mode[grep(paste0(unite.columns,collapse = "|"),joined$policy_mode)] = "united"
   }
-  
-  
+
+
   ggplot(joined,aes(y = n,axis1 = base_mode,axis2 = policy_mode))+
     geom_alluvium(aes(fill = base_mode),width = 1/15)+
     geom_stratum(width = 1/10, fill = "black", color = "grey")+
@@ -159,20 +159,20 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite
 
 #Find crs from network?
 transformToSf <- function(table, crs, geometry.type = st_multipoint()){
-  
+
   if(class(geometry.type)[2] == "POINT"){
-    table1 <- table %>% 
+    table1 <- table %>%
       #mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep =""))
       mutate(start_wkt = paste("POINT(", start_x, " ", start_y,")", sep =""))
-    table2 <- table %>% 
+    table2 <- table %>%
       mutate(end_wkt = paste("POINT(", end_x, " ", end_y,")", sep =""))
     attr(table,"geometry.type")<-"POINT"
-    
-    
+
+
     table1_wkt<- st_as_sf(table1,wkt = "start_wkt")%>% select(-start_x,-start_y,-end_x,-end_y)
     table2_wkt<- st_as_sf(table2,wkt = "end_wkt")%>% select(-start_x,-start_y,-end_x,-end_y)
-    
-    
+
+
     result_table<- table1_wkt %>% mutate(end_wkt = table2_wkt$end_wkt)
     st_geometry(result_table)<-"start_wkt"
     st_crs(result_table) <- crs
@@ -180,27 +180,27 @@ transformToSf <- function(table, crs, geometry.type = st_multipoint()){
     st_crs(result_table) <- crs
     st_geometry(result_table)<-"start_wkt"
     return(result_table)
-    
+
   }else if(class(geometry.type)[2] == "MULTIPOINT"){
-    
-    table <- table %>% 
+
+    table <- table %>%
       mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep =""))
     attr(table,"geometry.type")<-"MULTIPOINT"
-    
-    
+
+
     result_table<- st_as_sf(table,wkt = "wkt")%>% select(-start_x,-start_y,-end_x,-end_y)
 
     st_crs(result_table) <- crs
     return(result_table)
   }else if(class(geometry.type)[2] == "LINESTRING"){
-    
-    table <- table %>% 
+
+    table <- table %>%
       mutate(wkt = paste("LINESTRING(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep =""))
     attr(table,"geometry.type")<-"LINESTRING"
-    
-    
+
+
     result_table<- st_as_sf(table,wkt = "wkt")%>% select(-start_x,-start_y,-end_x,-end_y)
-    
+
     st_crs(result_table) <- crs
     return(result_table)
   }
@@ -210,36 +210,36 @@ transformToSf <- function(table, crs, geometry.type = st_multipoint()){
 }
 
 filterByRegion <- function(tripsTable,shapeTable,crs,start.inshape = TRUE,end.inshape = TRUE){
-  
+
   #shapeTable <- st_read(shapeFile)
   if(st_crs(shapeTable) == NA){
     st_crs(shapeTable)<-crs
   }
-  
+
   sf_table <-  transformToSf(tripsTable,crs = crs,geometry.type = st_point())
   shapeTable <- st_transform(shapeTable,crs = crs)
   #shapeTable isn't table - shape
-  
+
   union_shape<-st_union(shapeTable) # transforms the crs back to the previous in the file
   union_shape<- st_transform(union_shape,crs = st_crs(shapeTable))
-  
-  
+
+
   st_geometry(sf_table)<-"start_wkt"             # Set start_wkt as an active geometry
   cont1 = st_contains(union_shape,sf_table)[[1]] # Indexes of rows where start point is in shapefile
-  
+
   st_geometry(sf_table)<-"end_wkt"               # Set end_wkt as and active geometry
   cont2 = st_contains(union_shape,sf_table)[[1]] # Indexes of rows where end point is in shapefile
-  
+
   #get trips that ended outside of shape
   cont_end_outside = setdiff(1:nrow(sf_table),cont2)
-  
+
   #get trips that started outside of shape
   cont_start_outside = setdiff(1:nrow(sf_table),cont1)
-  
+
   if(start.inshape== TRUE && end.inshape == TRUE){
-    cont_union = intersect(cont1,cont2) 
+    cont_union = intersect(cont1,cont2)
   }else if(start.inshape == TRUE && end.inshape == FALSE){
-    
+
     cont_union = intersect(cont1,cont_end_outside)
   }
   else if(start.inshape == FALSE && end.inshape == TRUE){
@@ -247,8 +247,8 @@ filterByRegion <- function(tripsTable,shapeTable,crs,start.inshape = TRUE,end.in
   }else{
     cont_union = intersect(cont_start_outside,cont_end_outside)  # Give back trips that are neither starting and ending outside the area
   }
-  
-  
+
+
   return(tripsTable[cont_union,])
 
 }
@@ -257,7 +257,7 @@ plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.insha
   table = table[1:5000,]
   #table_sf = transformToSf(table,crs = crs)
   filtered = filterByRegion(table,shapeTable,crs = crs, start.inshape, end.inshape)
-  
+
   filtered_sf = transformToSf(filtered,crs = crs,geometry.type = st_point())
   filtered_sf_start = filtered_sf
   st_geometry(filtered_sf_start) = "start_wkt"
@@ -268,10 +268,10 @@ plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.insha
     ct_crs(shapeTable) = crs
   }
   shapeTable = st_transform(shapeTable,crs = crs)
-  
+
   colors  = c("Start" = "green","End" = "red")
   shapes  = c("Start" = 5,"End" = 3)
-  
+
   ggplot()+
     geom_sf(data = shapeTable)+
     #geom_sf(data = )
@@ -289,20 +289,20 @@ plotMapWithTripsType <- function(table,shapeTable,crs){
   filtered_origin = filterByRegion(table,shapeTable,crs = crs, start.inshape = TRUE, end.inshape = FALSE)
   filtered_destination = filterByRegion(table,shapeTable,crs = crs, start.inshape = FALSE, end.inshape = TRUE)
   filtered_transit = filterByRegion(table,shapeTable,crs = crs, start.inshape = FALSE, end.inshape = FALSE)
-  
+
   filtered_sf_inside = transformToSf(filtered_inside,crs = crs,geometry.type = st_multipoint())
   filtered_sf_origin = transformToSf(filtered_origin,crs = crs,geometry.type = st_multipoint())
   filtered_sf_destination = transformToSf(filtered_destination,crs = crs,geometry.type = st_multipoint())
   filtered_sf_transit = transformToSf(filtered_transit,crs = crs,geometry.type = st_multipoint())
-  
+
   if(st_crs(shapeTable) == NA){
     ct_crs(shapeTable) = crs
   }
   shapeTable = st_transform(shapeTable,crs = crs)
-  
+
   colors  = c("inside" = "green","origin" = "red","destination" = "orange","transit" = "blue")
   shapes  = c("Start" = 5,"End" = 3)
-  
+
   ggplot()+
     geom_sf(data = shapeTable)+
     #geom_sf(data = )
