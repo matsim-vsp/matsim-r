@@ -284,6 +284,7 @@ plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.insha
 plotMapWithTripsType <- function(table,shapeTable,crs){
   table = table[1:200,]
   #table_sf = transformToSf(table,crs = crs)
+  #Maybe union all this tables as 1 extended with additional column
   filtered_inside = filterByRegion(table,shapeTable,crs = crs, start.inshape = TRUE, end.inshape = TRUE)
   filtered_origin = filterByRegion(table,shapeTable,crs = crs, start.inshape = TRUE, end.inshape = FALSE)
   filtered_destination = filterByRegion(table,shapeTable,crs = crs, start.inshape = FALSE, end.inshape = TRUE)
@@ -313,4 +314,7 @@ plotMapWithTripsType <- function(table,shapeTable,crs){
     scale_colour_manual(values=colors)
 }
 #Mb Create analytical functions/plots of trips_type(Transit,indide,destination,origin) distribution(like for modal)
-
+test = function(smth = c("p,m,l")){
+  print(smth)
+  return(NA)
+}
