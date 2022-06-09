@@ -1,22 +1,15 @@
-#' Works and analyses with trips_output file from MatSim
-#' Starting point of the workflow is readTripsTable
-#' Plotting is based on main_mode attr of trips_output
+
+#' Load MATSIM output_trips table into Memory
 #'
-#' transformToSf changes representation of trips_output to geographical with geometry
-#' filterByRegion takes location of shapeFile and filters the trips_output excluding trips out of shapeFile
-
-
-
-
-
-#' @import tidyverse
-#' @import sf
-#' @import ggalluvial
-#' @import ggrepel
-#' @import tidyr
-
-
-#Reading of Output_Trips from directory
+#' Loads a MATSim CSV output_trips file or archive,
+#' creating a tibble with columns as in csv file
+#'
+#'
+#'
+#' @param pathTOMATSimOutputDirectory matsim output directory or link to the file.
+#'
+#' @return tibble of trips_output
+#'
 #' @export
 readTripsTable <- function (pathToMATSimOutputDirectory = "."){
   #Get the file names, output_trips should be there
@@ -63,7 +56,6 @@ readTripsTable <- function (pathToMATSimOutputDirectory = "."){
   }
 }
 
-#Plots the main_mode percentage in PieChart
 #' @export
 plotModalSplitPieChart<-function(tripsTable, unite.columns = character(0),united.name = "united"){
 
@@ -95,7 +87,6 @@ plotModalSplitPieChart<-function(tripsTable, unite.columns = character(0),united
          theme_void())
 }
 
-#Plots the Bar Chart for the percentage of used main_mode
 #' @export
 plotModalSplitBarChart<-function(tripsTable,unite.columns = character(0),united.name = "united"){
 
@@ -118,8 +109,6 @@ plotModalSplitBarChart<-function(tripsTable,unite.columns = character(0),united.
     coord_flip()
 }
 
-#using ggaluvial CRAN Package
-#supress warning message options(warn = -1)
 #' @export
 plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite.columns = character(0)){
 
@@ -149,14 +138,6 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite
     geom_label(stat = "stratum", aes(label = after_stat(stratum)))+
     scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))
 }
-
-#Use parameter for defining the point_representation
-#column start_wkt - POINT and column end_wkt - POINT
-#or
-#column wkt - MULTIPOINT(start,end)
-#or
-#column wkt - LINESTRING
-#geometry.type is also a attribute for the point representation. What variant is better
 
 #' @export
 transformToSf <- function(table, crs, geometry.type = st_multipoint()){
@@ -209,6 +190,7 @@ transformToSf <- function(table, crs, geometry.type = st_multipoint()){
     return(NA)
   }
 }
+
 #' @export
 filterByRegion <- function(tripsTable,shapeTable,crs,start.inshape = TRUE,end.inshape = TRUE){
 
@@ -253,7 +235,7 @@ filterByRegion <- function(tripsTable,shapeTable,crs,start.inshape = TRUE,end.in
   return(tripsTable[cont_union,])
 
 }
-#bug if filtered_set is empty, then handle the mistake
+
 #' @export
 plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.inshape = TRUE){
   table = table[1:5000,]
@@ -282,7 +264,7 @@ plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.insha
     labs(color = "Type")+
     scale_colour_manual(values=colors)
 }
-#bug if filtered_set is empty, then handle the mistake
+
 #' @export
 plotMapWithTripsType <- function(table,shapeTable,crs){
   table = table[1:200,]
@@ -316,5 +298,4 @@ plotMapWithTripsType <- function(table,shapeTable,crs){
     labs(color = "Type")+
     scale_colour_manual(values=colors)
 }
-#Mb Create analytical functions/plots of trips_type(Transit,indide,destination,origin) distribution(like for modal)
 

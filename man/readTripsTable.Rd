@@ -2,13 +2,17 @@
 % Please edit documentation in R/tripsOutput.R
 \name{readTripsTable}
 \alias{readTripsTable}
-\title{Works and analyses with trips_output file from MatSim
-Starting point of the workflow is readTripsTable
-Plotting is based on main_mode attr of trips_output}
+\title{Load MATSIM output_trips table into Memory}
 \usage{
 readTripsTable(pathToMATSimOutputDirectory = ".")
 }
+\arguments{
+\item{pathTOMATSimOutputDirectory}{matsim output directory or link to the file.}
+}
+\value{
+tibble of trips_output
+}
 \description{
-transformToSf changes representation of trips_output to geographical with geometry
-filterByRegion takes location of shapeFile and filters the trips_output excluding trips out of shapeFile
+Loads a MATSim CSV output_trips file or archive,
+creating a tibble with columns as in csv file
 }

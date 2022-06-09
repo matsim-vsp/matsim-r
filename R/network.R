@@ -16,6 +16,13 @@
 #' @import purrr
 #' @import xml2
 #' @import tidyr
+#' @import tidyverse
+#' @import sf
+#' @import ggalluvial
+#' @import ggrepel
+#' @import tidyr
+#' @import ggplot2
+
 
 #NETWORK = "kelheim.output_network.xml"
 #NETWORK = "network.xml"
