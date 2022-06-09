@@ -7,12 +7,12 @@
 readTripsTable(pathToMATSimOutputDirectory = ".")
 }
 \arguments{
-\item{pathTOMATSimOutputDirectory}{matsim output directory or link to the file.}
+\item{pathTOMATSimOutputDirectory}{path to matsim output directory or http link to the file.}
 }
 \value{
 tibble of trips_output
 }
 \description{
-Loads a MATSim CSV output_trips file or archive,
+Loads a MATSim CSV output_trips from file or archive,
 creating a tibble with columns as in csv file
 }

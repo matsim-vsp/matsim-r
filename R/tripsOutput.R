@@ -1,12 +1,14 @@
 
 #' Load MATSIM output_trips table into Memory
 #'
-#' Loads a MATSim CSV output_trips file or archive,
+#' Loads a MATSim CSV output_trips from file or archive,
 #' creating a tibble with columns as in csv file
 #'
 #'
 #'
-#' @param pathTOMATSimOutputDirectory matsim output directory or link to the file.
+#'
+#'
+#' @param pathTOMATSimOutputDirectory path to matsim output directory or http link to the file.
 #'
 #' @return tibble of trips_output
 #'
@@ -56,6 +58,23 @@ readTripsTable <- function (pathToMATSimOutputDirectory = "."){
   }
 }
 
+#' Plot main_mode as a Pie Chart
+#'
+#' Takes Table trips_output (from readTripsTable()),
+#' to plot pie chart with with values that represent
+#' percentage of using transport modes from trips
+#'
+#' Function automatically detects transport_modes from table
+#' and plots pie chart.
+#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#'
+#'
+#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param unite.columns changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name if columns were united, you can specify name for the resulting column in chart
+#'
+#' @return Pie Chart of transport mode distribution, values given in percents
+#'
 #' @export
 plotModalSplitPieChart<-function(tripsTable, unite.columns = character(0),united.name = "united"){
 
