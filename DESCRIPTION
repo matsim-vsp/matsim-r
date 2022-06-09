@@ -16,7 +16,7 @@ Description: MATSim support package for R
      This project is under ongoing development and submissions are welcome!
 License: GPL (>= 3)
 Encoding: UTF-8
-Depends: dplyr, purrr, readr, tidyr, xml2, ggplot2, sf
+Depends: dplyr, purrr, readr, tidyr, tidyverse, xml2, ggplot2, sf, ggalluvial, ggrepel
 LazyData: true
 URL: https://github.com/matsim-vsp/matsim-r
 BugReports: https://github.com/matsim-vsp/matsim-r/issues
