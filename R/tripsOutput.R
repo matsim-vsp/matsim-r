@@ -8,7 +8,7 @@
 #'
 #'
 #'
-#' @param pathTOMATSimOutputDirectory path to matsim output directory or http link to the file.
+#' @param pathTOMATSimOutputDirectory character string, path to matsim output directory or http link to the file.
 #'
 #' @return tibble of trips_output
 #'
@@ -70,10 +70,10 @@ readTripsTable <- function (pathToMATSimOutputDirectory = "."){
 #'
 #'
 #' @param tripsTable tible of trips_output (from readTripsTable())
-#' @param unite.columns changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
-#' @param united.name if columns were united, you can specify name for the resulting column in chart
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #'
-#' @return Pie Chart of transport mode distribution, values given in percents
+#' @return Pie Chart plot of transport mode distribution, values given in percents
 #'
 #' @export
 plotModalSplitPieChart<-function(tripsTable, unite.columns = character(0),united.name = "united"){
@@ -106,6 +106,23 @@ plotModalSplitPieChart<-function(tripsTable, unite.columns = character(0),united
          theme_void())
 }
 
+#' Plot main_mode as a bar Chart
+#'
+#' Takes Table trips_output (from readTripsTable()),
+#' to plot bar chart with with values that represent
+#' percentage of using transport modes from trips
+#'
+#' Function automatically detects transport_modes from table
+#' and plots pie chart with percentage of distribution.
+#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#'
+#'
+#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#'
+#' @return Bar Chart plot of transport mode distribution, values given in percents
+#'
 #' @export
 plotModalSplitBarChart<-function(tripsTable,unite.columns = character(0),united.name = "united"){
 
@@ -128,8 +145,26 @@ plotModalSplitBarChart<-function(tripsTable,unite.columns = character(0),united.
     coord_flip()
 }
 
+#' Plot alluvial/sankey diagram of transport mode changes
+#'
+#' Takes two trips_table (from readTripsTable), and collects
+#' changes between transport mode distribution of these tables
+#' to make alluvial diagram from this data
+#'
+#' Function calculates number of each transport mode used in
+#' first and second table, and draws plot that represent how
+#' distribution of transport mode has changed (f. e. what part of concrete trasport mode changed to another)
+#' Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united.name is "united")
+#' Using parameter show.onlyChanges
+#'
+#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param unite.columns vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name if columns were united, you can specify name for the resulting column in plot
+#'
+#' @return Alluvial diagram that represents changes in transport mode distribution of trip tables
+#'
 #' @export
-plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite.columns = character(0)){
+plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite.columns = character(0),united.name = "united"){
 
 
   if(show.onlyChanges == TRUE){
@@ -146,8 +181,8 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite
 
   # If the unite.commercials flag is set to TRUE, then join all commercials under 1 name commercial
   if(length(unite.columns) != 0){
-    joined$base_mode[grep(paste0(unite.columns,collapse = "|"),joined$base_mode)] = "united"
-    joined$policy_mode[grep(paste0(unite.columns,collapse = "|"),joined$policy_mode)] = "united"
+    joined$base_mode[grep(paste0(unite.columns,collapse = "|"),joined$base_mode)] =united.name
+    joined$policy_mode[grep(paste0(unite.columns,collapse = "|"),joined$policy_mode)] =united.name
   }
 
 
@@ -158,6 +193,29 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite
     scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))
 }
 
+#' Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)
+#'
+#' Takes trips_table (from readTripsTable) and transforms trips_table to sf object using start_x, end_x, start_y, end_y as a geometry features
+#' deletes from resulting data.frame start_x, end_x, start_y, end_y.
+#' And adds wkt column, if geometry.type = st_mulitpoint(), or geometry.type = st_linestring()
+#' Or adds start_wkt and end_wkt, if geometry.type = st_point()
+#' Added column/columns projected to given CRS (coordinate reference system),
+#' that can be taken from network file of MATSimOutputDirectory
+#'
+#' Function also sets attribute geometry.type to resulting table to character value of "POINT","MULTIPOINT","LINESTRING"
+#' to get which type of table was generated, if it is needed
+#'
+#' @param table tibble of trips_output (from readTripsTable())
+#'
+#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#'
+#' @param geometry.type function of sf transformation, geometry.type can be (by default is st_multipoint())
+#' !!!st_point()-resulting table contains 2 geometries start_wkt and end_wkt, representing start and end POINTs, and have type POINT!!!  or
+#' !!!st_multipoint()-resulting table contains 1 geometry wkt, representing start and end POINTS as MULTIPOINT!!! or
+#' !!!st_linestring() - resulting table contains 1 geometry wkt, representing line between start and end points as LINESTRING!!!
+#'
+#' @return sf object (data.frame with geometries depending to geometry.type)
+#'
 #' @export
 transformToSf <- function(table, crs, geometry.type = st_multipoint()){
 
@@ -210,6 +268,28 @@ transformToSf <- function(table, crs, geometry.type = st_multipoint()){
   }
 }
 
+#' Filtering of trips_table(from readTripsTable) depending on how they located in given shape
+#'
+#' Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file))
+#' transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
+#' and filters the trips from table depending on *.inshape flags:
+#' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
+#' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
+#' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
+#' if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
+#'
+#' @param table tibble of trips_output (from readTripsTable())
+#'
+#' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#'
+#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#'
+#' @param start.inshape bool, defines trips to conclude (see Description)
+#'
+#' @param end.inshape bool, defines trips to conclude (see Description)
+#'
+#' @return tibble, with filtered trips depending on shapeTable and special flags (see Description)
+#'
 #' @export
 filterByRegion <- function(tripsTable,shapeTable,crs,start.inshape = TRUE,end.inshape = TRUE){
 
@@ -255,9 +335,32 @@ filterByRegion <- function(tripsTable,shapeTable,crs,start.inshape = TRUE,end.in
 
 }
 
+#' Plots result of filtered trips on the map (from shape)
+#'
+#' Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file))
+#' transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
+#' and filters the trips from table depending on *.inshape flags:
+#' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
+#' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
+#' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
+#' if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
+#' result of filtering is plotted on map of shapeTable where green points are startpoints of trip and red points are endpoints of trip
+#'
+#' @param table tibble of trips_output (from readTripsTable())
+#'
+#' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#'
+#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#'
+#' @param start.inshape bool, defines trips to conclude (see Description)
+#'
+#' @param end.inshape bool, defines trips to conclude (see Description)
+#'
+#' @return plot with trips filtered depending on flags *.inshape on map from shapeTable
+#'
 #' @export
 plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.inshape = TRUE){
-  table = table[1:5000,]
+  #table = table[1:5000,] #To make plotting faster
   #table_sf = transformToSf(table,crs = crs)
   filtered = filterByRegion(table,shapeTable,crs = crs, start.inshape, end.inshape)
 
@@ -284,9 +387,21 @@ plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.insha
     scale_colour_manual(values=colors)
 }
 
+#' Plots every type of trips(inside, outside, origin and destinating) on map
+#'
+#'
+#'
+#' @param table tibble of trips_output (from readTripsTable())
+#'
+#' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#'
+#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#'
+#' @return plot that contains every trip with defined trip type
+#'
 #' @export
 plotMapWithTripsType <- function(table,shapeTable,crs){
-  table = table[1:200,]
+  #table = table[1:5000,] #To make plotting faster
   #table_sf = transformToSf(table,crs = crs)
   #Maybe union all this tables as 1 extended with additional column
   filtered_inside = filterByRegion(table,shapeTable,crs = crs, start.inshape = TRUE, end.inshape = TRUE)

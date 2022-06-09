@@ -7,7 +7,7 @@
 readTripsTable(pathToMATSimOutputDirectory = ".")
 }
 \arguments{
-\item{pathTOMATSimOutputDirectory}{path to matsim output directory or http link to the file.}
+\item{pathTOMATSimOutputDirectory}{character string, path to matsim output directory or http link to the file.}
 }
 \value{
 tibble of trips_output
