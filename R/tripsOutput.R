@@ -64,7 +64,7 @@ readTripsTable <- function (pathToMATSimOutputDirectory = "."){
 }
 
 #Plots the main_mode percentage in PieChart
-#ggrepel
+#' @export
 plotModalSplitPieChart<-function(tripsTable, unite.columns = character(0),united.name = "united"){
 
   #If some columns should be united
@@ -96,6 +96,7 @@ plotModalSplitPieChart<-function(tripsTable, unite.columns = character(0),united
 }
 
 #Plots the Bar Chart for the percentage of used main_mode
+#' @export
 plotModalSplitBarChart<-function(tripsTable,unite.columns = character(0),united.name = "united"){
 
   #If some columns should be united
@@ -117,8 +118,9 @@ plotModalSplitBarChart<-function(tripsTable,unite.columns = character(0),united.
     coord_flip()
 }
 
-#using ggaluval CRAN Package
-#deprecate warning message options(warn = -1)
+#using ggaluvial CRAN Package
+#supress warning message options(warn = -1)
+#' @export
 plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite.columns = character(0)){
 
 
@@ -156,7 +158,7 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite
 #column wkt - LINESTRING
 #geometry.type is also a attribute for the point representation. What variant is better
 
-#Find crs from network?
+#' @export
 transformToSf <- function(table, crs, geometry.type = st_multipoint()){
 
   if(class(geometry.type)[2] == "POINT"){
@@ -207,7 +209,7 @@ transformToSf <- function(table, crs, geometry.type = st_multipoint()){
     return(NA)
   }
 }
-
+#' @export
 filterByRegion <- function(tripsTable,shapeTable,crs,start.inshape = TRUE,end.inshape = TRUE){
 
   #shapeTable <- st_read(shapeFile)
@@ -252,6 +254,7 @@ filterByRegion <- function(tripsTable,shapeTable,crs,start.inshape = TRUE,end.in
 
 }
 #bug if filtered_set is empty, then handle the mistake
+#' @export
 plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.inshape = TRUE){
   table = table[1:5000,]
   #table_sf = transformToSf(table,crs = crs)
@@ -280,6 +283,7 @@ plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.insha
     scale_colour_manual(values=colors)
 }
 #bug if filtered_set is empty, then handle the mistake
+#' @export
 plotMapWithTripsType <- function(table,shapeTable,crs){
   table = table[1:200,]
   #table_sf = transformToSf(table,crs = crs)
@@ -313,7 +317,4 @@ plotMapWithTripsType <- function(table,shapeTable,crs){
     scale_colour_manual(values=colors)
 }
 #Mb Create analytical functions/plots of trips_type(Transit,indide,destination,origin) distribution(like for modal)
-test = function(smth = c("p,m,l")){
-  print(smth)
-  return(NA)
-}
+
