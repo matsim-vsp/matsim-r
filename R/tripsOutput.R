@@ -271,7 +271,8 @@ transformToSf <- function(table, crs, geometry.type = st_multipoint()){
 
 #' Filtering of trips_table(from readTripsTable) depending on how they located in given shape
 #'
-#' Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file))
+#' Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
+#' Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
 #' transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
 #' and filters the trips from table depending on *.inshape flags:
 #' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
