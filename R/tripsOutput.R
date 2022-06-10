@@ -33,6 +33,22 @@ readTripsTable <- function (pathToMATSimOutputDirectory = "."){
     return(trips_output_table)
 
   }
+  if(grepl("output_trips.csv.gz$",pathToMATSimOutputDirectory) == TRUE){
+    trips_output_table = read_csv2(pathToMATSimOutputDirectory,
+                                   col_types = cols(start_x = col_character(),
+                                                    start_y = col_character(),
+                                                    end_x = col_character(),
+                                                    end_y = col_character(),
+                                                    end_link = col_character(),
+                                                    start_link = col_character()))
+    # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
+    # doesn't reads coordinates correctly
+    trips_output_table <- trips_output_table %>% mutate(start_x = as.double(start_x),
+                                                        start_y = as.double(start_y),
+                                                        end_x = as.double(end_x),
+                                                        end_y = as.double(end_y))
+    return(trips_output_table)
+  }
 
   files = list.files(pathToMATSimOutputDirectory,full.names = TRUE)
   #Read from global/local directory
@@ -189,7 +205,7 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite
   ggplot(joined,aes(y = n,axis1 = base_mode,axis2 = policy_mode))+
     geom_alluvium(aes(fill = base_mode),width = 1/8,knot.pos = 0)+
     geom_stratum(width = 1/8,alpha = 0.25)+
-    geom_label(stat = "stratum", aes(label = after_stat(stratum)),size = 2)+
+    geom_text(stat = "stratum", aes(label = after_stat(stratum)),size = 3)+
     scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))#+
     #scale_fill_brewer()
 }
