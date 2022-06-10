@@ -187,10 +187,11 @@ plotModalShift<-function(tripsTable1,tripsTable2,show.onlyChanges = FALSE, unite
 
 
   ggplot(joined,aes(y = n,axis1 = base_mode,axis2 = policy_mode))+
-    geom_alluvium(aes(fill = base_mode),width = 1/15)+
-    geom_stratum(width = 1/10, fill = "black", color = "grey")+
-    geom_label(stat = "stratum", aes(label = after_stat(stratum)))+
-    scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))
+    geom_alluvium(aes(fill = base_mode),width = 1/8,knot.pos = 0)+
+    geom_stratum(width = 1/8,alpha = 0.25)+
+    geom_label(stat = "stratum", aes(label = after_stat(stratum)),size = 2)+
+    scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))#+
+    #scale_fill_brewer()
 }
 
 #' Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)
