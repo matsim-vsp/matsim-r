@@ -109,9 +109,11 @@ plotModalSplitPieChart<-function(tripsTable, unite.columns = character(0),united
            pos = if_else(is.na(pos), n/2, pos))
 
   #plotting
-  return(ggplot(tripsTableCount,aes(x="",y = n,fill = main_mode))+
+  return(ggplot(tripsTableCount,aes(x="",y = n,fill = fct_inorder(main_mode)))+
+           geom_col(width = 1,col = 1)+
          geom_bar(stat="identity",width = 1)+
          coord_polar("y",start = 0)+
+           labs(fill = "main_mode")+
          #geom_text(aes(label = round(n,digits = 1)),
                     #position=position_stack(vjust = 0.5),
                     #show.legend = FALSE,size = 4)+
@@ -381,7 +383,11 @@ plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.insha
   #table = table[1:5000,] #To make plotting faster
   #table_sf = transformToSf(table,crs = crs)
   filtered = filterByRegion(table,shapeTable,crs = crs, start.inshape, end.inshape)
-
+  if(nrow(filtered) == 0){
+    ggplot()+
+      geom_sf(data = shapeTable)
+    warning("there is no trip filtered for this map")
+  }
   filtered_sf = transformToSf(filtered,crs = crs,geometry.type = st_point())
   filtered_sf_start = filtered_sf
   st_geometry(filtered_sf_start) = "start_wkt"
@@ -439,9 +445,10 @@ plotTripTypeSplitPieChart <- function(table,shapeTable,crs){
            pos = n/2 + lead(csum, 1),
            pos = if_else(is.na(pos), n/2, pos))
 
-  return(ggplot(result,aes(x="",y = n,fill = type))+
+  return(ggplot(result,aes(x="",y = n,fill = fct_inorder(type)))+
+           geom_col(width = 1,col = 1)+
            geom_bar(stat="identity",width = 1)+
-           coord_polar("y",start = 0)+
+           coord_polar("y")+
            #geom_text(aes(label = round(n,digits = 1)),
            #position=position_stack(vjust = 0.5),
            #show.legend = FALSE,size = 4)+
