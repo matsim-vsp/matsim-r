@@ -405,6 +405,53 @@ plotMapWithTrips <- function(table,shapeTable,crs,start.inshape = TRUE,end.insha
     scale_colour_manual(values=colors)
 }
 
+#' Plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
+#'
+#'
+#'
+#' @param table tibble of trips_output (from readTripsTable())
+#'
+#' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#'
+#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#'
+#' @return plot with percentage of each type of trips
+#'
+#' @export
+plotTripTypeSplitPieChart <- function(table,shapeTable,crs){
+  table = table[1:5000,] #To make plotting faster
+  #table_sf = transformToSf(table,crs = crs)
+  #Maybe union all this tables as 1 extended with additional column
+  filtered_inside = filterByRegion(table,shapeTable,crs = crs, start.inshape = TRUE, end.inshape = TRUE)
+  filtered_origin = filterByRegion(table,shapeTable,crs = crs, start.inshape = TRUE, end.inshape = FALSE)
+  filtered_destination = filterByRegion(table,shapeTable,crs = crs, start.inshape = FALSE, end.inshape = TRUE)
+  filtered_transit = filterByRegion(table,shapeTable,crs = crs, start.inshape = FALSE, end.inshape = FALSE)
+
+  result = tibble(n = c(nrow(filtered_inside),nrow(filtered_transit),nrow(filtered_origin),nrow(filtered_destination)),
+                  type = c("inside the shape","outside the shape","starting in shape","ending in shape"))
+
+  #result gives percentage representation out
+  result <- result  %>% mutate(n = n/sum(n)*100)
+
+  #getthe positions
+  positions <- result %>%
+    mutate(csum = rev(cumsum(rev(n))),
+           pos = n/2 + lead(csum, 1),
+           pos = if_else(is.na(pos), n/2, pos))
+
+  return(ggplot(result,aes(x="",y = n,fill = type))+
+           geom_bar(stat="identity",width = 1)+
+           coord_polar("y",start = 0)+
+           #geom_text(aes(label = round(n,digits = 1)),
+           #position=position_stack(vjust = 0.5),
+           #show.legend = FALSE,size = 4)+
+           geom_label_repel(data = positions,
+                            aes(y = pos, label = paste0(round(n,digits = 1), "%")),
+                            size = 4.5, nudge_x = 1, show.legend = FALSE) +
+           ggtitle("Distribution"))
+
+}
+
 #' Plots every type of trips(inside, outside, origin and destinating) on map
 #'
 #'
