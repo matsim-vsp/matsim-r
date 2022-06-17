@@ -23,9 +23,9 @@
 #' @import ggplot2
 
 
-#NETWORK = "kelheim.output_network.xml"
-#NETWORK = "network.xml"
-NETWORK = "berlin.network.xml.gz"
+# NETWORK = "kelheim.output_network.xml"
+# NETWORK = "network.xml"
+NETWORK <- "berlin.network.xml.gz"
 
 # prevent warning about global use of "name". Thanks dplyr
 utils::globalVariables(c("name"))
@@ -62,7 +62,7 @@ loadNetwork <- function(filename) {
   attributes <- node_elements %>% xml_find_all("./attributes/attribute")
   # skip if there are no node attributes
   if (length(attributes)) {
-    attrIds <- tibble(id=unlist(map(attributes, function(row) xml_attr(xml_parent(xml_parent(row)), "id"))))
+    attrIds <- tibble(id = unlist(map(attributes, function(row) xml_attr(xml_parent(xml_parent(row)), "id"))))
 
     nodeAttributes <- tibble(
       id = attrIds$id,
@@ -72,16 +72,18 @@ loadNetwork <- function(filename) {
     )
 
     # which columns should be converted to numeric?
-    types <- nodeAttributes %>% select(name,class) %>% distinct()
-    convert = filter(types,class=="java.lang.Double")$name
+    types <- nodeAttributes %>%
+      select(name, class) %>%
+      distinct()
+    convert <- filter(types, class == "java.lang.Double")$name
 
     # convert to a format we can join to the links
     nodeAttributes <- (nodeAttributes
-      %>% select(-class)
-      %>% pivot_wider(names_from="name", values_from="value")
+    %>% select(-class)
+      %>% pivot_wider(names_from = "name", values_from = "value")
       %>% mutate_at(vars(one_of(convert)), as.double)
     )
-    nodes <- nodes %>% left_join(nodeAttributes, by="id")
+    nodes <- nodes %>% left_join(nodeAttributes, by = "id")
   }
 
   cat("Links..")
@@ -100,8 +102,8 @@ loadNetwork <- function(filename) {
 
   # merge node coordinates
   links <- (links
-            %>% left_join(nodes, by=c("from" = "id"))
-            %>% left_join(nodes, by=c("to" = "id"), suffix=c('.from', '.to'))
+  %>% left_join(nodes, by = c("from" = "id"))
+    %>% left_join(nodes, by = c("to" = "id"), suffix = c(".from", ".to"))
   )
 
   # attributes don't have IDs on them! JFC, MATSim!
@@ -110,7 +112,7 @@ loadNetwork <- function(filename) {
   attributes <- link_elements %>% xml_find_all("./attributes/attribute")
   # skip if there are no link-attributes
   if (length(attributes)) {
-    attrIds <- tibble(id=unlist(map(attributes, function(row) xml_attr(xml_parent(xml_parent(row)), "id"))))
+    attrIds <- tibble(id = unlist(map(attributes, function(row) xml_attr(xml_parent(xml_parent(row)), "id"))))
 
     linkAttributes <- tibble(
       id = attrIds$id,
@@ -120,21 +122,23 @@ loadNetwork <- function(filename) {
     )
 
     # which columns should be converted to numeric?
-    types <- linkAttributes %>% select(name,class) %>% distinct()
-    convert = filter(types,class=="java.lang.Double")$name
+    types <- linkAttributes %>%
+      select(name, class) %>%
+      distinct()
+    convert <- filter(types, class == "java.lang.Double")$name
 
     # convert to a format we can join to the links
     linkAttributes <- (linkAttributes
-      %>% select(-class)
-      %>% pivot_wider(names_from="name", values_from="value")
+    %>% select(-class)
+      %>% pivot_wider(names_from = "name", values_from = "value")
       %>% mutate_at(vars(one_of(convert)), as.double)
     )
 
-    links <- links %>% left_join(linkAttributes, by="id", suffix=c(".link", ".attr"))
+    links <- links %>% left_join(linkAttributes, by = "id", suffix = c(".link", ".attr"))
   }
 
   # Top-level network attributes
-  networkAttributes = NULL
+  networkAttributes <- NULL
 
   allNetworkAttributes <- network %>% xml_find_all("./attributes/attribute")
   if (length(allNetworkAttributes)) {
@@ -144,14 +148,16 @@ loadNetwork <- function(filename) {
       value = allNetworkAttributes %>% xml_text(),
     )
     # which columns should be converted to numeric?
-    types <- networkAttributes %>% select(name,class) %>% distinct()
-    convert = filter(types,class=="java.lang.Double")$name
+    types <- networkAttributes %>%
+      select(name, class) %>%
+      distinct()
+    convert <- filter(types, class == "java.lang.Double")$name
 
     # convert to a format we can join to the links
     networkAttributes <- (networkAttributes
-                       %>% select(-class)
-                       %>% pivot_wider(names_from="name", values_from="value")
-                       %>% mutate_at(vars(one_of(convert)), as.double)
+    %>% select(-class)
+      %>% pivot_wider(names_from = "name", values_from = "value")
+      %>% mutate_at(vars(one_of(convert)), as.double)
     )
   }
 
@@ -159,4 +165,3 @@ loadNetwork <- function(filename) {
 
   list("nodes" = nodes, "links" = links, "attributes" = networkAttributes)
 }
-
