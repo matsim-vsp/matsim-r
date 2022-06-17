@@ -16,7 +16,6 @@
 #' @import purrr
 #' @import xml2
 #' @import tidyr
-#' @import tidyverse
 #' @import sf
 #' @import ggalluvial
 #' @import ggrepel
