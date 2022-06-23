@@ -5,3 +5,5 @@
 .DS_Store
 __MACOSX
 node_modules/
+matsim_r_analysis/
+matsim_r_output/

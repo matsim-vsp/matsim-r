@@ -1,4 +1,4 @@
-
+matsimDumpOutputDirectory = "./matsim_r_output"
 #' Load MATSIM output_trips table into Memory
 #'
 #' Loads a MATSim CSV output_trips from file or archive,
@@ -106,7 +106,7 @@ readTripsTable <- function(pathToMATSimOutputDirectory = ".") {
 #' @return Pie Chart plot of transport mode distribution, values given in percents
 #'
 #' @export
-plotModalSplitPieChart <- function(tripsTable, unite.columns = character(0), united.name = "united") {
+plotModalSplitPieChart <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory) {
 
   # If some columns should be united
   if (length(unite.columns) != 0) {
@@ -127,7 +127,7 @@ plotModalSplitPieChart <- function(tripsTable, unite.columns = character(0), uni
     )
 
   # plotting
-  return(ggplot(tripsTableCount, aes(x = "", y = n, fill = fct_inorder(main_mode))) +
+  plt = ggplot(tripsTableCount, aes(x = "", y = n, fill = fct_inorder(main_mode))) +
     geom_col(width = 1, col = 1) +
     geom_bar(stat = "identity", width = 1) +
     coord_polar("y", start = 0) +
@@ -141,7 +141,14 @@ plotModalSplitPieChart <- function(tripsTable, unite.columns = character(0), uni
       size = 4.5, nudge_x = 1, show.legend = FALSE
     ) +
     ggtitle("Distribution of transport type") +
-    theme_void())
+    theme_void()
+  plt;
+  if(file.exists(matsimDumpOutputDirectory)){
+    ggsave(paste0(matsimDumpOutputDirectory,"/modalSplitPieChart.png"),plt)
+  }else{
+    dir.create(matsimDumpOutputDirectory)
+    ggsave(paste0(matsimDumpOutputDirectory,"/modalSplitPieChart.png"),plt)
+  }
 }
 
 #' Plot main_mode as a bar Chart
@@ -174,7 +181,7 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
     mutate(n = n / sum(n) * 100) %>%
     arrange(desc(n))
   # plotting
-  ggplot(tripsTableCount, aes(x = main_mode, y = n, fill = main_mode)) +
+  return(ggplot(tripsTableCount, aes(x = main_mode, y = n, fill = main_mode)) +
     geom_bar(stat = "identity") +
     geom_text(aes(label = round(n, digits = 1)),
       position = position_stack(vjust = 0.5),
@@ -184,7 +191,7 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
     labs(x = "main_mode", y = "Percentage") +
     ggtitle("Distribution of transport type (in %)") +
     theme(legend.position = "none") +
-    coord_flip()
+    coord_flip())
 }
 
 #' Plot alluvial/sankey diagram of transport mode changes
@@ -231,11 +238,11 @@ plotModalShift <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, u
   }
 
 
-  ggplot(joined, aes(y = n, axis1 = base_mode, axis2 = policy_mode)) +
+  return(ggplot(joined, aes(y = n, axis1 = base_mode, axis2 = policy_mode)) +
     geom_alluvium(aes(fill = base_mode), width = 1 / 8, knot.pos = 0) +
     geom_stratum(width = 1 / 8, alpha = 0.25) +
     geom_text(stat = "stratum", aes(label = after_stat(stratum)), size = 3) +
-    scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05)) #+
+    scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))) #+
   # scale_fill_brewer()
 }
 
@@ -421,13 +428,13 @@ plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.i
   colors <- c("Start" = "green", "End" = "red")
   shapes <- c("Start" = 5, "End" = 3)
 
-  ggplot() +
+  return(ggplot() +
     geom_sf(data = shapeTable) +
     # geom_sf(data = )
     geom_sf(data = filtered_sf_start, aes(color = "Start"), size = 1, shape = 5) +
     geom_sf(data = filtered_sf_end, aes(color = "End"), size = 1, shape = 3) +
     labs(color = "Type") +
-    scale_colour_manual(values = colors)
+    scale_colour_manual(values = colors))
 }
 
 #' Plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
@@ -518,7 +525,7 @@ plotMapWithTripsType <- function(table, shapeTable, crs) {
   colors <- c("inside" = "green", "origin" = "red", "destination" = "orange", "transit" = "blue")
   shapes <- c("Start" = 5, "End" = 3)
 
-  ggplot() +
+  return(ggplot() +
     geom_sf(data = shapeTable) +
     # geom_sf(data = )
     geom_sf(data = filtered_sf_inside, aes(color = "inside"), size = 3, alpha = 0.5) +
@@ -526,5 +533,5 @@ plotMapWithTripsType <- function(table, shapeTable, crs) {
     geom_sf(data = filtered_sf_destination, aes(color = "destination"), size = 3, alpha = 0.3) +
     geom_sf(data = filtered_sf_transit, aes(color = "transit"), size = 2, alpha = 0.1) +
     labs(color = "Type") +
-    scale_colour_manual(values = colors)
+    scale_colour_manual(values = colors))
 }
