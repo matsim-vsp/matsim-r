@@ -21,7 +21,7 @@
 #' @import ggrepel
 #' @import tidyr
 #' @import ggplot2
-
+#' @import yaml
 
 # NETWORK = "kelheim.output_network.xml"
 # NETWORK = "network.xml"
