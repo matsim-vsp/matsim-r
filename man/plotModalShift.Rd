@@ -9,7 +9,8 @@ plotModalShift(
   tripsTable2,
   show.onlyChanges = FALSE,
   unite.columns = character(0),
-  united.name = "united"
+  united.name = "united",
+  dump.output.to = matsimDumpOutputDirectory
 )
 }
 \arguments{
