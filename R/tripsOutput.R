@@ -517,14 +517,15 @@ plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.i
 
   colors <- c("Start" = "green", "End" = "red")
   shapes <- c("Start" = 5, "End" = 3)
-
-  return(ggplot() +
+  plt = ggplot() +
     geom_sf(data = shapeTable) +
     # geom_sf(data = )
     geom_sf(data = filtered_sf_start, aes(color = "Start"), size = 1, shape = 5) +
     geom_sf(data = filtered_sf_end, aes(color = "End"), size = 1, shape = 3) +
     labs(color = "Type") +
-    scale_colour_manual(values = colors))
+    scale_colour_manual(values = colors)
+
+  return(plotly::ggplotly(plt))
 }
 
 #' Plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
@@ -614,8 +615,7 @@ plotMapWithTripsType <- function(table, shapeTable, crs) {
 
   colors <- c("inside" = "green", "origin" = "red", "destination" = "orange", "transit" = "blue")
   shapes <- c("Start" = 5, "End" = 3)
-
-  return(ggplot() +
+  plt = ggplot() +
     geom_sf(data = shapeTable) +
     # geom_sf(data = )
     geom_sf(data = filtered_sf_inside, aes(color = "inside"), size = 3, alpha = 0.5) +
@@ -623,7 +623,9 @@ plotMapWithTripsType <- function(table, shapeTable, crs) {
     geom_sf(data = filtered_sf_destination, aes(color = "destination"), size = 3, alpha = 0.3) +
     geom_sf(data = filtered_sf_transit, aes(color = "transit"), size = 2, alpha = 0.1) +
     labs(color = "Type") +
-    scale_colour_manual(values = colors))
+    scale_colour_manual(values = colors)
+  plotly::ggplotly(plt)
+  return(plotly::ggplotly(plt))
 }
 
 #' Creates dashboard for the given table or folder with data

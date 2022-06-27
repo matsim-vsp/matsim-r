@@ -22,6 +22,7 @@
 #' @import tidyr
 #' @import ggplot2
 #' @import yaml
+#' @import plotly
 
 # NETWORK = "kelheim.output_network.xml"
 # NETWORK = "network.xml"
