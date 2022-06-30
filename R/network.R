@@ -23,6 +23,7 @@
 #' @import ggplot2
 #' @import yaml
 #' @import plotly
+#' @import leaflet
 
 # NETWORK = "kelheim.output_network.xml"
 # NETWORK = "network.xml"

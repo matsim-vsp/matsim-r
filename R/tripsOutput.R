@@ -505,27 +505,60 @@ plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.i
     warning("there is no trip filtered for this map")
   }
   filtered_sf <- transformToSf(filtered, crs = crs, geometry.type = st_point())
-  filtered_sf_start <- filtered_sf
-  st_geometry(filtered_sf_start) <- "start_wkt"
-  filtered_sf_end <- filtered_sf
-  st_geometry(filtered_sf_end) <- "end_wkt"
+  st_geometry(filtered_sf) <- "start_wkt"
+  filtered_sf_start <- filtered_sf %>% select(-end_wkt)
+  st_geometry(filtered_sf) <- "end_wkt"
+  filtered_sf_end <- filtered_sf %>% select(-start_wkt)
   # shape = st_read(shapePath)
   if (st_crs(shapeTable) == NA) {
     ct_crs(shapeTable) <- crs
   }
   shapeTable <- st_transform(shapeTable, crs = crs)
+  filtered_sf_start = st_transform(filtered_sf_start,"+proj=longlat +datum=WGS84 +no_defs")
+  filtered_sf_end = st_transform(filtered_sf_end,"+proj=longlat +datum=WGS84 +no_defs")
 
-  colors <- c("Start" = "green", "End" = "red")
-  shapes <- c("Start" = 5, "End" = 3)
-  plt = ggplot() +
-    geom_sf(data = shapeTable) +
-    # geom_sf(data = )
-    geom_sf(data = filtered_sf_start, aes(color = "Start"), size = 1, shape = 5) +
-    geom_sf(data = filtered_sf_end, aes(color = "End"), size = 1, shape = 3) +
-    labs(color = "Type") +
-    scale_colour_manual(values = colors)
+  #cols <- c("Start" = "blue", "End" = "red")
+  #shapes <- c("Start" = 5, "End" = 3)
 
-  return(plotly::ggplotly(plt))
+  #ggplot2 isn't interactive!
+  # plt = ggplot() +
+  #   geom_sf(data = shapeTable) +
+  #   # geom_sf(data = )
+  #   geom_sf(data = filtered_sf_start, aes(color = "Start"), size = 1, shape = 5) +
+  #   geom_sf(data = filtered_sf_end, aes(color = "End"), size = 1, shape = 3) +
+  #   labs(color = "Type") +
+  #   scale_colour_manual(values = colors)
+
+  #If we need to adjust design
+  #css_fix <- "div.info.legend.leaflet-control br {clear: both;}"
+  # Convert CSS to HTML
+  #html_fix <- htmltools::tags$style(type = "text/css", css_fix)
+
+  plt = leaflet() %>% addTiles() %>%
+    #addPolygons(data = shapeTable)%>%
+    addCircleMarkers(filtered_sf_start,lng = st_coordinates(filtered_sf_start$start_wkt)[,1]
+                     ,lat = st_coordinates(filtered_sf_start$start_wkt)[,2],radius = 3,color ="blue",
+                     label = paste(
+                       "Person_id:",
+                       filtered_sf_start$person, "<br>",
+                       "main_mode",filtered_sf_start$main_mode,"<br>"
+                     )%>% lapply(htmltools::HTML)) %>%
+    addCircleMarkers(filtered_sf_end,lng = st_coordinates(filtered_sf_end$end_wkt)[,1],
+                     lat = st_coordinates(filtered_sf_end$end_wkt)[,2],radius = 0.15,color ="red",
+                     label = paste(
+                       "Person_id:",
+                       filtered_sf_start$person, "<br>",
+                       "main_mode",filtered_sf_end$main_mode,"<br>"
+                     )%>% lapply(htmltools::HTML))%>%
+    addLegend(
+      colors = c("blue","red"),
+      labels = c("Start of trip","End of trip"),
+      position = "bottomleft",
+      title = "Type of the point",
+      opacity = 0.9
+    ) %>%
+    addMiniMap()
+  return(plt)
 }
 
 #' Plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
