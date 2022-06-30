@@ -19,14 +19,14 @@ readTripsTable <- function(pathToMATSimOutputDirectory = ".") {
   # Read from URL
   if (grepl("http", pathToMATSimOutputDirectory) == TRUE) {
     trips_output_table <- read_delim(pathToMATSimOutputDirectory,
-      delim = ";",
-      col_types = cols(
-        start_x = col_character(),
-        start_y = col_character(), end_x = col_character(),
-        end_y = col_character(),
-        end_link = col_character(),
-        start_link = col_character()
-      )
+                                     delim = ";",
+                                     col_types = cols(
+                                       start_x = col_character(),
+                                       start_y = col_character(), end_x = col_character(),
+                                       end_y = col_character(),
+                                       end_link = col_character(),
+                                       start_link = col_character()
+                                     )
     )
 
     trips_output_table <- trips_output_table %>% mutate(
@@ -40,14 +40,14 @@ readTripsTable <- function(pathToMATSimOutputDirectory = ".") {
   }
   if (grepl("output_trips.csv.gz$", pathToMATSimOutputDirectory) == TRUE) {
     trips_output_table <- read_csv2(pathToMATSimOutputDirectory,
-      col_types = cols(
-        start_x = col_character(),
-        start_y = col_character(),
-        end_x = col_character(),
-        end_y = col_character(),
-        end_link = col_character(),
-        start_link = col_character()
-      )
+                                    col_types = cols(
+                                      start_x = col_character(),
+                                      start_y = col_character(),
+                                      end_x = col_character(),
+                                      end_y = col_character(),
+                                      end_link = col_character(),
+                                      start_link = col_character()
+                                    )
     )
     # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
     # doesn't reads coordinates correctly
@@ -65,14 +65,14 @@ readTripsTable <- function(pathToMATSimOutputDirectory = ".") {
   # output_trips is contained as output_trips.csv.gz
   if (length(grep("output_trips.csv.gz$", files)) != 0) {
     trips_output_table <- read_csv2(files[grep("output_trips.csv.gz$", files)],
-      col_types = cols(
-        start_x = col_character(),
-        start_y = col_character(),
-        end_x = col_character(),
-        end_y = col_character(),
-        end_link = col_character(),
-        start_link = col_character()
-      )
+                                    col_types = cols(
+                                      start_x = col_character(),
+                                      start_y = col_character(),
+                                      end_x = col_character(),
+                                      end_y = col_character(),
+                                      end_link = col_character(),
+                                      start_link = col_character()
+                                    )
     )
     # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
     # doesn't reads coordinates correctly
@@ -210,16 +210,16 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
     arrange(desc(n))
   # plotting
   plt = (ggplot(tripsTableCount, aes(x = main_mode, y = n, fill = main_mode)) +
-    geom_bar(stat = "identity") +
-    geom_text(aes(label = round(n, digits = 1)),
-      position = position_stack(vjust = 0.5),
-      size = 2
-    ) +
-    theme_minimal() +
-    labs(x = "main_mode", y = "Percentage") +
-    ggtitle("Distribution of transport type (in %)") +
-    theme(legend.position = "none") +
-    coord_flip())
+           geom_bar(stat = "identity") +
+           geom_text(aes(label = round(n, digits = 1)),
+                     position = position_stack(vjust = 0.5),
+                     size = 2
+           ) +
+           theme_minimal() +
+           labs(x = "main_mode", y = "Percentage") +
+           ggtitle("Distribution of transport type (in %)") +
+           theme(legend.position = "none") +
+           coord_flip())
   if(file.exists(matsimDumpOutputDirectory)){
     ggsave(paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.png"),plt)
   }else{
@@ -236,7 +236,7 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
     dir.create(matsimDumpOutputDirectory)
     write_file(paste(tripsTableCount$main_mode,collapse = "\t"),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = FALSE)
     write_file(paste("\r\n",paste(tripsTableCount$n,collapse = "\t")),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = TRUE)
-   # write.csv2(tripsTableCount,paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"))
+    # write.csv2(tripsTableCount,paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"))
   }
 
   yaml_list = list(header = list(tab = "Summary",title = "Dashboard",description="Plots from output directory"),
@@ -288,15 +288,15 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
 plotModalShift <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, unite.columns = character(0), united.name = "united",dump.output.to=matsimDumpOutputDirectory) {
   if (show.onlyChanges == TRUE) {
     joined <- as_tibble(inner_join(tripsTable1, tripsTable2 %>%
-      select(trip_id, main_mode), by = "trip_id") %>%
-      rename(base_mode = main_mode.x, policy_mode = main_mode.y))
+                                     select(trip_id, main_mode), by = "trip_id") %>%
+                          rename(base_mode = main_mode.x, policy_mode = main_mode.y))
     joined <- joined %>%
       filter(base_mode != policy_mode) %>%
       group_by(base_mode, policy_mode) %>%
       count()
   } else {
     joined <- as_tibble(inner_join(tripsTable1, tripsTable2 %>%
-      select(trip_id, main_mode), by = "trip_id") %>% rename(base_mode = main_mode.x, policy_mode = main_mode.y))
+                                     select(trip_id, main_mode), by = "trip_id") %>% rename(base_mode = main_mode.x, policy_mode = main_mode.y))
     joined <- joined %>%
       group_by(base_mode, policy_mode) %>%
       count()
@@ -329,10 +329,10 @@ plotModalShift <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, u
 
 
   return(ggplot(joined, aes(y = n, axis1 = base_mode, axis2 = policy_mode)) +
-    geom_alluvium(aes(fill = base_mode), width = 1 / 8, knot.pos = 0) +
-    geom_stratum(width = 1 / 8, alpha = 0.25) +
-    geom_text(stat = "stratum", aes(label = after_stat(stratum)), size = 3) +
-    scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))) #+
+           geom_alluvium(aes(fill = base_mode), width = 1 / 8, knot.pos = 0) +
+           geom_stratum(width = 1 / 8, alpha = 0.25) +
+           geom_text(stat = "stratum", aes(label = after_stat(stratum)), size = 3) +
+           scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))) #+
   # scale_fill_brewer()
 }
 
@@ -492,10 +492,13 @@ filterByRegion <- function(tripsTable, shapeTable, crs, start.inshape = TRUE, en
 #'
 #' @param end.inshape bool, defines trips to conclude (see Description)
 #'
+#' @param optimized bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot
+#'
+#'
 #' @return plot with trips filtered depending on flags *.inshape on map from shapeTable
 #'
 #' @export
-plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.inshape = TRUE) {
+plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.inshape = TRUE,optimized = FALSE) {
   # table = table[1:5000,] #To make plotting faster
   # table_sf = transformToSf(table,crs = crs)
   filtered <- filterByRegion(table, shapeTable, crs = crs, start.inshape, end.inshape)
@@ -513,42 +516,89 @@ plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.i
   if (st_crs(shapeTable) == NA) {
     ct_crs(shapeTable) <- crs
   }
-  shapeTable <- st_transform(shapeTable, crs = crs)
+  shapeTable <- st_transform(shapeTable, crs = "+proj=longlat +datum=WGS84 +no_defs")
   filtered_sf_start = st_transform(filtered_sf_start,"+proj=longlat +datum=WGS84 +no_defs")
   filtered_sf_end = st_transform(filtered_sf_end,"+proj=longlat +datum=WGS84 +no_defs")
 
-  #cols <- c("Start" = "blue", "End" = "red")
-  #shapes <- c("Start" = 5, "End" = 3)
+  if(optimized){
+    colors <- c("Start" = "blue", "End" = "red")
+    shapes <- c("Start" = 5, "End" = 3)
+    #ggplot2 isn't interactive!
+    plt = ggplot() +
+      geom_sf(data = shapeTable) +
+      # geom_sf(data = )
+      geom_sf(data = filtered_sf_start, aes(color = "Start"), size = 1, shape = 5) +
+      geom_sf(data = filtered_sf_end, aes(color = "End"), size = 1, shape = 3) +
+      labs(color = "Type") +
+      scale_colour_manual(values = colors)
+    plt
+    return(plt)
+  }
 
-  #ggplot2 isn't interactive!
-  # plt = ggplot() +
-  #   geom_sf(data = shapeTable) +
-  #   # geom_sf(data = )
-  #   geom_sf(data = filtered_sf_start, aes(color = "Start"), size = 1, shape = 5) +
-  #   geom_sf(data = filtered_sf_end, aes(color = "End"), size = 1, shape = 3) +
-  #   labs(color = "Type") +
-  #   scale_colour_manual(values = colors)
 
-  #If we need to adjust design
+
+
+
+  #If we need to change design
   #css_fix <- "div.info.legend.leaflet-control br {clear: both;}"
   # Convert CSS to HTML
   #html_fix <- htmltools::tags$style(type = "text/css", css_fix)
 
+
   plt = leaflet() %>% addTiles() %>%
-    #addPolygons(data = shapeTable)%>%
+    addProviderTiles(
+      "OpenStreetMap",
+      # give the layer a name
+      group = "OpenStreetMap"
+    ) %>%
+    addProviderTiles(
+      "Stamen.Toner",
+      group = "Stamen.Toner"
+    ) %>%
+    addProviderTiles(
+      "Stamen.Terrain",
+      group = "Stamen.Terrain"
+    ) %>%
+    addProviderTiles(
+      "Esri.WorldStreetMap",
+      group = "Esri.WorldStreetMap"
+    ) %>%
+    addProviderTiles(
+      "Wikimedia",
+      group = "Wikimedia"
+    ) %>%
+    addProviderTiles(
+      "CartoDB.Positron",
+      group = "CartoDB.Positron"
+    ) %>%
+    addProviderTiles(
+      "Esri.WorldImagery",
+      group = "Esri.WorldImagery"
+    ) %>%
+    addPolygons(data = shapeTable,opacity = 0.1,color = "green")%>%
     addCircleMarkers(filtered_sf_start,lng = st_coordinates(filtered_sf_start$start_wkt)[,1]
                      ,lat = st_coordinates(filtered_sf_start$start_wkt)[,2],radius = 3,color ="blue",
                      label = paste(
                        "Person_id:",
                        filtered_sf_start$person, "<br>",
-                       "main_mode",filtered_sf_start$main_mode,"<br>"
+                       "Trip_id:",
+                       filtered_sf_start$trip_id, "<br>",
+                       "main_mode:",filtered_sf_start$main_mode,"<br>",
+                       "type:","start","<br>",
+                       "Start activity:",
+                       filtered_sf_start$start_activity_type, "<br>"
                      )%>% lapply(htmltools::HTML)) %>%
     addCircleMarkers(filtered_sf_end,lng = st_coordinates(filtered_sf_end$end_wkt)[,1],
                      lat = st_coordinates(filtered_sf_end$end_wkt)[,2],radius = 0.15,color ="red",
                      label = paste(
                        "Person_id:",
-                       filtered_sf_start$person, "<br>",
-                       "main_mode",filtered_sf_end$main_mode,"<br>"
+                       filtered_sf_end$person, "<br>",
+                       "Trip_id:",
+                       filtered_sf_end$trip_id, "<br>",
+                       "main_mode:",filtered_sf_end$main_mode,"<br>",
+                       "type:","end","<br>",
+                       "End activity:",
+                       filtered_sf_start$end_activity_type, "<br>"
                      )%>% lapply(htmltools::HTML))%>%
     addLegend(
       colors = c("blue","red"),
@@ -557,7 +607,17 @@ plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.i
       title = "Type of the point",
       opacity = 0.9
     ) %>%
-    addMiniMap()
+    addMiniMap()%>%
+    addLayersControl(
+      baseGroups = c(
+        "OpenStreetMap", "Stamen.Toner",
+        "Stamen.Terrain", "Esri.WorldStreetMap",
+        "Wikimedia", "CartoDB.Positron", "Esri.WorldImagery"
+      ),
+      # position it on the topleft
+      position = "topleft"
+    )
+
   return(plt)
 }
 
@@ -571,11 +631,13 @@ plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.i
 #'
 #' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
 #'
+#'
+#'
 #' @return plot with percentage of each type of trips
 #'
 #' @export
 plotTripTypeSplitPieChart <- function(table, shapeTable, crs) {
-  table <- table[1:5000, ] # To make plotting faster
+  r
   # table_sf = transformToSf(table,crs = crs)
   # Maybe union all this tables as 1 extended with additional column
   filtered_inside <- filterByRegion(table, shapeTable, crs = crs, start.inshape = TRUE, end.inshape = TRUE)
@@ -600,18 +662,18 @@ plotTripTypeSplitPieChart <- function(table, shapeTable, crs) {
     )
 
   return(ggplot(result, aes(x = "", y = n, fill = fct_inorder(type))) +
-    geom_col(width = 1, col = 1) +
-    geom_bar(stat = "identity", width = 1) +
-    coord_polar("y") +
-    # geom_text(aes(label = round(n,digits = 1)),
-    # position=position_stack(vjust = 0.5),
-    # show.legend = FALSE,size = 4)+
-    geom_label_repel(
-      data = positions,
-      aes(y = pos, label = paste0(round(n, digits = 1), "%")),
-      size = 4.5, nudge_x = 1, show.legend = FALSE
-    ) +
-    ggtitle("Distribution"))
+           geom_col(width = 1, col = 1) +
+           geom_bar(stat = "identity", width = 1) +
+           coord_polar("y") +
+           # geom_text(aes(label = round(n,digits = 1)),
+           # position=position_stack(vjust = 0.5),
+           # show.legend = FALSE,size = 4)+
+           geom_label_repel(
+             data = positions,
+             aes(y = pos, label = paste0(round(n, digits = 1), "%")),
+             size = 4.5, nudge_x = 1, show.legend = FALSE
+           ) +
+           ggtitle("Distribution"))
 }
 
 #' Plots every type of trips(inside, outside, origin and destinating) on map
@@ -627,7 +689,7 @@ plotTripTypeSplitPieChart <- function(table, shapeTable, crs) {
 #' @return plot that contains every trip with defined trip type
 #'
 #' @export
-plotMapWithTripsType <- function(table, shapeTable, crs) {
+plotMapWithTripsType <- function(table, shapeTable, crs,optimized = FALSE) {
   # table = table[1:5000,] #To make plotting faster
   # table_sf = transformToSf(table,crs = crs)
   # Maybe union all this tables as 1 extended with additional column
@@ -644,21 +706,111 @@ plotMapWithTripsType <- function(table, shapeTable, crs) {
   if (st_crs(shapeTable) == NA) {
     ct_crs(shapeTable) <- crs
   }
-  shapeTable <- st_transform(shapeTable, crs = crs)
+  shapeTable <- st_transform(shapeTable, crs = "+proj=longlat +datum=WGS84 +no_defs")
+  filtered_sf_inside = st_transform(filtered_sf_start,"+proj=longlat +datum=WGS84 +no_defs")
+  filtered_sf_origin = st_transform(filtered_sf_end,"+proj=longlat +datum=WGS84 +no_defs")
+  filtered_sf_destination = st_transform(filtered_sf_end,"+proj=longlat +datum=WGS84 +no_defs")
+  filtered_sf_transit = st_transform(filtered_sf_end,"+proj=longlat +datum=WGS84 +no_defs")
 
-  colors <- c("inside" = "green", "origin" = "red", "destination" = "orange", "transit" = "blue")
-  shapes <- c("Start" = 5, "End" = 3)
-  plt = ggplot() +
-    geom_sf(data = shapeTable) +
-    # geom_sf(data = )
-    geom_sf(data = filtered_sf_inside, aes(color = "inside"), size = 3, alpha = 0.5) +
-    geom_sf(data = filtered_sf_origin, aes(color = "origin"), size = 3, alpha = 0.4) +
-    geom_sf(data = filtered_sf_destination, aes(color = "destination"), size = 3, alpha = 0.3) +
-    geom_sf(data = filtered_sf_transit, aes(color = "transit"), size = 2, alpha = 0.1) +
-    labs(color = "Type") +
-    scale_colour_manual(values = colors)
-  plotly::ggplotly(plt)
-  return(plotly::ggplotly(plt))
+  if(optimized){
+    colors <- c("inside" = "green", "origin" = "red", "destination" = "orange", "transit" = "blue")
+    shapes <- c("Start" = 5, "End" = 3)
+    plt = ggplot() +
+      geom_sf(data = shapeTable) +
+      # geom_sf(data = )
+      geom_sf(data = filtered_sf_inside, aes(color = "inside"), size = 3, alpha = 0.5) +
+      geom_sf(data = filtered_sf_origin, aes(color = "origin"), size = 3, alpha = 0.4) +
+      geom_sf(data = filtered_sf_destination, aes(color = "destination"), size = 3, alpha = 0.3) +
+      geom_sf(data = filtered_sf_transit, aes(color = "transit"), size = 2, alpha = 0.1) +
+      labs(color = "Type") +
+      scale_colour_manual(values = colors)
+    plt
+    return((plt))
+  }
+
+  #If we need to adjust design
+  #css_fix <- "div.info.legend.leaflet-control br {clear: both;}"
+  # Convert CSS to HTML
+  #html_fix <- htmltools::tags$style(type = "text/css", css_fix)
+
+
+  plt = leaflet() %>% addTiles() %>%
+    addProviderTiles(
+      "OpenStreetMap",
+      # give the layer a name
+      group = "OpenStreetMap"
+    ) %>%
+    addProviderTiles(
+      "Stamen.Toner",
+      group = "Stamen.Toner"
+    ) %>%
+    addProviderTiles(
+      "Stamen.Terrain",
+      group = "Stamen.Terrain"
+    ) %>%
+    addProviderTiles(
+      "Esri.WorldStreetMap",
+      group = "Esri.WorldStreetMap"
+    ) %>%
+    addProviderTiles(
+      "Wikimedia",
+      group = "Wikimedia"
+    ) %>%
+    addProviderTiles(
+      "CartoDB.Positron",
+      group = "CartoDB.Positron"
+    ) %>%
+    addProviderTiles(
+      "Esri.WorldImagery",
+      group = "Esri.WorldImagery"
+    ) %>%
+    addPolygons(data = shapeTable,opacity = 0.1,color = "green")%>%
+    addCircleMarkers(filtered_sf_start,lng = st_coordinates(filtered_sf_start$start_wkt)[,1]
+                     ,lat = st_coordinates(filtered_sf_start$start_wkt)[,2],radius = 3,color ="blue",
+                     label = paste(
+                       "Person_id:",
+                       filtered_sf_start$person, "<br>",
+                       "Trip_id:",
+                       filtered_sf_start$trip_id, "<br>",
+                       "main_mode:",filtered_sf_start$main_mode,"<br>",
+                       "type:","start","<br>",
+                       "Start activity:",
+                       filtered_sf_start$start_activity_type, "<br>"
+                     )%>% lapply(htmltools::HTML)) %>%
+    addCircleMarkers(filtered_sf_end,lng = st_coordinates(filtered_sf_end$end_wkt)[,1],
+                     lat = st_coordinates(filtered_sf_end$end_wkt)[,2],radius = 0.15,color ="red",
+                     label = paste(
+                       "Person_id:",
+                       filtered_sf_end$person, "<br>",
+                       "Trip_id:",
+                       filtered_sf_end$trip_id, "<br>",
+                       "main_mode:",filtered_sf_end$main_mode,"<br>",
+                       "type:","end","<br>",
+                       "End activity:",
+                       filtered_sf_start$end_activity_type, "<br>"
+                     )%>% lapply(htmltools::HTML))%>%
+    addLegend(
+      colors = c("blue","red"),
+      labels = c("Start of trip","End of trip"),
+      position = "bottomleft",
+      title = "Type of the point",
+      opacity = 0.9
+    ) %>%
+    addMiniMap()%>%
+    addLayersControl(
+      baseGroups = c(
+        "OpenStreetMap", "Stamen.Toner",
+        "Stamen.Terrain", "Esri.WorldStreetMap",
+        "Wikimedia", "CartoDB.Positron", "Esri.WorldImagery"
+      ),
+      # position it on the topleft
+      position = "topleft"
+    )
+
+  return(plt)
+
+
+
 }
 
 #' Creates dashboard for the given table or folder with data

@@ -9,7 +9,8 @@ plotMapWithTrips(
   shapeTable,
   crs,
   start.inshape = TRUE,
-  end.inshape = TRUE
+  end.inshape = TRUE,
+  optimized = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ plotMapWithTrips(
 \item{start.inshape}{bool, defines trips to conclude (see Description)}
 
 \item{end.inshape}{bool, defines trips to conclude (see Description)}
+
+\item{optimized}{bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot}
 }
 \value{
 plot with trips filtered depending on flags *.inshape on map from shapeTable

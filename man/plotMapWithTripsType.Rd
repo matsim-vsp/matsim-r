@@ -4,7 +4,7 @@
 \alias{plotMapWithTripsType}
 \title{Plots every type of trips(inside, outside, origin and destinating) on map}
 \usage{
-plotMapWithTripsType(table, shapeTable, crs)
+plotMapWithTripsType(table, shapeTable, crs, optimized = FALSE)
 }
 \arguments{
 \item{table}{tibble of trips_output (from readTripsTable())}
