@@ -10,9 +10,12 @@ prepareSimwrapperDashboardFromFolder(folder, append = FALSE)
 \item{folder}{specifies data source folder with tripsOutput}
 
 \item{append}{specifies if the ouput folder should be erased before creating}
+
+\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard and all plots using functions:
+plotModalSplitBarChart(),plotModalSplitPieChart(),plotModalShift().}
 }
 \value{
-plot that contains every trip with defined trip type
+tibble of output_trips from folder. Generates content needed for Simwrapper
 }
 \description{
 Creates dashboard for the given table or folder with data

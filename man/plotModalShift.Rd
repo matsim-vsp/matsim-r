@@ -18,6 +18,8 @@ plotModalShift(
 
 \item{united.name}{if columns were united, you can specify name for the resulting column in plot}
 
+\item{dump.output.to}{folder that saves and configures yaml for simwrapper. folder where png of plot is stored}
+
 \item{tripsTable}{tible of trips_output (from readTripsTable())}
 }
 \value{

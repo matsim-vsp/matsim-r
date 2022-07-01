@@ -15,7 +15,7 @@ matsimDumpOutputDirectory <- "./matsim_r_output"
 #' @export
 readTripsTable <- function(pathToMATSimOutputDirectory = ".") {
   # Get the file names, output_trips should be there
-  options(digits = 12)
+  options(digits = 18)
   # Read from URL
   if (grepl("http", pathToMATSimOutputDirectory) == TRUE) {
     trips_output_table <- read_delim(pathToMATSimOutputDirectory,
@@ -102,6 +102,7 @@ readTripsTable <- function(pathToMATSimOutputDirectory = ".") {
 #' @param tripsTable tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #'
 #' @return Pie Chart plot of transport mode distribution, values given in percents
 #'
@@ -202,6 +203,7 @@ plotModalSplitPieChart <- function(tripsTable, unite.columns = character(0), uni
 #' @param tripsTable tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #'
 #' @return Bar Chart plot of transport mode distribution, values given in percents
 #'
@@ -293,6 +295,7 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
 #' @param tripsTable tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name if columns were united, you can specify name for the resulting column in plot
+#' @param dump.output.to folder that saves and configures yaml for simwrapper. folder where png of plot is stored
 #'
 #' @return Alluvial diagram that represents changes in transport mode distribution of trip tables
 #'
@@ -931,12 +934,37 @@ plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {
 #'
 #' @param append specifies if the ouput folder should be erased before creating
 #'
-#' @return plot that contains every trip with defined trip type
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard and all plots using functions:
+#' plotModalSplitBarChart(),plotModalSplitPieChart(),plotModalShift().
+#'
+#' @return tibble of output_trips from folder. Generates content needed for Simwrapper
 #'
 #' @export
 prepareSimwrapperDashboardFromFolder <- function(folder, append = FALSE) {
+  options(digits = 18)
+  table = readTripsTable(folder)
+  prepareSimwrapperDashboardFromTable(table)
+  return(table)
+}
+#' Creates dashboard for the given table or folder with data
+#'
+#'
+#'
+#' @param folder specifies data source folder with tripsOutput
+#'
+#' @param append specifies if the ouput folder should be erased before creating
+#'
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard and all plots using functions:
+#' plotModalSplitBarChart(),plotModalSplitPieChart(),plotModalShift().
+#'
+#' @return tibble of output_trips from folder
+#'
+#' @export
+compareBasePolicyOutput <- function(baseFolder,policyFolder,dump.output.to = matsimDumpOutputDirectory) {
+
 
 }
+
 
 #' Creates dashboard for the given table or folder with data
 #'
@@ -946,7 +974,10 @@ prepareSimwrapperDashboardFromFolder <- function(folder, append = FALSE) {
 #'
 #' @param append specifies if the ouput folder should be erased before creating
 #'
-#' @return plot that contains every trip with defined trip type
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard and all plots using functions:
+#' plotModalSplitBarChart(),plotModalSplitPieChart(),plotModalShift().
+#'
+#' @return generates folder with content for simwrapper out of trips table
 #'
 #' @export
 prepareSimwrapperDashboardFromTable <- function(table, dump.output.to = matsimDumpOutputDirectory, append = FALSE) {
@@ -955,7 +986,8 @@ prepareSimwrapperDashboardFromTable <- function(table, dump.output.to = matsimDu
       unlink(matsimDumpOutputDirectory, recursive = TRUE)
     }
   }
-  plotModalSplitBarChart(table)
-  plotModalSplitPieChart(table)
-  plotModalShift(table, table)
+  plotModalSplitBarChart(table,dump.output.to = dump.output.to)
+  plotModalSplitPieChart(table,dump.output.to = dump.output.to)
+  #Not sure if it is needed
+  #plotModalShift(table, table,dump.output.to = dump.output.to)
 }
