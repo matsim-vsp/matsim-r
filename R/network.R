@@ -19,7 +19,7 @@
 #' @import sf
 #' @import ggalluvial
 #' @import ggrepel
-#' @import tidyr
+#' @import tidyverse
 #' @import ggplot2
 #' @import yaml
 #' @import plotly
