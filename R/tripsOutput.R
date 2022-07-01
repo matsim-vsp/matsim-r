@@ -1,4 +1,4 @@
-matsimDumpOutputDirectory = "./matsim_r_output"
+matsimDumpOutputDirectory <- "./matsim_r_output"
 #' Load MATSIM output_trips table into Memory
 #'
 #' Loads a MATSim CSV output_trips from file or archive,
@@ -19,14 +19,14 @@ readTripsTable <- function(pathToMATSimOutputDirectory = ".") {
   # Read from URL
   if (grepl("http", pathToMATSimOutputDirectory) == TRUE) {
     trips_output_table <- read_delim(pathToMATSimOutputDirectory,
-                                     delim = ";",
-                                     col_types = cols(
-                                       start_x = col_character(),
-                                       start_y = col_character(), end_x = col_character(),
-                                       end_y = col_character(),
-                                       end_link = col_character(),
-                                       start_link = col_character()
-                                     )
+      delim = ";",
+      col_types = cols(
+        start_x = col_character(),
+        start_y = col_character(), end_x = col_character(),
+        end_y = col_character(),
+        end_link = col_character(),
+        start_link = col_character()
+      )
     )
 
     trips_output_table <- trips_output_table %>% mutate(
@@ -40,14 +40,14 @@ readTripsTable <- function(pathToMATSimOutputDirectory = ".") {
   }
   if (grepl("output_trips.csv.gz$", pathToMATSimOutputDirectory) == TRUE) {
     trips_output_table <- read_csv2(pathToMATSimOutputDirectory,
-                                    col_types = cols(
-                                      start_x = col_character(),
-                                      start_y = col_character(),
-                                      end_x = col_character(),
-                                      end_y = col_character(),
-                                      end_link = col_character(),
-                                      start_link = col_character()
-                                    )
+      col_types = cols(
+        start_x = col_character(),
+        start_y = col_character(),
+        end_x = col_character(),
+        end_y = col_character(),
+        end_link = col_character(),
+        start_link = col_character()
+      )
     )
     # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
     # doesn't reads coordinates correctly
@@ -65,14 +65,14 @@ readTripsTable <- function(pathToMATSimOutputDirectory = ".") {
   # output_trips is contained as output_trips.csv.gz
   if (length(grep("output_trips.csv.gz$", files)) != 0) {
     trips_output_table <- read_csv2(files[grep("output_trips.csv.gz$", files)],
-                                    col_types = cols(
-                                      start_x = col_character(),
-                                      start_y = col_character(),
-                                      end_x = col_character(),
-                                      end_y = col_character(),
-                                      end_link = col_character(),
-                                      start_link = col_character()
-                                    )
+      col_types = cols(
+        start_x = col_character(),
+        start_y = col_character(),
+        end_x = col_character(),
+        end_y = col_character(),
+        end_link = col_character(),
+        start_link = col_character()
+      )
     )
     # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
     # doesn't reads coordinates correctly
@@ -106,77 +106,86 @@ readTripsTable <- function(pathToMATSimOutputDirectory = ".") {
 #' @return Pie Chart plot of transport mode distribution, values given in percents
 #'
 #' @export
-plotModalSplitPieChart<-function(tripsTable, unite.columns = character(0),united.name = "united",dump.output.to = matsimDumpOutputDirectory){
+plotModalSplitPieChart <- function(tripsTable, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory) {
 
-  #If some columns should be united
-  if(length(unite.columns)!=0){
-    tripsTable$main_mode[grep(paste0(unite.columns,collapse = "|"),tripsTable$main_mode)] = united.name
+  # If some columns should be united
+  if (length(unite.columns) != 0) {
+    tripsTable$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable$main_mode)] <- united.name
   }
 
-  #tripsTableCount gives percentage representation out
-  tripsTableCount <- tripsTable %>% count(main_mode)%>% mutate(n = n/sum(n)*100)
+  # tripsTableCount gives percentage representation out
+  tripsTableCount <- tripsTable %>%
+    count(main_mode) %>%
+    mutate(n = n / sum(n) * 100)
 
-  #getthe positions
+  # getthe positions
   positions <- tripsTableCount %>%
-    mutate(csum = rev(cumsum(rev(n))),
-           pos = n/2 + lead(csum, 1),
-           pos = if_else(is.na(pos), n/2, pos))
+    mutate(
+      csum = rev(cumsum(rev(n))),
+      pos = n / 2 + lead(csum, 1),
+      pos = if_else(is.na(pos), n / 2, pos)
+    )
 
-  #plotting
+  # plotting
 
-  plt = ggplot(tripsTableCount,aes(x="",y = n,fill = main_mode))+
-    geom_bar(stat="identity",width = 1)+
-    coord_polar("y",start = 0)+
-    geom_label_repel(data = positions,
-                     aes(y = pos, label = paste0(round(n,digits = 1), "%")),
-                     size = 4.5, nudge_x = 1, show.legend = FALSE) +
-    ggtitle("Distribution of transport type")+
+  plt <- ggplot(tripsTableCount, aes(x = "", y = n, fill = main_mode)) +
+    geom_bar(stat = "identity", width = 1) +
+    coord_polar("y", start = 0) +
+    geom_label_repel(
+      data = positions,
+      aes(y = pos, label = paste0(round(n, digits = 1), "%")),
+      size = 4.5, nudge_x = 1, show.legend = FALSE
+    ) +
+    ggtitle("Distribution of transport type") +
     theme_void()
   plt
-  if(file.exists(matsimDumpOutputDirectory)){
-    ggsave(paste0(matsimDumpOutputDirectory,"/modalSplitPieChart.png"),plt)
-  }else{
+  if (file.exists(matsimDumpOutputDirectory)) {
+    ggsave(paste0(matsimDumpOutputDirectory, "/modalSplitPieChart.png"), plt)
+  } else {
     dir.create(matsimDumpOutputDirectory)
-    ggsave(paste0(matsimDumpOutputDirectory,"/modalSplitPieChart.png"),plt)
+    ggsave(paste0(matsimDumpOutputDirectory, "/modalSplitPieChart.png"), plt)
   }
 
-  #Generating yaml and output_files
-  if(file.exists(matsimDumpOutputDirectory)){
-    write_file(paste(tripsTableCount$main_mode,collapse = "\t"),paste0(matsimDumpOutputDirectory,"/modalSplitPieChart.txt"),append = FALSE)
-    write_file(paste("\r\n",paste(tripsTableCount$n,collapse = "\t")),paste0(matsimDumpOutputDirectory,"/modalSplitPieChart.txt"),append = TRUE)
-    #write.csv2(tripsTableCount,paste0(matsimDumpOutputDirectory,"/modalSplitPieChart.csv"))
-  }else{
+  # Generating yaml and output_files
+  if (file.exists(matsimDumpOutputDirectory)) {
+    write_file(paste(tripsTableCount$main_mode, collapse = "\t"), paste0(matsimDumpOutputDirectory, "/modalSplitPieChart.txt"), append = FALSE)
+    write_file(paste("\r\n", paste(tripsTableCount$n, collapse = "\t")), paste0(matsimDumpOutputDirectory, "/modalSplitPieChart.txt"), append = TRUE)
+    # write.csv2(tripsTableCount,paste0(matsimDumpOutputDirectory,"/modalSplitPieChart.csv"))
+  } else {
     dir.create(matsimDumpOutputDirectory)
-    write_file(paste(tripsTableCount$main_mode,collapse = "\t"),paste0(matsimDumpOutputDirectory,"/modalSplitPieChart.txt"),append = FALSE)
-    write_file(paste("\r\n",paste(tripsTableCount$n,collapse = "\t")),paste0(matsimDumpOutputDirectory,"/modalSplitPieChart.txt"),append = TRUE)
-    #write.csv2(tripsTableCount,paste0(matsimDumpOutputDirectory,"/modalSplitPieChart.csv"))
+    write_file(paste(tripsTableCount$main_mode, collapse = "\t"), paste0(matsimDumpOutputDirectory, "/modalSplitPieChart.txt"), append = FALSE)
+    write_file(paste("\r\n", paste(tripsTableCount$n, collapse = "\t")), paste0(matsimDumpOutputDirectory, "/modalSplitPieChart.txt"), append = TRUE)
+    # write.csv2(tripsTableCount,paste0(matsimDumpOutputDirectory,"/modalSplitPieChart.csv"))
   }
 
-  yaml_list = list(header = list(tab = "Summary",title = "Dashboard",description="Plots from output directory"),
-                   layout = list('1' = list(title = "Modal Split Pie Chart",
-                                            description = "generated by plotModalSplitPieChart()",
-                                            type = 'pie',
-                                            width = 1,
-                                            props = list(dataset="modalSplitPieChart.txt",useLastRow="true"))))
+  yaml_list <- list(
+    header = list(tab = "Summary", title = "Dashboard", description = "Plots from output directory"),
+    layout = list("1" = list(
+      title = "Modal Split Pie Chart",
+      description = "generated by plotModalSplitPieChart()",
+      type = "pie",
+      width = 1,
+      props = list(dataset = "modalSplitPieChart.txt", useLastRow = "true")
+    ))
+  )
 
-  if(file.exists(paste0(matsimDumpOutputDirectory,"/dashboard-sum.yaml"))){
-    yaml_from_directory = read_yaml(paste0(matsimDumpOutputDirectory,"/dashboard-sum.yaml"))
-    yaml_from_directory$layout = append(yaml_from_directory$layout,list(new_row = list(title = "Modal Split Pie Chart",
-                                                                                       description = "generated by plotModalSplitPieChart()",
-                                                                                       type = 'pie',
-                                                                                       width = 1,
-                                                                                       props = list(dataset="modalSplitPieChart.txt",useLastRow="true"))))
-    names(yaml_from_directory$layout) = 1:length(names(yaml_from_directory$layout))
+  if (file.exists(paste0(matsimDumpOutputDirectory, "/dashboard-sum.yaml"))) {
+    yaml_from_directory <- read_yaml(paste0(matsimDumpOutputDirectory, "/dashboard-sum.yaml"))
+    yaml_from_directory$layout <- append(yaml_from_directory$layout, list(new_row = list(
+      title = "Modal Split Pie Chart",
+      description = "generated by plotModalSplitPieChart()",
+      type = "pie",
+      width = 1,
+      props = list(dataset = "modalSplitPieChart.txt", useLastRow = "true")
+    )))
+    names(yaml_from_directory$layout) <- 1:length(names(yaml_from_directory$layout))
 
-    write_yaml(yaml_from_directory,paste0(matsimDumpOutputDirectory,"/dashboard-sum.yaml"))
-
-
-  }else{
-    write_yaml(yaml_list,paste0(matsimDumpOutputDirectory,"/dashboard-sum.yaml"))
+    write_yaml(yaml_from_directory, paste0(matsimDumpOutputDirectory, "/dashboard-sum.yaml"))
+  } else {
+    write_yaml(yaml_list, paste0(matsimDumpOutputDirectory, "/dashboard-sum.yaml"))
   }
   plt
   return(plt)
-
 }
 
 #' Plot main_mode as a bar Chart
@@ -209,61 +218,64 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
     mutate(n = n / sum(n) * 100) %>%
     arrange(desc(n))
   # plotting
-  plt = (ggplot(tripsTableCount, aes(x = main_mode, y = n, fill = main_mode)) +
-           geom_bar(stat = "identity") +
-           geom_text(aes(label = round(n, digits = 1)),
-                     position = position_stack(vjust = 0.5),
-                     size = 2
-           ) +
-           theme_minimal() +
-           labs(x = "main_mode", y = "Percentage") +
-           ggtitle("Distribution of transport type (in %)") +
-           theme(legend.position = "none") +
-           coord_flip())
-  if(file.exists(matsimDumpOutputDirectory)){
-    ggsave(paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.png"),plt)
-  }else{
+  plt <- (ggplot(tripsTableCount, aes(x = main_mode, y = n, fill = main_mode)) +
+    geom_bar(stat = "identity") +
+    geom_text(aes(label = round(n, digits = 1)),
+      position = position_stack(vjust = 0.5),
+      size = 2
+    ) +
+    theme_minimal() +
+    labs(x = "main_mode", y = "Percentage") +
+    ggtitle("Distribution of transport type (in %)") +
+    theme(legend.position = "none") +
+    coord_flip())
+  if (file.exists(matsimDumpOutputDirectory)) {
+    ggsave(paste0(matsimDumpOutputDirectory, "/modalSplitBarChart.png"), plt)
+  } else {
     dir.create(matsimDumpOutputDirectory)
-    ggsave(paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.png"),plt)
+    ggsave(paste0(matsimDumpOutputDirectory, "/modalSplitBarChart.png"), plt)
   }
 
-  #Generating yaml and output_files
-  if(file.exists(matsimDumpOutputDirectory)){
-    write_file(paste(tripsTableCount$main_mode,collapse = "\t"),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = FALSE)
-    write_file(paste("\r\n",paste(tripsTableCount$n,collapse = "\t")),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = TRUE)
-    #write.csv2(tripsTableCount,paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"))
-  }else{
+  # Generating yaml and output_files
+  if (file.exists(matsimDumpOutputDirectory)) {
+    write_file(paste(tripsTableCount$main_mode, collapse = "\t"), paste0(matsimDumpOutputDirectory, "/modalSplitBarChart.txt"), append = FALSE)
+    write_file(paste("\r\n", paste(tripsTableCount$n, collapse = "\t")), paste0(matsimDumpOutputDirectory, "/modalSplitBarChart.txt"), append = TRUE)
+    # write.csv2(tripsTableCount,paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"))
+  } else {
     dir.create(matsimDumpOutputDirectory)
-    write_file(paste(tripsTableCount$main_mode,collapse = "\t"),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = FALSE)
-    write_file(paste("\r\n",paste(tripsTableCount$n,collapse = "\t")),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = TRUE)
+    write_file(paste(tripsTableCount$main_mode, collapse = "\t"), paste0(matsimDumpOutputDirectory, "/modalSplitBarChart.txt"), append = FALSE)
+    write_file(paste("\r\n", paste(tripsTableCount$n, collapse = "\t")), paste0(matsimDumpOutputDirectory, "/modalSplitBarChart.txt"), append = TRUE)
     # write.csv2(tripsTableCount,paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"))
   }
 
-  yaml_list = list(header = list(tab = "Summary",title = "Dashboard",description="Plots from output directory"),
-                   layout = list('1' = list(title = "Modal Split Bar Chart",
-                                            description = "generated by plotModalSplitBarChart()",
-                                            type = 'bar',
-                                            width = 1,
-                                            props = list(dataset="modalSplitBarChart.txt"))))
+  yaml_list <- list(
+    header = list(tab = "Summary", title = "Dashboard", description = "Plots from output directory"),
+    layout = list("1" = list(
+      title = "Modal Split Bar Chart",
+      description = "generated by plotModalSplitBarChart()",
+      type = "bar",
+      width = 1,
+      props = list(dataset = "modalSplitBarChart.txt")
+    ))
+  )
 
-  if(file.exists(paste0(matsimDumpOutputDirectory,"/dashboard-sum.yaml"))){
-    yaml_from_directory = read_yaml(paste0(matsimDumpOutputDirectory,"/dashboard-sum.yaml"))
-    yaml_from_directory$layout = append(yaml_from_directory$layout,list(new_row = list(title = "Modal Split Bar Chart",
-                                                                                       description = "generated by plotModalSplitBarChart()",
-                                                                                       type = 'bar',
-                                                                                       width = 1,
-                                                                                       props = list(dataset="modalSplitBarChart.txt"))))
-    names(yaml_from_directory$layout) = 1:length(names(yaml_from_directory$layout))
+  if (file.exists(paste0(matsimDumpOutputDirectory, "/dashboard-sum.yaml"))) {
+    yaml_from_directory <- read_yaml(paste0(matsimDumpOutputDirectory, "/dashboard-sum.yaml"))
+    yaml_from_directory$layout <- append(yaml_from_directory$layout, list(new_row = list(
+      title = "Modal Split Bar Chart",
+      description = "generated by plotModalSplitBarChart()",
+      type = "bar",
+      width = 1,
+      props = list(dataset = "modalSplitBarChart.txt")
+    )))
+    names(yaml_from_directory$layout) <- 1:length(names(yaml_from_directory$layout))
 
-    write_yaml(yaml_from_directory,paste0(matsimDumpOutputDirectory,"/dashboard-sum.yaml"))
-
-
-  }else{
-    write_yaml(yaml_list,paste0(matsimDumpOutputDirectory,"/dashboard-sum.yaml"))
+    write_yaml(yaml_from_directory, paste0(matsimDumpOutputDirectory, "/dashboard-sum.yaml"))
+  } else {
+    write_yaml(yaml_list, paste0(matsimDumpOutputDirectory, "/dashboard-sum.yaml"))
   }
   plt
   return(plt)
-
 }
 
 #' Plot alluvial/sankey diagram of transport mode changes
@@ -285,18 +297,18 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
 #' @return Alluvial diagram that represents changes in transport mode distribution of trip tables
 #'
 #' @export
-plotModalShift <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, unite.columns = character(0), united.name = "united",dump.output.to=matsimDumpOutputDirectory) {
+plotModalShift <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory) {
   if (show.onlyChanges == TRUE) {
     joined <- as_tibble(inner_join(tripsTable1, tripsTable2 %>%
-                                     select(trip_id, main_mode), by = "trip_id") %>%
-                          rename(base_mode = main_mode.x, policy_mode = main_mode.y))
+      select(trip_id, main_mode), by = "trip_id") %>%
+      rename(base_mode = main_mode.x, policy_mode = main_mode.y))
     joined <- joined %>%
       filter(base_mode != policy_mode) %>%
       group_by(base_mode, policy_mode) %>%
       count()
   } else {
     joined <- as_tibble(inner_join(tripsTable1, tripsTable2 %>%
-                                     select(trip_id, main_mode), by = "trip_id") %>% rename(base_mode = main_mode.x, policy_mode = main_mode.y))
+      select(trip_id, main_mode), by = "trip_id") %>% rename(base_mode = main_mode.x, policy_mode = main_mode.y))
     joined <- joined %>%
       group_by(base_mode, policy_mode) %>%
       count()
@@ -307,21 +319,21 @@ plotModalShift <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, u
     joined$policy_mode[grep(paste0(unite.columns, collapse = "|"), joined$policy_mode)] <- united.name
   }
   #########################################################
-  #Generating yaml and output_files
-  if(file.exists(matsimDumpOutputDirectory)){
-    #write_file(paste(tripsTableCount$main_mode,collapse = "\t"),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = FALSE)
-    #write_file(paste("\r\n",paste(tripsTableCount$n,collapse = "\t")),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = TRUE)
-    write.csv2(joined,paste0(matsimDumpOutputDirectory,"/modalShift.csv"),row.names = FALSE)
-  }else{
+  # Generating yaml and output_files
+  if (file.exists(matsimDumpOutputDirectory)) {
+    # write_file(paste(tripsTableCount$main_mode,collapse = "\t"),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = FALSE)
+    # write_file(paste("\r\n",paste(tripsTableCount$n,collapse = "\t")),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = TRUE)
+    write.csv2(joined, paste0(matsimDumpOutputDirectory, "/modalShift.csv"), row.names = FALSE)
+  } else {
     dir.create(matsimDumpOutputDirectory)
-    #write_file(paste(tripsTableCount$main_mode,collapse = "\t"),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = FALSE)
-    #write_file(paste("\r\n",paste(tripsTableCount$n,collapse = "\t")),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = TRUE)
-    write.csv2(joined,paste0(matsimDumpOutputDirectory,"/modalShift.csv"),row.names = FALSE)
+    # write_file(paste(tripsTableCount$main_mode,collapse = "\t"),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = FALSE)
+    # write_file(paste("\r\n",paste(tripsTableCount$n,collapse = "\t")),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = TRUE)
+    write.csv2(joined, paste0(matsimDumpOutputDirectory, "/modalShift.csv"), row.names = FALSE)
   }
 
-  yaml_list = list(csv = "/modalShift.csv",title = "Modal Shift Sankey Diagram", description = "generated by plotModalShift")
+  yaml_list <- list(csv = "/modalShift.csv", title = "Modal Shift Sankey Diagram", description = "generated by plotModalShift")
 
-  write_yaml(yaml_list,paste0(matsimDumpOutputDirectory,"/sankey-modalshift.yaml"))
+  write_yaml(yaml_list, paste0(matsimDumpOutputDirectory, "/sankey-modalshift.yaml"))
 
 
 
@@ -329,10 +341,10 @@ plotModalShift <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, u
 
 
   return(ggplot(joined, aes(y = n, axis1 = base_mode, axis2 = policy_mode)) +
-           geom_alluvium(aes(fill = base_mode), width = 1 / 8, knot.pos = 0) +
-           geom_stratum(width = 1 / 8, alpha = 0.25) +
-           geom_text(stat = "stratum", aes(label = after_stat(stratum)), size = 3) +
-           scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))) #+
+    geom_alluvium(aes(fill = base_mode), width = 1 / 8, knot.pos = 0) +
+    geom_stratum(width = 1 / 8, alpha = 0.25) +
+    geom_text(stat = "stratum", aes(label = after_stat(stratum)), size = 3) +
+    scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))) #+
   # scale_fill_brewer()
 }
 
@@ -498,7 +510,7 @@ filterByRegion <- function(tripsTable, shapeTable, crs, start.inshape = TRUE, en
 #' @return plot with trips filtered depending on flags *.inshape on map from shapeTable
 #'
 #' @export
-plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.inshape = TRUE,optimized = FALSE) {
+plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.inshape = TRUE, optimized = FALSE) {
   # table = table[1:5000,] #To make plotting faster
   # table_sf = transformToSf(table,crs = crs)
   filtered <- filterByRegion(table, shapeTable, crs = crs, start.inshape, end.inshape)
@@ -517,14 +529,14 @@ plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.i
     ct_crs(shapeTable) <- crs
   }
   shapeTable <- st_transform(shapeTable, crs = "+proj=longlat +datum=WGS84 +no_defs")
-  filtered_sf_start = st_transform(filtered_sf_start,"+proj=longlat +datum=WGS84 +no_defs")
-  filtered_sf_end = st_transform(filtered_sf_end,"+proj=longlat +datum=WGS84 +no_defs")
+  filtered_sf_start <- st_transform(filtered_sf_start, "+proj=longlat +datum=WGS84 +no_defs")
+  filtered_sf_end <- st_transform(filtered_sf_end, "+proj=longlat +datum=WGS84 +no_defs")
 
-  if(optimized){
+  if (optimized) {
     colors <- c("Start" = "blue", "End" = "red")
     shapes <- c("Start" = 5, "End" = 3)
-    #ggplot2 isn't interactive!
-    plt = ggplot() +
+    # ggplot2 isn't interactive!
+    plt <- ggplot() +
       geom_sf(data = shapeTable) +
       # geom_sf(data = )
       geom_sf(data = filtered_sf_start, aes(color = "Start"), size = 1, shape = 5) +
@@ -539,13 +551,14 @@ plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.i
 
 
 
-  #If we need to change design
-  #css_fix <- "div.info.legend.leaflet-control br {clear: both;}"
+  # If we need to change design
+  # css_fix <- "div.info.legend.leaflet-control br {clear: both;}"
   # Convert CSS to HTML
-  #html_fix <- htmltools::tags$style(type = "text/css", css_fix)
+  # html_fix <- htmltools::tags$style(type = "text/css", css_fix)
 
 
-  plt = leaflet() %>% addTiles() %>%
+  plt <- leaflet() %>%
+    addTiles() %>%
     addProviderTiles(
       "OpenStreetMap",
       # give the layer a name
@@ -575,39 +588,43 @@ plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.i
       "Esri.WorldImagery",
       group = "Esri.WorldImagery"
     ) %>%
-    addPolygons(data = shapeTable,opacity = 0.1,color = "green")%>%
-    addCircleMarkers(filtered_sf_start,lng = st_coordinates(filtered_sf_start$start_wkt)[,1]
-                     ,lat = st_coordinates(filtered_sf_start$start_wkt)[,2],radius = 3,color ="blue",
-                     label = paste(
-                       "Person_id:",
-                       filtered_sf_start$person, "<br>",
-                       "Trip_id:",
-                       filtered_sf_start$trip_id, "<br>",
-                       "main_mode:",filtered_sf_start$main_mode,"<br>",
-                       "type:","start","<br>",
-                       "Start activity:",
-                       filtered_sf_start$start_activity_type, "<br>"
-                     )%>% lapply(htmltools::HTML)) %>%
-    addCircleMarkers(filtered_sf_end,lng = st_coordinates(filtered_sf_end$end_wkt)[,1],
-                     lat = st_coordinates(filtered_sf_end$end_wkt)[,2],radius = 0.15,color ="red",
-                     label = paste(
-                       "Person_id:",
-                       filtered_sf_end$person, "<br>",
-                       "Trip_id:",
-                       filtered_sf_end$trip_id, "<br>",
-                       "main_mode:",filtered_sf_end$main_mode,"<br>",
-                       "type:","end","<br>",
-                       "End activity:",
-                       filtered_sf_end$end_activity_type, "<br>"
-                     )%>% lapply(htmltools::HTML))%>%
+    addPolygons(data = shapeTable, opacity = 0.1, color = "green") %>%
+    addCircleMarkers(filtered_sf_start,
+      lng = st_coordinates(filtered_sf_start$start_wkt)[, 1],
+      lat = st_coordinates(filtered_sf_start$start_wkt)[, 2], radius = 3, color = "blue",
+      label = paste(
+        "Person_id:",
+        filtered_sf_start$person, "<br>",
+        "Trip_id:",
+        filtered_sf_start$trip_id, "<br>",
+        "main_mode:", filtered_sf_start$main_mode, "<br>",
+        "type:", "start", "<br>",
+        "Start activity:",
+        filtered_sf_start$start_activity_type, "<br>"
+      ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_end,
+      lng = st_coordinates(filtered_sf_end$end_wkt)[, 1],
+      lat = st_coordinates(filtered_sf_end$end_wkt)[, 2], radius = 0.15, color = "red",
+      label = paste(
+        "Person_id:",
+        filtered_sf_end$person, "<br>",
+        "Trip_id:",
+        filtered_sf_end$trip_id, "<br>",
+        "main_mode:", filtered_sf_end$main_mode, "<br>",
+        "type:", "end", "<br>",
+        "End activity:",
+        filtered_sf_end$end_activity_type, "<br>"
+      ) %>% lapply(htmltools::HTML)
+    ) %>%
     addLegend(
-      colors = c("blue","red"),
-      labels = c("Start of trip","End of trip"),
+      colors = c("blue", "red"),
+      labels = c("Start of trip", "End of trip"),
       position = "bottomleft",
       title = "Type of the point",
       opacity = 0.9
     ) %>%
-    addMiniMap()%>%
+    addMiniMap() %>%
     addLayersControl(
       baseGroups = c(
         "OpenStreetMap", "Stamen.Toner",
@@ -662,18 +679,18 @@ plotTripTypeSplitPieChart <- function(table, shapeTable, crs) {
     )
 
   return(ggplot(result, aes(x = "", y = n, fill = fct_inorder(type))) +
-           geom_col(width = 1, col = 1) +
-           geom_bar(stat = "identity", width = 1) +
-           coord_polar("y") +
-           # geom_text(aes(label = round(n,digits = 1)),
-           # position=position_stack(vjust = 0.5),
-           # show.legend = FALSE,size = 4)+
-           geom_label_repel(
-             data = positions,
-             aes(y = pos, label = paste0(round(n, digits = 1), "%")),
-             size = 4.5, nudge_x = 1, show.legend = FALSE
-           ) +
-           ggtitle("Distribution"))
+    geom_col(width = 1, col = 1) +
+    geom_bar(stat = "identity", width = 1) +
+    coord_polar("y") +
+    # geom_text(aes(label = round(n,digits = 1)),
+    # position=position_stack(vjust = 0.5),
+    # show.legend = FALSE,size = 4)+
+    geom_label_repel(
+      data = positions,
+      aes(y = pos, label = paste0(round(n, digits = 1), "%")),
+      size = 4.5, nudge_x = 1, show.legend = FALSE
+    ) +
+    ggtitle("Distribution"))
 }
 
 #' Plots every type of trips(inside, outside, origin and destinating) on map
@@ -691,7 +708,7 @@ plotTripTypeSplitPieChart <- function(table, shapeTable, crs) {
 #' @return plot that contains every trip with defined trip type
 #'
 #' @export
-plotMapWithTripsType <- function(table, shapeTable, crs,optimized = FALSE) {
+plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {
   # table = table[1:5000,] #To make plotting faster
   # table_sf = transformToSf(table,crs = crs)
   # Maybe union all this tables as 1 extended with additional column
@@ -709,15 +726,15 @@ plotMapWithTripsType <- function(table, shapeTable, crs,optimized = FALSE) {
     ct_crs(shapeTable) <- crs
   }
   shapeTable <- st_transform(shapeTable, crs = "+proj=longlat +datum=WGS84 +no_defs")
-  filtered_sf_inside = st_transform(filtered_sf_inside,"+proj=longlat +datum=WGS84 +no_defs")
-  filtered_sf_origin = st_transform(filtered_sf_origin,"+proj=longlat +datum=WGS84 +no_defs")
-  filtered_sf_destination = st_transform(filtered_sf_destination,"+proj=longlat +datum=WGS84 +no_defs")
-  filtered_sf_transit = st_transform(filtered_sf_transit,"+proj=longlat +datum=WGS84 +no_defs")
+  filtered_sf_inside <- st_transform(filtered_sf_inside, "+proj=longlat +datum=WGS84 +no_defs")
+  filtered_sf_origin <- st_transform(filtered_sf_origin, "+proj=longlat +datum=WGS84 +no_defs")
+  filtered_sf_destination <- st_transform(filtered_sf_destination, "+proj=longlat +datum=WGS84 +no_defs")
+  filtered_sf_transit <- st_transform(filtered_sf_transit, "+proj=longlat +datum=WGS84 +no_defs")
 
-  if(optimized){
+  if (optimized) {
     colors <- c("inside" = "green", "origin" = "red", "destination" = "orange", "transit" = "blue")
     shapes <- c("Start" = 5, "End" = 3)
-    plt = ggplot() +
+    plt <- ggplot() +
       geom_sf(data = shapeTable) +
       # geom_sf(data = )
       geom_sf(data = filtered_sf_inside, aes(color = "inside"), size = 3, alpha = 0.5) +
@@ -730,13 +747,14 @@ plotMapWithTripsType <- function(table, shapeTable, crs,optimized = FALSE) {
     return((plt))
   }
 
-  #If we need to adjust design
-  #css_fix <- "div.info.legend.leaflet-control br {clear: both;}"
+  # If we need to adjust design
+  # css_fix <- "div.info.legend.leaflet-control br {clear: both;}"
   # Convert CSS to HTML
-  #html_fix <- htmltools::tags$style(type = "text/css", css_fix)
+  # html_fix <- htmltools::tags$style(type = "text/css", css_fix)
 
 
-  plt = leaflet() %>% addTiles() %>%
+  plt <- leaflet() %>%
+    addTiles() %>%
     addProviderTiles(
       "OpenStreetMap",
       # give the layer a name
@@ -766,117 +784,132 @@ plotMapWithTripsType <- function(table, shapeTable, crs,optimized = FALSE) {
       "Esri.WorldImagery",
       group = "Esri.WorldImagery"
     ) %>%
-    addPolygons(data = shapeTable,opacity = 0.1,color = "green")%>%
-    addCircleMarkers(filtered_sf_inside,lng = st_coordinates(filtered_sf_inside$wkt)[seq(1, length(filtered_sf_inside$wkt), 2),1]
-                     ,lat = st_coordinates(filtered_sf_inside$wkt)[seq(1, length(filtered_sf_inside$wkt), 2),2],radius = 3,color ="blue",
-                     label = paste(
-                       "Person_id:",
-                       filtered_sf_inside$person, "<br>",
-                       "Trip_id:",
-                       filtered_sf_inside$trip_id, "<br>",
-                       "main_mode:",filtered_sf_inside$main_mode,"<br>",
-                       "type:","start","<br>",
-                       "Start activity:",
-                       filtered_sf_inside$start_activity_type, "<br>"
-                     )%>% lapply(htmltools::HTML)) %>%
-    addCircleMarkers(filtered_sf_inside,lng = st_coordinates(filtered_sf_inside$wkt)[seq(2, length(filtered_sf_inside$wkt), 2),1]
-                     ,lat = st_coordinates(filtered_sf_inside$wkt)[seq(2, length(filtered_sf_inside$wkt), 2),2],radius = 3,color ="blue",
-                     label = paste(
-                       "Person_id:",
-                       filtered_sf_inside$person, "<br>",
-                       "Trip_id:",
-                       filtered_sf_inside$trip_id, "<br>",
-                       "main_mode:",filtered_sf_inside$main_mode,"<br>",
-                       "type:","end","<br>",
-                       "End activity:",
-                       filtered_sf_inside$end_activity_type, "<br>"
-                     )%>% lapply(htmltools::HTML)) %>%
-    addCircleMarkers(filtered_sf_origin,lng = st_coordinates(filtered_sf_origin$wkt)[seq(1, length(filtered_sf_inside$wkt), 2),1],
-                     lat = st_coordinates(filtered_sf_origin$wkt)[seq(1, length(filtered_sf_inside$wkt), 2),2],radius = 2,color ="red",
-                     label = paste(
-                       "Person_id:",
-                       filtered_sf_origin$person, "<br>",
-                       "Trip_id:",
-                       filtered_sf_origin$trip_id, "<br>",
-                       "main_mode:",filtered_sf_origin$main_mode,"<br>",
-                       "type:","start","<br>",
-                       "Start activity:",
-                       filtered_sf_origin$end_activity_type, "<br>"
-                     )%>% lapply(htmltools::HTML))%>%
-    addCircleMarkers(filtered_sf_origin,lng = st_coordinates(filtered_sf_origin$wkt)[seq(2, length(filtered_sf_inside$wkt), 2),1],
-                     lat = st_coordinates(filtered_sf_origin$wkt)[seq(2, length(filtered_sf_inside$wkt), 2),2],radius = 2,color ="red",
-                     label = paste(
-                       "Person_id:",
-                       filtered_sf_origin$person, "<br>",
-                       "Trip_id:",
-                       filtered_sf_origin$trip_id, "<br>",
-                       "main_mode:",filtered_sf_origin$main_mode,"<br>",
-                       "type:","end","<br>",
-                       "End activity:",
-                       filtered_sf_origin$end_activity_type, "<br>"
-                     )%>% lapply(htmltools::HTML))%>%
-    addCircleMarkers(filtered_sf_destination,lng = st_coordinates(filtered_sf_destination$wkt)[seq(1, length(filtered_sf_inside$wkt), 2),1],
-                     lat = st_coordinates(filtered_sf_destination$wkt)[seq(1, length(filtered_sf_inside$wkt), 2),2],radius = 1,color ="orange",
-                     label = paste(
-                       "Person_id:",
-                       filtered_sf_destination$person, "<br>",
-                       "Trip_id:",
-                       filtered_sf_destination$trip_id, "<br>",
-                       "main_mode:",filtered_sf_destination$main_mode,"<br>",
-                       "type:","start","<br>",
-                       "Start activity:",
-                       filtered_sf_destination$end_activity_type, "<br>"
-                     )%>% lapply(htmltools::HTML))%>%
-    addCircleMarkers(filtered_sf_destination,lng = st_coordinates(filtered_sf_destination$wkt)[seq(2, length(filtered_sf_inside$wkt), 2),1],
-                     lat = st_coordinates(filtered_sf_destination$wkt)[seq(2, length(filtered_sf_inside$wkt), 2),2],radius = 1,color ="orange",
-                     label = paste(
-                       "Person_id:",
-                       filtered_sf_destination$person, "<br>",
-                       "Trip_id:",
-                       filtered_sf_destination$trip_id, "<br>",
-                       "main_mode:",filtered_sf_destination$main_mode,"<br>",
-                       "type:","end","<br>",
-                       "End activity:",
-                       filtered_sf_destination$end_activity_type, "<br>"
-                     )%>% lapply(htmltools::HTML))%>%
-    addCircleMarkers(filtered_sf_transit,lng = st_coordinates(filtered_sf_transit$wkt)[seq(1, length(filtered_sf_inside$wkt), 2),1],
-                     lat = st_coordinates(filtered_sf_transit$wkt)[seq(1, length(filtered_sf_inside$wkt), 2),2],radius = 0.15,color ="black",
-                     label = paste(
-                       "Person_id:",
-                       filtered_sf_transit$person, "<br>",
-                       "Trip_id:",
-                       filtered_sf_transit$trip_id, "<br>",
-                       "main_mode:",filtered_sf_transit$main_mode,"<br>",
-                       "type:","start","<br>",
-                       "Start activity:",
-                       filtered_sf_transit$end_activity_type, "<br>"
-                     )%>% lapply(htmltools::HTML))%>%
-    addCircleMarkers(filtered_sf_transit,lng = st_coordinates(filtered_sf_transit$wkt)[seq(2, length(filtered_sf_inside$wkt), 2),1],
-                     lat = st_coordinates(filtered_sf_transit$wkt)[seq(2, length(filtered_sf_inside$wkt), 2),2],radius = 0.15,color ="black",
-                     label = paste(
-                       "Person_id:",
-                       filtered_sf_transit$person, "<br>",
-                       "Trip_id:",
-                       filtered_sf_transit$trip_id, "<br>",
-                       "main_mode:",filtered_sf_transit$main_mode,"<br>",
-                       "type:","end","<br>",
-                       "End activity:",
-                       filtered_sf_transit$end_activity_type, "<br>"
-                     )%>% lapply(htmltools::HTML))%>%
-
-
-
+    addPolygons(data = shapeTable, opacity = 0.1, color = "green") %>%
+    addCircleMarkers(filtered_sf_inside,
+      lng = st_coordinates(filtered_sf_inside$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 1],
+      lat = st_coordinates(filtered_sf_inside$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 2], radius = 3, color = "blue",
+      label = paste(
+        "Person_id:",
+        filtered_sf_inside$person, "<br>",
+        "Trip_id:",
+        filtered_sf_inside$trip_id, "<br>",
+        "main_mode:", filtered_sf_inside$main_mode, "<br>",
+        "type:", "start", "<br>",
+        "Start activity:",
+        filtered_sf_inside$start_activity_type, "<br>"
+      ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_inside,
+      lng = st_coordinates(filtered_sf_inside$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 1],
+      lat = st_coordinates(filtered_sf_inside$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 2], radius = 3, color = "blue",
+      label = paste(
+        "Person_id:",
+        filtered_sf_inside$person, "<br>",
+        "Trip_id:",
+        filtered_sf_inside$trip_id, "<br>",
+        "main_mode:", filtered_sf_inside$main_mode, "<br>",
+        "type:", "end", "<br>",
+        "End activity:",
+        filtered_sf_inside$end_activity_type, "<br>"
+      ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_origin,
+      lng = st_coordinates(filtered_sf_origin$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 1],
+      lat = st_coordinates(filtered_sf_origin$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 2], radius = 2, color = "red",
+      label = paste(
+        "Person_id:",
+        filtered_sf_origin$person, "<br>",
+        "Trip_id:",
+        filtered_sf_origin$trip_id, "<br>",
+        "main_mode:", filtered_sf_origin$main_mode, "<br>",
+        "type:", "start", "<br>",
+        "Start activity:",
+        filtered_sf_origin$end_activity_type, "<br>"
+      ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_origin,
+      lng = st_coordinates(filtered_sf_origin$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 1],
+      lat = st_coordinates(filtered_sf_origin$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 2], radius = 2, color = "red",
+      label = paste(
+        "Person_id:",
+        filtered_sf_origin$person, "<br>",
+        "Trip_id:",
+        filtered_sf_origin$trip_id, "<br>",
+        "main_mode:", filtered_sf_origin$main_mode, "<br>",
+        "type:", "end", "<br>",
+        "End activity:",
+        filtered_sf_origin$end_activity_type, "<br>"
+      ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_destination,
+      lng = st_coordinates(filtered_sf_destination$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 1],
+      lat = st_coordinates(filtered_sf_destination$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 2], radius = 1, color = "orange",
+      label = paste(
+        "Person_id:",
+        filtered_sf_destination$person, "<br>",
+        "Trip_id:",
+        filtered_sf_destination$trip_id, "<br>",
+        "main_mode:", filtered_sf_destination$main_mode, "<br>",
+        "type:", "start", "<br>",
+        "Start activity:",
+        filtered_sf_destination$end_activity_type, "<br>"
+      ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_destination,
+      lng = st_coordinates(filtered_sf_destination$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 1],
+      lat = st_coordinates(filtered_sf_destination$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 2], radius = 1, color = "orange",
+      label = paste(
+        "Person_id:",
+        filtered_sf_destination$person, "<br>",
+        "Trip_id:",
+        filtered_sf_destination$trip_id, "<br>",
+        "main_mode:", filtered_sf_destination$main_mode, "<br>",
+        "type:", "end", "<br>",
+        "End activity:",
+        filtered_sf_destination$end_activity_type, "<br>"
+      ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_transit,
+      lng = st_coordinates(filtered_sf_transit$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 1],
+      lat = st_coordinates(filtered_sf_transit$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 2], radius = 0.15, color = "black",
+      label = paste(
+        "Person_id:",
+        filtered_sf_transit$person, "<br>",
+        "Trip_id:",
+        filtered_sf_transit$trip_id, "<br>",
+        "main_mode:", filtered_sf_transit$main_mode, "<br>",
+        "type:", "start", "<br>",
+        "Start activity:",
+        filtered_sf_transit$end_activity_type, "<br>"
+      ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_transit,
+      lng = st_coordinates(filtered_sf_transit$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 1],
+      lat = st_coordinates(filtered_sf_transit$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 2], radius = 0.15, color = "black",
+      label = paste(
+        "Person_id:",
+        filtered_sf_transit$person, "<br>",
+        "Trip_id:",
+        filtered_sf_transit$trip_id, "<br>",
+        "main_mode:", filtered_sf_transit$main_mode, "<br>",
+        "type:", "end", "<br>",
+        "End activity:",
+        filtered_sf_transit$end_activity_type, "<br>"
+      ) %>% lapply(htmltools::HTML)
+    ) %>%
     addLegend(
-      colors = c("blue","red","orange","black"),
-      labels = c("Trips inside of region",
-                 "Trips with the end outside region",
-                 "Trips with the start outside region",
-                 "Trips that start and end outside region"),
+      colors = c("blue", "red", "orange", "black"),
+      labels = c(
+        "Trips inside of region",
+        "Trips with the end outside region",
+        "Trips with the start outside region",
+        "Trips that start and end outside region"
+      ),
       position = "bottomleft",
       title = "Type of the point",
       opacity = 0.9
     ) %>%
-    addMiniMap()%>%
+    addMiniMap() %>%
     addLayersControl(
       baseGroups = c(
         "OpenStreetMap", "Stamen.Toner",
@@ -888,9 +921,6 @@ plotMapWithTripsType <- function(table, shapeTable, crs,optimized = FALSE) {
     )
 
   return(plt)
-
-
-
 }
 
 #' Creates dashboard for the given table or folder with data
@@ -904,7 +934,7 @@ plotMapWithTripsType <- function(table, shapeTable, crs,optimized = FALSE) {
 #' @return plot that contains every trip with defined trip type
 #'
 #' @export
-prepareSimwrapperDashboardFromFolder = function(folder,append = FALSE){
+prepareSimwrapperDashboardFromFolder <- function(folder, append = FALSE) {
 
 }
 
@@ -919,15 +949,13 @@ prepareSimwrapperDashboardFromFolder = function(folder,append = FALSE){
 #' @return plot that contains every trip with defined trip type
 #'
 #' @export
-prepareSimwrapperDashboardFromTable = function(table,dump.output.to = matsimDumpOutputDirectory,append = FALSE){
-  if(append == FALSE){
-    if(file.exists(matsimDumpOutputDirectory)){
-      unlink(matsimDumpOutputDirectory,recursive = TRUE)
+prepareSimwrapperDashboardFromTable <- function(table, dump.output.to = matsimDumpOutputDirectory, append = FALSE) {
+  if (append == FALSE) {
+    if (file.exists(matsimDumpOutputDirectory)) {
+      unlink(matsimDumpOutputDirectory, recursive = TRUE)
     }
   }
   plotModalSplitBarChart(table)
   plotModalSplitPieChart(table)
-  plotModalShift(table,table)
-
+  plotModalShift(table, table)
 }
-
