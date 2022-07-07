@@ -229,8 +229,8 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
     theme_minimal() +
     labs(x = "main_mode", y = "Percentage") +
     ggtitle("Distribution of transport type (in %)") +
-    theme(legend.position = "none") +
-    coord_flip())
+    theme(legend.position = "none")+
+      coord_flip())
   if (file.exists(matsimDumpOutputDirectory)) {
     ggsave(paste0(matsimDumpOutputDirectory, "/modalSplitBarChart.png"), plt)
   } else {
@@ -276,7 +276,7 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
   } else {
     write_yaml(yaml_list, paste0(matsimDumpOutputDirectory, "/dashboard-sum.yaml"))
   }
-  plt
+  plotly::ggplotly(plt)
   return(plt)
 }
 
@@ -300,7 +300,7 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
 #' @return Alluvial diagram that represents changes in transport mode distribution of trip tables
 #'
 #' @export
-plotModalShift <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory) {
+plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory) {
   if (show.onlyChanges == TRUE) {
     joined <- as_tibble(inner_join(tripsTable1, tripsTable2 %>%
       select(trip_id, main_mode), by = "trip_id") %>%
@@ -324,13 +324,9 @@ plotModalShift <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, u
   #########################################################
   # Generating yaml and output_files
   if (file.exists(matsimDumpOutputDirectory)) {
-    # write_file(paste(tripsTableCount$main_mode,collapse = "\t"),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = FALSE)
-    # write_file(paste("\r\n",paste(tripsTableCount$n,collapse = "\t")),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = TRUE)
     write.csv2(joined, paste0(matsimDumpOutputDirectory, "/modalShift.csv"), row.names = FALSE)
   } else {
     dir.create(matsimDumpOutputDirectory)
-    # write_file(paste(tripsTableCount$main_mode,collapse = "\t"),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = FALSE)
-    # write_file(paste("\r\n",paste(tripsTableCount$n,collapse = "\t")),paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.txt"),append = TRUE)
     write.csv2(joined, paste0(matsimDumpOutputDirectory, "/modalShift.csv"), row.names = FALSE)
   }
 
@@ -342,13 +338,70 @@ plotModalShift <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, u
 
   ##########################################################
 
-
-  return(ggplot(joined, aes(y = n, axis1 = base_mode, axis2 = policy_mode)) +
+  plt = ggplot(joined, aes(y = n, axis1 = base_mode, axis2 = policy_mode)) +
     geom_alluvium(aes(fill = base_mode), width = 1 / 8, knot.pos = 0) +
     geom_stratum(width = 1 / 8, alpha = 0.25) +
     geom_text(stat = "stratum", aes(label = after_stat(stratum)), size = 3) +
-    scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))) #+
-  # scale_fill_brewer()
+    scale_x_discrete(limits = c("Base Mode", "Policy Mode"), expand = c(.05, .05))
+  plt
+  return(plt)
+}
+
+#' Plot bar chart diagram of transport mode changes
+#'
+#' Takes two trips_table (from readTripsTable), and collects
+#' changes between transport mode distribution of these tables
+#' to make bar chart diagram with dodging positioning from this data
+#'
+#' Function calculates number of each transport mode used in
+#' first and second table, and draws plot that represent how
+#' distribution of transport mode has changed (f. e. what part of concrete trasport mode changed to another)
+#' Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united.name is "united")
+#' Using parameter show.onlyChanges
+#'
+#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param unite.columns vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name if columns were united, you can specify name for the resulting column in plot
+#' @param dump.output.to folder that saves and configures yaml for simwrapper. folder where png of plot is stored
+#'
+#' @return Alluvial diagram that represents changes in transport mode distribution of trip tables
+#'
+#' @export
+plotModalShiftBar <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory) {
+  # If the unite.columns is specified, then
+  if (length(unite.columns) != 0) {
+    tripsTable1$main_mode[grep(paste0(unite.columns, collapse = "|"), joined$main_mode)] <- united.name
+    tripsTable2$main_mode[grep(paste0(unite.columns, collapse = "|"), joined$main_mode)] <- united.name
+  }
+  tripsTable1  = tripsTable1 %>% mutate(type = "base")
+  tripsTable2  = tripsTable2 %>% mutate(type = "policy")
+
+  total_trips = rbind(tripsTable1,tripsTable2)
+  ##########################################################
+
+  plt = ggplot(total_trips, aes(x =main_mode,fill = factor(type)))+
+    geom_bar(position = position_dodge())+
+    coord_flip()
+  plotly::ggplotly(plt)
+  return(plotly::ggplotly(plt))
+
+
+  #########################################################
+  # Generating yaml and output_files
+  if (file.exists(matsimDumpOutputDirectory)) {
+    write.csv2(joined, paste0(matsimDumpOutputDirectory, "/modalShift.csv"), row.names = FALSE)
+  } else {
+    dir.create(matsimDumpOutputDirectory)
+     write.csv2(joined, paste0(matsimDumpOutputDirectory, "/modalShift.csv"), row.names = FALSE)
+  }
+
+  yaml_list <- list(csv = "/modalShift.csv", title = "Modal Shift Sankey Diagram", description = "generated by plotModalShift")
+
+  write_yaml(yaml_list, paste0(matsimDumpOutputDirectory, "/sankey-modalshift.yaml"))
+
+
+
+
 }
 
 #' Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)
@@ -961,6 +1014,7 @@ prepareSimwrapperDashboardFromFolder <- function(folder, append = FALSE) {
 #'
 #' @export
 compareBasePolicyOutput <- function(baseFolder,policyFolder,dump.output.to = matsimDumpOutputDirectory) {
+
 
 
 }
