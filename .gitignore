@@ -5,3 +5,9 @@
 .DS_Store
 __MACOSX
 node_modules/
+berlin/
+berlin_policy/
+hamburg/
+hamburg_shape/
+matsim_r_output/
+serengeti/
