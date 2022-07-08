@@ -367,7 +367,7 @@ plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FA
 #' @return Alluvial diagram that represents changes in transport mode distribution of trip tables
 #'
 #' @export
-plotModalShiftBar <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory) {
+plotModalShiftBar <- function(tripsTable1, tripsTable2, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory) {
   # If the unite.columns is specified, then
   if (length(unite.columns) != 0) {
     tripsTable1$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable1$main_mode)] <- united.name
@@ -994,24 +994,67 @@ prepareSimwrapperDashboardFromFolder <- function(folder, append = FALSE) {
   prepareSimwrapperDashboardFromTable(table)
   return(table)
 }
-#' Creates dashboard for the given table or folder with data
+#' Chooses a function to compare output_trips from the folders.
+#' baseFolder contains all base outputs, policyFolder contains all policy outputs.
 #'
 #'
 #'
-#' @param folder specifies data source folder with tripsOutput
+#' @param baseFolder specifies data source folder with multiple base output_trips
 #'
-#' @param append specifies if the ouput folder should be erased before creating
+#' @param policyFolder specifies data source folder with multiple policy output_trips
 #'
-#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard and all plots using functions:
-#' plotModalSplitBarChart(),plotModalSplitPieChart(),plotModalShift().
+#' @param dump.output.to that saves result of all comparisons between each base and each policy.
+#' For now it creates plotModalShiftBar() for the output_trips
 #'
-#' @return tibble of output_trips from folder
+#' @return list of tibbles, list of all base and policy output_trips as tibble
 #'
 #' @export
-compareBasePolicyOutput <- function(baseFolder,policyFolder,dump.output.to = matsimDumpOutputDirectory) {
+compareBasePolicyOutput <- function(baseFolder,policyFolder,crs,dump.output.to = matsimDumpOutputDirectory) {
 
+  base_trips = list(NULL)
+  policy_trips = list(NULL)
+  for(file in list.files(baseFolder,full.names = TRUE))
+  {
+    temp = readTripsTable(file)
+    if(!is.null(temp)){
+      attr(temp,"name") = strsplit(file,'/')[[1]][-1]
+      if(is.null(base_trips[[1]])){
+        base_trips[[1]] = temp
+      }else{
+        base_trips = append(base_trips,list(temp))
+      }
+    }
+  }
 
+  for(file in list.files(policyFolder,full.names = TRUE))
+  {
+    temp = readTripsTable(file)
+    if(!is.null(temp)){
+      attr(temp,"name") = strsplit(file,'/')[[1]][-1]
+      if(is.null(policy_trips[[1]])){
+        policy_trips[[1]] = temp
+      }else{
+        policy_trips = append(policy_trips,list(temp))
+      }
+    }
+  }
+  i = 0;
 
+  if (!file.exists(dump.output.to)) {
+    dir.create(dump.output.to)
+  }
+  for(base in base_trips){
+
+    for(policy in policy_trips){
+      print(paste0(i," comparison"))
+      plotModalShiftBar(base,
+                        policy,
+                        crs,
+                        dump.output.to = paste0(dump.output.to,"/",i,"_",attr(base,"name"),"--",attr(policy,"name")) )
+      i=i+1
+    }
+  }
+  invisible(list(base = base_trips,policy = policy_trips))
 }
 
 

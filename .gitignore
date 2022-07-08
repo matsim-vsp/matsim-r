@@ -12,3 +12,7 @@ berlin_policy/
 serengeti/
 hamburg/
 hamburg_shape/
+base/
+policy/
+temp_output_trips.csv
+test_comparing/

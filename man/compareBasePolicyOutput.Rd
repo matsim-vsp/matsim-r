@@ -2,25 +2,28 @@
 % Please edit documentation in R/tripsOutput.R
 \name{compareBasePolicyOutput}
 \alias{compareBasePolicyOutput}
-\title{Creates dashboard for the given table or folder with data}
+\title{Chooses a function to compare output_trips from the folders.
+baseFolder contains all base outputs, policyFolder contains all policy outputs.}
 \usage{
 compareBasePolicyOutput(
   baseFolder,
   policyFolder,
+  crs,
   dump.output.to = matsimDumpOutputDirectory
 )
 }
 \arguments{
-\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard and all plots using functions:
-plotModalSplitBarChart(),plotModalSplitPieChart(),plotModalShift().}
+\item{baseFolder}{specifies data source folder with multiple base output_trips}
 
-\item{folder}{specifies data source folder with tripsOutput}
+\item{policyFolder}{specifies data source folder with multiple policy output_trips}
 
-\item{append}{specifies if the ouput folder should be erased before creating}
+\item{dump.output.to}{that saves result of all comparisons between each base and each policy.
+For now it creates plotModalShiftBar() for the output_trips}
 }
 \value{
-tibble of output_trips from folder
+list of tibbles, list of all base and policy output_trips as tibble
 }
 \description{
-Creates dashboard for the given table or folder with data
+Chooses a function to compare output_trips from the folders.
+baseFolder contains all base outputs, policyFolder contains all policy outputs.
 }

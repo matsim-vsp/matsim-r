@@ -15,7 +15,6 @@
 #' @import readr
 #' @import purrr
 #' @import xml2
-#' @import tidyr
 #' @import sf
 #' @import ggalluvial
 #' @import ggrepel

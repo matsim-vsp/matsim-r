@@ -7,7 +7,6 @@
 plotModalShiftBar(
   tripsTable1,
   tripsTable2,
-  show.onlyChanges = FALSE,
   unite.columns = character(0),
   united.name = "united",
   dump.output.to = matsimDumpOutputDirectory
