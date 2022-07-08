@@ -23,6 +23,7 @@
 #' @import yaml
 #' @import plotly
 #' @import leaflet
+#' @import forcats
 
 # NETWORK = "kelheim.output_network.xml"
 # NETWORK = "network.xml"

@@ -392,11 +392,6 @@ plotModalShiftBar <- function(tripsTable1, tripsTable2, unite.columns = characte
   }
 
   return(plotly::ggplotly(plt))
-
-
-
-
-
 }
 
 #' Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)
@@ -704,8 +699,8 @@ plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.i
 #' @return plot with percentage of each type of trips
 #'
 #' @export
-plotTripTypeSplitPieChart <- function(table, shapeTable, crs) {
-  r
+plotTripTypesPieChart <- function(table, shapeTable, crs) {
+
   # table_sf = transformToSf(table,crs = crs)
   # Maybe union all this tables as 1 extended with additional column
   filtered_inside <- filterByRegion(table, shapeTable, crs = crs, start.inshape = TRUE, end.inshape = TRUE)
@@ -742,6 +737,66 @@ plotTripTypeSplitPieChart <- function(table, shapeTable, crs) {
       size = 4.5, nudge_x = 1, show.legend = FALSE
     ) +
     ggtitle("Distribution"))
+}
+
+#' Creates BarChart of changing trip types(originating,transit etc) between 2 tables
+#' and saves output to dump.output.to
+#'
+#'
+#'
+#' @param tripsTable1 tibble of trips_output (from readTripsTable(),f.e. base case)
+#'
+#' @param tripsTable2 tibble of trips_output (from readTripsTable(),f.e. policy case)
+#'
+#' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#'
+#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#'
+#' @param dump.output.to folder that saves resulting image of BarChart
+#'
+#'
+#' @return plot with percentage of each type of trips between 2 tables
+#'
+#' @export
+compareTripTypesBarChart <- function(tripsTable1,tripsTable2,shapeTable,crs,dump.output.to = matsimDumpOutputDirectory){
+  # table_sf = transformToSf(table,crs = crs)
+  # Maybe union all this tables as 1 extended with additional column
+  filtered_inside1 <- filterByRegion(tripsTable1, shapeTable, crs = crs, start.inshape = TRUE, end.inshape = TRUE) %>%
+    mutate(type = "inside",table_num = "1 table")
+  filtered_origin1 <- filterByRegion(tripsTable1, shapeTable, crs = crs, start.inshape = TRUE, end.inshape = FALSE) %>%
+    mutate(type = "start_in_shape",table_num = "1 table")
+  filtered_destination1 <- filterByRegion(tripsTable1, shapeTable, crs = crs, start.inshape = FALSE, end.inshape = TRUE) %>%
+    mutate(type = "endind_in_shape",table_num = "1 table")
+  filtered_transit1 <- filterByRegion(tripsTable1, shapeTable, crs = crs, start.inshape = FALSE, end.inshape = FALSE)%>%
+    mutate(type = "outside",table_num = "1 table")
+
+  filtered_inside2 <- filterByRegion(tripsTable2, shapeTable, crs = crs, start.inshape = TRUE, end.inshape = TRUE) %>%
+    mutate(type = "inside",table_num = "2 table")
+  filtered_origin2 <- filterByRegion(tripsTable2, shapeTable, crs = crs, start.inshape = TRUE, end.inshape = FALSE) %>%
+    mutate(type = "start_in_shape",table_num = "2 table")
+  filtered_destination2 <- filterByRegion(tripsTable2, shapeTable, crs = crs, start.inshape = FALSE, end.inshape = TRUE) %>%
+    mutate(type = "endind_in_shape",table_num = "2 table")
+  filtered_transit2 <- filterByRegion(tripsTable2, shapeTable, crs = crs, start.inshape = FALSE, end.inshape = FALSE)%>%
+    mutate(type = "outside",table_num = "2 table")
+
+
+  result_table = rbind(filtered_inside1,filtered_origin1,filtered_destination1,filtered_transit1,
+                       filtered_inside2,filtered_origin2,filtered_destination2,filtered_transit2)
+  #########################################################
+  plt = ggplot(result_table, aes(x =type,fill = factor(table_num)))+
+    geom_bar(position = position_dodge())+
+    coord_flip()
+  plotly::ggplotly(plt)
+
+  if (file.exists(dump.output.to)) {
+    ggsave(paste0(dump.output.to, "/tripTypeComparison.png"), plt)
+  } else {
+    dir.create(dump.output.to)
+    ggsave(paste0(dump.output.to, "/tripTypeComparison.png"), plt)
+  }
+
+  return(plotly::ggplotly(plt))
+
 }
 
 #' Plots every type of trips(inside, outside, origin and destinating) on map
