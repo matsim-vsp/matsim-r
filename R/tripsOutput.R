@@ -782,6 +782,7 @@ compareTripTypesBarChart <- function(tripsTable1,tripsTable2,shapeTable,crs,dump
 
   result_table = rbind(filtered_inside1,filtered_origin1,filtered_destination1,filtered_transit1,
                        filtered_inside2,filtered_origin2,filtered_destination2,filtered_transit2)
+
   #########################################################
   plt = ggplot(result_table, aes(x =type,fill = factor(table_num)))+
     geom_bar(position = position_dodge())+
@@ -831,6 +832,7 @@ plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {
   if (st_crs(shapeTable) == NA) {
     ct_crs(shapeTable) <- crs
   }
+
   shapeTable <- st_transform(shapeTable, crs = "+proj=longlat +datum=WGS84 +no_defs")
   filtered_sf_inside <- st_transform(filtered_sf_inside, "+proj=longlat +datum=WGS84 +no_defs")
   filtered_sf_origin <- st_transform(filtered_sf_origin, "+proj=longlat +datum=WGS84 +no_defs")
