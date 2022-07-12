@@ -1173,7 +1173,7 @@ compareBasePolicyShapeOutput <- function(baseFolder,policyFolder,shapeFilePath,c
                         policy,
                         crs,
                         dump.output.to = paste0(dump.output.to,"/",i,"_",attr(base,"name"),"--",attr(policy,"name")) )
-      compareTripTypesBarChart(base[1:3000,],policy[1:3000,],shape,crs,dump.output.to = paste0(dump.output.to,"/",i,"_",attr(base,"name"),"--",attr(policy,"name")))
+      compareTripTypesBarChart(base,policy,shape,crs,dump.output.to = paste0(dump.output.to,"/",i,"_",attr(base,"name"),"--",attr(policy,"name")))
       i=i+1
 
     }
@@ -1205,4 +1205,8 @@ prepareSimwrapperDashboardFromTable <- function(table, dump.output.to = matsimDu
   plotModalSplitPieChart(table,dump.output.to = dump.output.to)
   #Not sure if it is needed
   #plotModalShift(table, table,dump.output.to = dump.output.to)
+}
+
+clearDashboard<- function(matsimOutputFolder){
+
 }
