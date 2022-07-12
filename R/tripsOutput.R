@@ -141,10 +141,10 @@ plotModalSplitPieChart <- function(tripsTable, unite.columns = character(0), uni
     theme_void()
   plt
   if (file.exists(dump.output.to)) {
-    ggsave(paste0(dump.output.to, "/modalSplitPieChart.png"), plt)
+    ggsave(paste0(dump.output.to, "/modalSplitPieChart.png"),width = 6,height = 10, plt)
   } else {
     dir.create(dump.output.to)
-    ggsave(paste0(dump.output.to, "/modalSplitPieChart.png"), plt)
+    ggsave(paste0(dump.output.to, "/modalSplitPieChart.png"),width = 6,height = 10, plt)
   }
 
   # Generating yaml and output_files
@@ -232,10 +232,10 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
     theme(legend.position = "none")+
       coord_flip())
   if (file.exists(dump.output.to)) {
-    ggsave(paste0(dump.output.to, "/modalSplitBarChart.png"), plt)
+    ggsave(paste0(dump.output.to, "/modalSplitBarChart.png"),width = 6,height = 10, plt)
   } else {
     dir.create(dump.output.to)
-    ggsave(paste0(dump.output.to, "/modalSplitBarChart.png"), plt)
+    ggsave(paste0(dump.output.to, "/modalSplitBarChart.png"),width = 6,height = 10, plt)
   }
 
   # Generating yaml and output_files
@@ -790,10 +790,10 @@ compareTripTypesBarChart <- function(tripsTable1,tripsTable2,shapeTable,crs,dump
   plotly::ggplotly(plt)
 
   if (file.exists(dump.output.to)) {
-    ggsave(paste0(dump.output.to, "/tripTypeComparison.png"), plt)
+    ggsave(paste0(dump.output.to, "/tripTypeComparison.png"), plot = plt,width = 6,height = 10)
   } else {
     dir.create(dump.output.to)
-    ggsave(paste0(dump.output.to, "/tripTypeComparison.png"), plt)
+    ggsave(paste0(dump.output.to, "/tripTypeComparison.png"), plot = plt,width = 6,height = 10)
   }
 
   return(plotly::ggplotly(plt))
@@ -1066,7 +1066,7 @@ prepareSimwrapperDashboardFromFolder <- function(folder, append = FALSE) {
 #' @return list of tibbles, list of all base and policy output_trips as tibble
 #'
 #' @export
-compareBasePolicyOutput <- function(baseFolder,policyFolder,crs,dump.output.to = matsimDumpOutputDirectory) {
+compareBasePolicyOutput <- function(baseFolder,policyFolder,dump.output.to = matsimDumpOutputDirectory) {
 
   base_trips = list(NULL)
   policy_trips = list(NULL)
@@ -1106,14 +1106,80 @@ compareBasePolicyOutput <- function(baseFolder,policyFolder,crs,dump.output.to =
       print(paste0(i," comparison"))
       plotModalShiftBar(base,
                         policy,
-                        crs,
-                        dump.output.to = paste0(dump.output.to,"/",i,"_",attr(base,"name"),"--",attr(policy,"name")) )
+                        dump.output.to = paste0(dump.output.to,"/",i,"_",attr(base,"name"),"--",attr(policy,"name")))
+
       i=i+1
     }
   }
   invisible(list(base = base_trips,policy = policy_trips))
 }
+#' Chooses a function to compare output_trips from the folders.
+#' baseFolder contains all base outputs, policyFolder contains all policy outputs.
+#'
+#'
+#'
+#' @param baseFolder specifies data source folder with multiple base output_trips
+#'
+#' @param policyFolder specifies data source folder with multiple policy output_trips
+#'
+#' @param shapeFilePath specifies shapeFile used for comparison
+#' @param crs numeric of EPSG code or proj4string, can be found in network/config file from output directory of MATSim simulation
+#' @param dump.output.to that saves result of all comparisons between each base and each policy.
+#' For now it creates plotModalShiftBar() for the output_trips
+#'
+#' @return list of tibbles, list of all base and policy output_trips as tibble
+#'
+#' @export
+compareBasePolicyShapeOutput <- function(baseFolder,policyFolder,shapeFilePath,crs,dump.output.to = matsimDumpOutputDirectory) {
 
+  base_trips = list(NULL)
+  policy_trips = list(NULL)
+  shape = st_read(shapeFilePath)
+  for(file in list.files(baseFolder,full.names = TRUE))
+  {
+    temp = readTripsTable(file)
+    if(!is.null(temp)){
+      attr(temp,"name") = strsplit(file,'/')[[1]][-1]
+      if(is.null(base_trips[[1]])){
+        base_trips[[1]] = temp
+      }else{
+        base_trips = append(base_trips,list(temp))
+      }
+    }
+  }
+
+  for(file in list.files(policyFolder,full.names = TRUE))
+  {
+    temp = readTripsTable(file)
+    if(!is.null(temp)){
+      attr(temp,"name") = strsplit(file,'/')[[1]][-1]
+      if(is.null(policy_trips[[1]])){
+        policy_trips[[1]] = temp
+      }else{
+        policy_trips = append(policy_trips,list(temp))
+      }
+    }
+  }
+  i = 0;
+
+  if (!file.exists(dump.output.to)) {
+    dir.create(dump.output.to)
+  }
+  for(base in base_trips){
+
+    for(policy in policy_trips){
+      print(paste0(i," comparison"))
+      plotModalShiftBar(base,
+                        policy,
+                        crs,
+                        dump.output.to = paste0(dump.output.to,"/",i,"_",attr(base,"name"),"--",attr(policy,"name")) )
+      compareTripTypesBarChart(base[1:3000,],policy[1:3000,],shape,crs,dump.output.to = paste0(dump.output.to,"/",i,"_",attr(base,"name"),"--",attr(policy,"name")))
+      i=i+1
+
+    }
+  }
+  invisible(list(base = base_trips,policy = policy_trips))
+}
 
 #' Creates dashboard for the given table or folder with data
 #'
