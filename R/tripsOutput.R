@@ -185,7 +185,7 @@ plotModalSplitPieChart <- function(tripsTable, unite.columns = character(0), uni
   } else {
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
-  plt
+  plotly::ggplotly(plt)
   return(plt)
 }
 
@@ -279,6 +279,41 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
   plotly::ggplotly(plt)
   return(plt)
 }
+
+#' Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
+#'
+#' Takes Table trips_output (from readTripsTable()),
+#' to plot bar chart with with values that represent
+#' time spent on traveling/waiting
+#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#'
+#'
+#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
+#'
+#' @return Bar Chart plot of average time spent on travel/wait
+#'
+#' @export
+plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory) {
+
+  # If some columns should be united
+  if (length(unite.columns) != 0) {
+    tripsTable$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable$main_mode)] <- united.name
+  }
+
+  avg_time = tripsTable %>% group_by(main_mode)%>%
+    summarize(trav_time_avg = hms::hms(seconds_to_period(mean(trav_time))),
+                                       wait_time_avg = hms::hms(seconds_to_period(mean(wait_time)))) %>%
+    mutate(trav_time_avg = minute(trav_time_avg),wait_time_avg = minute(wait_time_avg))
+
+  fig = plot_ly(data = avg_time,x = ~main_mode,y = ~trav_time_avg,type = 'bar',name = "AVG Time Travelling")
+  fig = fig %>% add_trace(y = ~wait_time_avg,name = "AVG Time Waiting")
+  fig = fig %>% layout(yaxis = list(title = "Time spent (in minutes)"),barmode = "group")
+  fig
+}
+
 
 #' Plot alluvial/sankey diagram of transport mode changes
 #'
