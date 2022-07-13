@@ -8,7 +8,7 @@ matsimDumpOutputDirectory <- "./matsim_r_output"
 #'
 #'
 #'
-#' @param pathTOMATSimOutputDirectory character string, path to matsim output directory or http link to the file.
+#' @param pathToMATSimOutputDirectory character string, path to matsim output directory or http link to the file.
 #'
 #' @return tibble of trips_output
 #'
@@ -327,7 +327,8 @@ plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), unit
 #' Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united.name is "united")
 #' Using parameter show.onlyChanges
 #'
-#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param tripsTable1 tible of trips_output (from readTripsTable())
+#' @param tripsTable2 tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name if columns were united, you can specify name for the resulting column in plot
 #' @param dump.output.to folder that saves and configures yaml for simwrapper. folder where png of plot is stored
@@ -394,7 +395,8 @@ plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FA
 #' Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united.name is "united")
 #' Using parameter show.onlyChanges
 #'
-#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param tripsTable1 tible of trips_output (from readTripsTable())
+#' @param tripsTable2 tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name if columns were united, you can specify name for the resulting column in plot
 #' @param dump.output.to folder that saves and configures yaml for simwrapper. folder where png of plot is stored
@@ -510,7 +512,7 @@ transformToSf <- function(table, crs, geometry.type = st_multipoint()) {
 #' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
 #' if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
 #'
-#' @param table tibble of trips_output (from readTripsTable())
+#' @param tripsTable tibble of trips_output (from readTripsTable())
 #'
 #' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
 #'
@@ -1074,8 +1076,6 @@ plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {
 #'
 #' @param append specifies if the ouput folder should be erased before creating
 #'
-#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard and all plots using functions:
-#' plotModalSplitBarChart(),plotModalSplitPieChart(),plotModalShift().
 #'
 #' @return tibble of output_trips from folder. Generates content needed for Simwrapper
 #'

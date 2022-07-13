@@ -13,6 +13,8 @@ filterByRegion(
 )
 }
 \arguments{
+\item{tripsTable}{tibble of trips_output (from readTripsTable())}
+
 \item{shapeTable}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
 
 \item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
@@ -20,8 +22,6 @@ filterByRegion(
 \item{start.inshape}{bool, defines trips to conclude (see Description)}
 
 \item{end.inshape}{bool, defines trips to conclude (see Description)}
-
-\item{table}{tibble of trips_output (from readTripsTable())}
 }
 \value{
 tibble, with filtered trips depending on shapeTable and special flags (see Description)
