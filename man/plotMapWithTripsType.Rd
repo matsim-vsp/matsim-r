@@ -4,7 +4,7 @@
 \alias{plotMapWithTripsType}
 \title{Plots every type of trips(inside, outside, origin and destinating) on map}
 \usage{
-plotMapWithTripsType(table, shapeTable, crs)
+plotMapWithTripsType(table, shapeTable, crs, optimized = FALSE)
 }
 \arguments{
 \item{table}{tibble of trips_output (from readTripsTable())}
@@ -12,6 +12,8 @@ plotMapWithTripsType(table, shapeTable, crs)
 \item{shapeTable}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
 
 \item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
+
+\item{optimized}{bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot}
 }
 \value{
 plot that contains every trip with defined trip type

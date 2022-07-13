@@ -15,13 +15,15 @@
 #' @import readr
 #' @import purrr
 #' @import xml2
-#' @import tidyr
 #' @import sf
 #' @import ggalluvial
 #' @import ggrepel
-#' @import tidyr
+#' @import tidyverse
 #' @import ggplot2
-
+#' @import yaml
+#' @import plotly
+#' @import leaflet
+#' @import forcats
 
 # NETWORK = "kelheim.output_network.xml"
 # NETWORK = "network.xml"

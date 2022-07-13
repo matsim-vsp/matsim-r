@@ -11,3 +11,17 @@ hamburg/
 hamburg_shape/
 matsim_r_output/
 serengeti/
+matsim_r_analysis/
+matsim_r_output/
+berlin/
+berlin_policy/
+serengeti/
+hamburg/
+hamburg_shape/
+base/
+policy/
+temp_output_trips.csv
+test_comparing/
+output_after_plots.png
+test_comparing_first/
+test_prepare/
