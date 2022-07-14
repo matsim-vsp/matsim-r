@@ -18,6 +18,8 @@ plotModalShiftSankey(
 
 \item{tripsTable2}{tible of trips_output (from readTripsTable())}
 
+\item{show.onlyChanges}{boolean, if it is set to TRUE => sankey diagram only contains changes on axes}
+
 \item{unite.columns}{vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
 
 \item{united.name}{if columns were united, you can specify name for the resulting column in plot}
