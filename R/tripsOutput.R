@@ -1420,6 +1420,8 @@ prepareSimwrapperDashboardFromTable <- function(table, dump.output.to = matsimDu
   }
   plotModalSplitBarChart(table,dump.output.to = dump.output.to)
   plotModalSplitPieChart(table,dump.output.to = dump.output.to)
+  plotAverageTravelWait(table)
+  plotTripsByDistance(table)
   #Not sure if it is needed
   #plotModalShift(table, table,dump.output.to = dump.output.to)
 }
