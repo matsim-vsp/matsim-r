@@ -187,7 +187,7 @@ plotModalSplitPieChart <- function(tripsTable, unite.columns = character(0), uni
   } else {
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
-  plotly::ggplotly(plt)
+  (plt)
   return(plt)
 }
 
@@ -400,15 +400,15 @@ plotTripsByDistance <- function(tripsTable, unite.columns = character(0), united
 
   #This is a very bad way to do that, but I see no other way to get it done
   #Also filtering table into a new doesn't creates new objects in memory, so it works fast
-  tripsTable_05km = tripsTable %>% filter(traveled_distance<=500) %>% mutate(dist_cat = "0.5km")
-  tripsTable_1km = tripsTable %>% filter(traveled_distance>500 & traveled_distance<=1000  ) %>% mutate(dist_cat = "1km")
-  tripsTable_2km = tripsTable %>% filter(traveled_distance>1000 & traveled_distance<=2000) %>% mutate(dist_cat = "2km")
-  tripsTable_5km = tripsTable %>% filter(traveled_distance>2000 & traveled_distance<=5000) %>% mutate(dist_cat = "5km")
-  tripsTable_10km = tripsTable %>% filter(traveled_distance>5000 & traveled_distance<=10*1000) %>% mutate(dist_cat = "10km")
-  tripsTable_20km = tripsTable %>% filter(traveled_distance>10*1000 & traveled_distance<=20*1000) %>% mutate(dist_cat = "20km")
-  tripsTable_50km = tripsTable %>% filter(traveled_distance>20*1000 & traveled_distance<=50*1000) %>% mutate(dist_cat = "50km")
-  tripsTable_100km = tripsTable %>% filter(traveled_distance>50*1000 & traveled_distance<=100*1000) %>% mutate(dist_cat = "100km")
-  tripsTable_100pluskm = tripsTable %>% filter(traveled_distance>100*1000) %>% mutate(dist_cat = "100+km")
+  tripsTable_05km = tripsTable %>% filter(traveled_distance<=500) %>% mutate(dist_cat = "0-0.5km")
+  tripsTable_1km = tripsTable %>% filter(traveled_distance>500 & traveled_distance<=1000  ) %>% mutate(dist_cat = "0.5-1km")
+  tripsTable_2km = tripsTable %>% filter(traveled_distance>1000 & traveled_distance<=2000) %>% mutate(dist_cat = "1-2km")
+  tripsTable_5km = tripsTable %>% filter(traveled_distance>2000 & traveled_distance<=5000) %>% mutate(dist_cat = "2-5km")
+  tripsTable_10km = tripsTable %>% filter(traveled_distance>5000 & traveled_distance<=10*1000) %>% mutate(dist_cat = "5-10km")
+  tripsTable_20km = tripsTable %>% filter(traveled_distance>10*1000 & traveled_distance<=20*1000) %>% mutate(dist_cat = "10-20km")
+  tripsTable_50km = tripsTable %>% filter(traveled_distance>20*1000 & traveled_distance<=50*1000) %>% mutate(dist_cat = "20-50km")
+  tripsTable_100km = tripsTable %>% filter(traveled_distance>50*1000 & traveled_distance<=100*1000) %>% mutate(dist_cat = "50-100km")
+  tripsTable_100pluskm = tripsTable %>% filter(traveled_distance>100*1000) %>% mutate(dist_cat = "more 100km")
 
   tripsTable_result = rbind(tripsTable_05km,
                             tripsTable_1km,
@@ -491,6 +491,98 @@ plotTripsByDistance <- function(tripsTable, unite.columns = character(0), united
                    y = "[main_mode,n]",
                    yAxisTitle = "Count of trips",
                    xAxisTitle = "Distance")
+    )))
+    names(yaml_from_directory$layout) <- 1:length(names(yaml_from_directory$layout))
+
+    write_yaml(yaml_from_directory, paste0(dump.output.to, "/dashboard-sum.yaml"))
+  } else {
+    write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
+  }
+  return(fig)
+}
+
+#' Bar Chart with distance travelled on x-axis and number of trips on y-axis
+#'
+#' Takes Table trips_output (from readTripsTable()),
+#' to plot bar chart with with values that represent
+#' average distance traveled ~ main mode used
+#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#'
+#'
+#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
+#'
+#' @return Bar Chart plot of distance traveled per mode
+#'
+#' @export
+plotTripDistanceByMode <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory) {
+
+
+  # If some columns should be united
+  if (length(unite.columns) != 0) {
+    tripsTable$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable$main_mode)] <- united.name
+  }
+  modes = levels(factor(tripsTable$main_mode))
+
+  tripsTable = tripsTable %>%
+    group_by(main_mode) %>%
+    summarize(avg_dist = mean(traveled_distance)/1000)
+
+  text_for_y = round(tripsTable$avg_dist,digits = 2)
+
+  fig = plot_ly(data = tripsTable,x = ~main_mode,y = ~avg_dist,
+                type = 'bar',
+                text = text_for_y,
+                textposition = "auto",
+                name = "AVG Distance traveled by a person over a day")
+  fig = fig %>% layout(yaxis = list(title = "Distance (kms)"),barmode = "group")
+  fig
+
+  #files
+  if (file.exists(dump.output.to)) {
+    #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
+  } else {
+    dir.create(dump.output.to)
+    #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
+  }
+
+  # Generating yaml and output_files
+  if (file.exists(dump.output.to)) {
+    write.table(tripsTable,paste0(matsimDumpOutputDirectory,"/tripDistancePerMode.csv"),row.names = FALSE,sep = ",")
+  } else {
+    dir.create(dump.output.to)
+    write.table(tripsTable,paste0(matsimDumpOutputDirectory,"/tripDistancePerMode.csv"),row.names = FALSE,sep = ",")
+  }
+
+  yaml_list <- list(
+    header = list(tab = "Summary", title = "Dashboard", description = "Plots from output directory"),
+    layout = list("1" = list(
+      title =  paste0("Average distance traveled by person per mode ",attr(tripsTable,"table_name")),
+      description = "generated by plotTripDistanceByMode()",
+      type = "bar",
+      width = 1,
+      props = list(dataset = "tripDistancePerMode.csv",
+                   x = "main_mode",
+                   y = "[avg_dist]",
+                   yAxisTitle = "Distance (kms)",
+                   xAxisTitle = "Main_mode")
+    ))
+  )
+
+  if (file.exists(paste0(dump.output.to, "/dashboard-sum.yaml"))) {
+    yaml_from_directory <- read_yaml(paste0(dump.output.to, "/dashboard-sum.yaml"))
+    yaml_from_directory$layout <- append(yaml_from_directory$layout, list(new_row = list(
+      title =  paste0("Average distance traveled by person per mode ",attr(tripsTable,"table_name")),
+      description = "generated by plotTripDistanceByMode()",
+      type = "bar",
+      width = 1,
+      props = list(dataset = "tripDistancePerMode.csv",
+                   x = "main_mode",
+                   y = "[avg_dist]",
+                   yAxisTitle = "Distance (kms)",
+                   xAxisTitle = "Main_mode")
     )))
     names(yaml_from_directory$layout) <- 1:length(names(yaml_from_directory$layout))
 
@@ -1463,6 +1555,7 @@ prepareSimwrapperDashboardFromTable <- function(table, dump.output.to = matsimDu
   plotModalSplitPieChart(table,dump.output.to = dump.output.to)
   plotAverageTravelWait(table)
   plotTripsByDistance(table)
+  plotTripDistanceByMode(table)
   #Not sure if it is needed
   #plotModalShift(table, table,dump.output.to = dump.output.to)
 }
