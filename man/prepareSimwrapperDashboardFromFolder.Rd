@@ -13,6 +13,8 @@ prepareSimwrapperDashboardFromFolder(
 \arguments{
 \item{folder}{specifies data source folder with tripsOutput}
 
+\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard and all plots}
+
 \item{append}{specifies if the ouput folder should be erased before creating}
 }
 \value{
