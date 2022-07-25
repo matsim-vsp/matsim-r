@@ -26,6 +26,7 @@
 #' @import leaflet
 #' @import forcats
 #' @import lubridate
+#' @import htmltools
 
 # NETWORK = "kelheim.output_network.xml"
 # NETWORK = "network.xml"
