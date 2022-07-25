@@ -26,3 +26,6 @@ output_after_plots.png
 test_comparing_first/
 test_prepare/
 test.csv
+analysis_berlin/
+analysis_hamburg/
+test_folder/

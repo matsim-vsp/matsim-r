@@ -229,17 +229,6 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
   fig = fig %>% layout(yaxis = list(title = "Count"),barmode = "group")
   fig
 
-  #plt <- (ggplot(tripsTableCount, aes(x = main_mode, y = n, fill = main_mode)) +
-  #  geom_bar(stat = "identity") +
-  #  geom_text(aes(label = round(n, digits = 1)),
-  #    position = position_stack(vjust = 0.5),
-  #    size = 2
-  #  ) +
-  #  theme_minimal() +
-  #  labs(x = "main_mode", y = "Percentage") +
-  #  ggtitle("Distribution of transport type (in %)") +
-  #  theme(legend.position = "none"))
-  #files
   if (file.exists(dump.output.to)) {
     #ggsave(paste0(dump.output.to, "/modalSplitBarChart.png"),width = 6,height = 10, fig)
   } else {
@@ -249,14 +238,12 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
 
   # Generating yaml and output_files
   if (file.exists(dump.output.to)) {
-    #write_file(paste(tripsTableCount$main_mode, collapse = "\t"), paste0(dump.output.to, "/modalSplitBarChart.txt"), append = FALSE)
-    #write_file(paste("\r\n", paste(tripsTableCount$n, collapse = "\t")), paste0(dump.output.to, "/modalSplitBarChart.txt"), append = TRUE)
-    write.table(tripsTableCount,paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.csv"),row.names = FALSE,sep = ",")
+    write.table(tripsTableCount,paste0(dump.output.to,"/modalSplitBarChart.csv"),row.names = FALSE,sep = ",")
   } else {
     dir.create(dump.output.to)
     #write_file(paste(tripsTableCount$main_mode, collapse = "\t"), paste0(dump.output.to, "/modalSplitBarChart.txt"), append = FALSE)
     #write_file(paste("\r\n", paste(tripsTableCount$n, collapse = "\t")), paste0(dump.output.to, "/modalSplitBarChart.txt"), append = TRUE)
-    write.table(tripsTableCount,paste0(matsimDumpOutputDirectory,"/modalSplitBarChart.csv"),row.names = FALSE,sep = ",")
+    write.table(tripsTableCount,paste0(dump.output.to,"/modalSplitBarChart.csv"),row.names = FALSE,sep = ",")
   }
 
   yaml_list <- list(
@@ -341,10 +328,10 @@ plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), unit
 
   # Generating yaml and output_files
   if (file.exists(dump.output.to)) {
-    write.table(avg_time,paste0(matsimDumpOutputDirectory,"/averageTravelWait.csv"),row.names = FALSE,sep = ",")
+    write.table(avg_time,paste0(dump.output.to,"/averageTravelWait.csv"),row.names = FALSE,sep = ",")
   } else {
     dir.create(dump.output.to)
-    write.table(avg_time,paste0(matsimDumpOutputDirectory,"/averageTravelWait.csv"),row.names = FALSE,sep = ",")
+    write.table(avg_time,paste0(dump.output.to,"/averageTravelWait.csv"),row.names = FALSE,sep = ",")
   }
 
   yaml_list <- list(
@@ -468,10 +455,10 @@ plotTripsByDistance <- function(tripsTable, unite.columns = character(0), united
 
   # Generating yaml and output_files
   if (file.exists(dump.output.to)) {
-    write.table(tableToWrite,paste0(matsimDumpOutputDirectory,"/tripsPerDistance.csv"),row.names = FALSE,sep = ",")
+    write.table(tableToWrite,paste0(dump.output.to,"/tripsPerDistance.csv"),row.names = FALSE,sep = ",")
   } else {
     dir.create(dump.output.to)
-    write.table(tableToWrite,paste0(matsimDumpOutputDirectory,"/tripsPerDistance.csv"),row.names = FALSE,sep = ",")
+    write.table(tableToWrite,paste0(dump.output.to,"/tripsPerDistance.csv"),row.names = FALSE,sep = ",")
   }
 
   yaml_list <- list(
@@ -561,10 +548,10 @@ plotTripDistanceByMode <- function(tripsTable, unite.columns = character(0), uni
 
   # Generating yaml and output_files
   if (file.exists(dump.output.to)) {
-    write.table(tripsTable,paste0(matsimDumpOutputDirectory,"/tripDistancePerMode.csv"),row.names = FALSE,sep = ",")
+    write.table(tripsTable,paste0(dump.output.to,"/tripDistancePerMode.csv"),row.names = FALSE,sep = ",")
   } else {
     dir.create(dump.output.to)
-    write.table(tripsTable,paste0(matsimDumpOutputDirectory,"/tripDistancePerMode.csv"),row.names = FALSE,sep = ",")
+    write.table(tripsTable,paste0(dump.output.to,"/tripDistancePerMode.csv"),row.names = FALSE,sep = ",")
   }
 
   yaml_list <- list(
@@ -673,10 +660,10 @@ plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), uni
 
   # Generating yaml and output_files
   if (file.exists(dump.output.to)) {
-    write.table(tableToWrite,paste0(matsimDumpOutputDirectory,"/countTripsByDep.csv"),row.names = FALSE,sep = ",")
+    write.table(tableToWrite,paste0(dump.output.to,"/countTripsByDep.csv"),row.names = FALSE,sep = ",")
   } else {
     dir.create(dump.output.to)
-    write.table(tableToWrite,paste0(matsimDumpOutputDirectory,"/countTripsByDep.csv"),row.names = FALSE,sep = ",")
+    write.table(tableToWrite,paste0(dump.output.to,"/countTripsByDep.csv"),row.names = FALSE,sep = ",")
   }
 
   yaml_list <- list(
@@ -782,10 +769,10 @@ plotStartActCountByDepTime <- function(tripsTable, unite.columns = character(0),
 
   # Generating yaml and output_files
   if (file.exists(dump.output.to)) {
-    write.table(tableToWrite,paste0(matsimDumpOutputDirectory,"/countStartActByDep.csv"),row.names = FALSE,sep = ",")
+    write.table(tableToWrite,paste0(dump.output.to,"/countStartActByDep.csv"),row.names = FALSE,sep = ",")
   } else {
     dir.create(dump.output.to)
-    write.table(tableToWrite,paste0(matsimDumpOutputDirectory,"/countStartActByDep.csv"),row.names = FALSE,sep = ",")
+    write.table(tableToWrite,paste0(dump.output.to,"/countStartActByDep.csv"),row.names = FALSE,sep = ",")
   }
 
   yaml_list <- list(
@@ -892,10 +879,10 @@ plotEndActCountByArrTime <- function(tripsTable, unite.columns = character(0), u
 
   # Generating yaml and output_files
   if (file.exists(dump.output.to)) {
-    write.table(tableToWrite,paste0(matsimDumpOutputDirectory,"/countEndActByArr.csv"),row.names = FALSE,sep = ",")
+    write.table(tableToWrite,paste0(dump.output.to,"/countEndActByArr.csv"),row.names = FALSE,sep = ",")
   } else {
     dir.create(dump.output.to)
-    write.table(tableToWrite,paste0(matsimDumpOutputDirectory,"/countEndActByArr.csv"),row.names = FALSE,sep = ",")
+    write.table(tableToWrite,paste0(dump.output.to,"/countEndActByArr.csv"),row.names = FALSE,sep = ",")
   }
 
   yaml_list <- list(
@@ -1741,10 +1728,11 @@ plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {
 #' @return tibble of output_trips from folder. Generates content needed for Simwrapper
 #'
 #' @export
-prepareSimwrapperDashboardFromFolder <- function(folder, append = FALSE) {
+prepareSimwrapperDashboardFromFolder <- function(folder,dump.output.to = matsimDumpOutputDirectory, append = FALSE) {
   options(digits = 18)
   table = readTripsTable(folder)
-  prepareSimwrapperDashboardFromTable(table)
+  print(dump.output.to)
+  prepareSimwrapperDashboardFromTable(table,dump.output.to,append)
   return(table)
 }
 #' Chooses a function to compare output_trips from the folders.
@@ -1897,18 +1885,21 @@ prepareSimwrapperDashboardFromTable <- function(table, dump.output.to = matsimDu
       unlink(dump.output.to, recursive = TRUE)
     }
   }
+  print(" i am here")
   plotModalSplitBarChart(table,dump.output.to = dump.output.to)
   plotModalSplitPieChart(table,dump.output.to = dump.output.to)
-  plotAverageTravelWait(table)
-  plotTripsByDistance(table)
-  plotTripDistanceByMode(table)
-  plotTripCountByDepTime(table)
-  plotStartActCountByDepTime(table)
-  plotEndActCountByArrTime(table)
+  plotAverageTravelWait(table,dump.output.to = dump.output.to)
+  plotTripsByDistance(table,dump.output.to = dump.output.to)
+  plotTripDistanceByMode(table,dump.output.to = dump.output.to)
+  plotTripCountByDepTime(table,dump.output.to = dump.output.to)
+  plotStartActCountByDepTime(table,dump.output.to = dump.output.to)
+  plotEndActCountByArrTime(table,dump.output.to = dump.output.to)
   #Not sure if it is needed
   #plotModalShift(table, table,dump.output.to = dump.output.to)
 }
 
 clearDashboard<- function(matsimOutputFolder){
-
+  if (file.exists(dump.output.to)) {
+    unlink(dump.output.to, recursive = TRUE)
+  }
 }
