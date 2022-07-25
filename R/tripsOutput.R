@@ -1716,25 +1716,7 @@ plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {
   return(plt)
 }
 
-#' Creates dashboard for the given table or folder with data
-#'
-#'
-#'
-#' @param folder specifies data source folder with tripsOutput
-#'
-#' @param append specifies if the ouput folder should be erased before creating
-#'
-#'
-#' @return tibble of output_trips from folder. Generates content needed for Simwrapper
-#'
-#' @export
-prepareSimwrapperDashboardFromFolder <- function(folder,dump.output.to = matsimDumpOutputDirectory, append = FALSE) {
-  options(digits = 18)
-  table = readTripsTable(folder)
-  print(dump.output.to)
-  prepareSimwrapperDashboardFromTable(table,dump.output.to,append)
-  return(table)
-}
+
 #' Chooses a function to compare output_trips from the folders.
 #' baseFolder contains all base outputs, policyFolder contains all policy outputs.
 #'
@@ -1885,7 +1867,6 @@ prepareSimwrapperDashboardFromTable <- function(table, dump.output.to = matsimDu
       unlink(dump.output.to, recursive = TRUE)
     }
   }
-  print(" i am here")
   plotModalSplitBarChart(table,dump.output.to = dump.output.to)
   plotModalSplitPieChart(table,dump.output.to = dump.output.to)
   plotAverageTravelWait(table,dump.output.to = dump.output.to)
@@ -1896,6 +1877,25 @@ prepareSimwrapperDashboardFromTable <- function(table, dump.output.to = matsimDu
   plotEndActCountByArrTime(table,dump.output.to = dump.output.to)
   #Not sure if it is needed
   #plotModalShift(table, table,dump.output.to = dump.output.to)
+}
+
+#' Creates dashboard for the given table or folder with data
+#'
+#'
+#'
+#' @param folder specifies data source folder with tripsOutput
+#'
+#' @param append specifies if the ouput folder should be erased before creating
+#'
+#'
+#' @return tibble of output_trips from folder. Generates content needed for Simwrapper
+#'
+#' @export
+prepareSimwrapperDashboardFromFolder <- function(folder,dump.output.to = matsimDumpOutputDirectory, append = FALSE) {
+  options(digits = 18)
+  table = readTripsTable(folder)
+  prepareSimwrapperDashboardFromTable(table,dump.output.to,append)
+  return(table)
 }
 
 clearDashboard<- function(matsimOutputFolder){
