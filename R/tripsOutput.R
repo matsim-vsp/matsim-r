@@ -368,6 +368,7 @@ plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), unit
   } else {
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
+  return(fig)
 }
 
 #' Bar Chart with distance travelled on x-axis and number of trips on y-axis
