@@ -26,3 +26,9 @@ output_after_plots.png
 test_comparing_first/
 test_prepare/
 test.csv
+analysis_berlin/
+analysis_hamburg/
+test_folder/
+berlin-v5.5.3-1pct.output_trips.csv.gz
+config.xml
+network.xml.gz

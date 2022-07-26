@@ -4,10 +4,16 @@
 \alias{prepareSimwrapperDashboardFromFolder}
 \title{Creates dashboard for the given table or folder with data}
 \usage{
-prepareSimwrapperDashboardFromFolder(folder, append = FALSE)
+prepareSimwrapperDashboardFromFolder(
+  folder,
+  dump.output.to = matsimDumpOutputDirectory,
+  append = FALSE
+)
 }
 \arguments{
 \item{folder}{specifies data source folder with tripsOutput}
+
+\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard and all plots}
 
 \item{append}{specifies if the ouput folder should be erased before creating}
 }

@@ -19,12 +19,14 @@
 #' @import ggalluvial
 #' @import ggrepel
 #' @import tidyverse
+#' @import tidyr
 #' @import ggplot2
 #' @import yaml
 #' @import plotly
 #' @import leaflet
 #' @import forcats
 #' @import lubridate
+#' @import htmltools
 
 # NETWORK = "kelheim.output_network.xml"
 # NETWORK = "network.xml"
