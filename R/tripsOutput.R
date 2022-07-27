@@ -231,8 +231,10 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
 
   if (file.exists(dump.output.to)) {
     #ggsave(paste0(dump.output.to, "/modalSplitBarChart.png"),width = 6,height = 10, fig)
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/modalSplitBarChart.html"))
   } else {
     dir.create(dump.output.to)
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/modalSplitBarChart.html"))
     #ggsave(paste0(dump.output.to, "/modalSplitBarChart.png"),width = 6,height = 10, fig)
   }
 
@@ -320,9 +322,11 @@ plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), unit
 
   #files
   if (file.exists(dump.output.to)) {
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/averageTravelWait.html"))
     #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
   } else {
     dir.create(dump.output.to)
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/averageTravelWait.html"))
     #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
   }
 
@@ -449,9 +453,11 @@ plotTripsByDistance <- function(tripsTable, unite.columns = character(0), united
 
   #files
   if (file.exists(dump.output.to)) {
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/tripsPerDistance.html"))
     #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
   } else {
     dir.create(dump.output.to)
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/tripsPerDistance.html"))
     #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
   }
 
@@ -542,9 +548,11 @@ plotTripDistanceByMode <- function(tripsTable, unite.columns = character(0), uni
 
   #files
   if (file.exists(dump.output.to)) {
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/tripsPerDistanceByMode.html"))
     #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
   } else {
     dir.create(dump.output.to)
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/tripsPerDistanceByMode.html"))
     #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
   }
 
@@ -654,9 +662,11 @@ plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), uni
 
   #files
   if (file.exists(dump.output.to)) {
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/countTripsByDep.html"))
     #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
   } else {
     dir.create(dump.output.to)
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/countTripsByDep.html"))
     #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
   }
 
@@ -763,10 +773,11 @@ plotStartActCountByDepTime <- function(tripsTable, unite.columns = character(0),
 
   #files
   if (file.exists(dump.output.to)) {
-    #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/countTripsByDep.html"))
   } else {
     dir.create(dump.output.to)
-    #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/countTripsByDep.html"))
+
   }
 
   # Generating yaml and output_files
@@ -875,10 +886,11 @@ plotEndActCountByArrTime <- function(tripsTable, unite.columns = character(0), u
 
   #files
   if (file.exists(dump.output.to)) {
-    #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/countEndActByArr.html"))
   } else {
     dir.create(dump.output.to)
-    #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/countEndActByArr.html"))
+
   }
 
   # Generating yaml and output_files
