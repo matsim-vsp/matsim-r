@@ -8,7 +8,8 @@ plotTripDistanceByMode(
   tripsTable,
   unite.columns = character(0),
   united.name = "united",
-  dump.output.to = matsimDumpOutputDirectory
+  dump.output.to = matsimDumpOutputDirectory,
+  only.files = FALSE
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ plotTripDistanceByMode(
 \item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart}
 
 \item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored}
+
+\item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
 }
 \value{
 Bar Chart plot of distance traveled per mode

@@ -105,11 +105,13 @@ readTripsTable <- function(pathToMATSimOutputDirectory = ".") {
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #'
 #' @return Pie Chart plot of transport mode distribution, values given in percents
 #'
 #' @export
-plotModalSplitPieChart <- function(tripsTable, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory) {
+plotModalSplitPieChart <- function(tripsTable, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory,
+                                   only.files = FALSE) {
 
   # If some columns should be united
   if (length(unite.columns) != 0) {
@@ -187,8 +189,10 @@ plotModalSplitPieChart <- function(tripsTable, unite.columns = character(0), uni
   } else {
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
-  (plt)
-  return(plt)
+  if(!only.files){
+    return(plt)
+  }
+
 }
 
 #' Plot main_mode as a bar Chart
@@ -206,11 +210,13 @@ plotModalSplitPieChart <- function(tripsTable, unite.columns = character(0), uni
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #'
 #' @return Bar Chart plot of transport mode distribution, values given in percents
 #'
 #' @export
-plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory) {
+plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
+                                   only.files = FALSE) {
 
   # If some columns should be united
   if (length(unite.columns) != 0) {
@@ -220,15 +226,7 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
   tripsTableCount <- tripsTable %>%
     count(main_mode) %>%
     arrange(desc(n))
-  # plotting
   text_for_y = tripsTableCount$n
-  fig = plot_ly(data = tripsTableCount,x = ~main_mode,y = ~n,type = "bar",
-               text = text_for_y,
-               textposition = "auto",
-               name = "Distribution of transport type")
-  fig = fig %>% layout(yaxis = list(title = "Count"),barmode = "group")
-  fig
-
   if (file.exists(dump.output.to)) {
     #ggsave(paste0(dump.output.to, "/modalSplitBarChart.png"),width = 6,height = 10, fig)
     htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/modalSplitBarChart.html"))
@@ -282,8 +280,16 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
   } else {
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
-  #plotly::ggplotly(plt)
-  return(fig)
+  # plotting
+  if(!only.files){
+    fig = plot_ly(data = tripsTableCount,x = ~main_mode,y = ~n,type = "bar",
+                  text = text_for_y,
+                  textposition = "auto",
+                  name = "Distribution of transport type")
+    fig = fig %>% layout(yaxis = list(title = "Count"),barmode = "group")
+    fig
+    return(fig)
+  }
 }
 
 #' Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
@@ -298,11 +304,13 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #'
 #' @return Bar Chart plot of average time spent on travel/wait
 #'
 #' @export
-plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory) {
+plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
+                                  only.files = FALSE) {
 
   # If some columns should be united
   if (length(unite.columns) != 0) {
@@ -314,11 +322,6 @@ plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), unit
                                        wait_time_avg = hms::hms(seconds_to_period(mean(wait_time)))) %>%
     mutate(trav_time_avg = minute(trav_time_avg),wait_time_avg = minute(wait_time_avg))
 
-
-  fig = plot_ly(data = avg_time,x = ~main_mode,y = ~trav_time_avg,type = 'bar',name = "AVG Time Travelling")
-  fig = fig %>% add_trace(y = ~wait_time_avg,name = "AVG Time Waiting")
-  fig = fig %>% layout(yaxis = list(title = "Time spent (in minutes)"),barmode = "group")
-  fig
 
   #files
   if (file.exists(dump.output.to)) {
@@ -372,7 +375,15 @@ plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), unit
   } else {
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
-  return(fig)
+  #plotting
+  if(!only.files){
+    fig = plot_ly(data = avg_time,x = ~main_mode,y = ~trav_time_avg,type = 'bar',name = "AVG Time Travelling")
+    fig = fig %>% add_trace(y = ~wait_time_avg,name = "AVG Time Waiting")
+    fig = fig %>% layout(yaxis = list(title = "Time spent (in minutes)"),barmode = "group")
+    fig
+    return(fig)
+  }
+
 }
 
 #' Bar Chart with distance travelled on x-axis and number of trips on y-axis
@@ -387,11 +398,12 @@ plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), unit
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
-#'
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #' @return Bar Chart plot of count of trips among distance travelled
 #'
 #' @export
-plotTripsByDistance <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory) {
+plotTripsByDistance <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
+                                only.files = FALSE) {
 
 
   # If some columns should be united
@@ -442,14 +454,7 @@ plotTripsByDistance <- function(tripsTable, unite.columns = character(0), united
   tableToWrite$dist_cat = factor(tableToWrite$dist_cat,ordered = TRUE,
                                  levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km"))
   tableToWrite = tableToWrite %>% arrange(dist_cat)
-  plt = ggplot(tripsTable_result) +
-    geom_bar(aes(x = dist_cat,fill = main_mode),position = position_dodge())+
-    ggtitle("Number of trips per travelling distance")
 
-
-
-  fig = plotly::ggplotly(plt)
-  fig
 
   #files
   if (file.exists(dump.output.to)) {
@@ -503,7 +508,15 @@ plotTripsByDistance <- function(tripsTable, unite.columns = character(0), united
   } else {
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
-  return(fig)
+  if(!only.files){
+    plt = ggplot(tripsTable_result) +
+      geom_bar(aes(x = dist_cat,fill = main_mode),position = position_dodge())+
+      ggtitle("Number of trips per travelling distance")
+    fig = plotly::ggplotly(plt)
+    fig
+    return(fig)
+  }
+
 }
 
 #' Bar Chart with distance travelled on x-axis and number of trips on y-axis
@@ -518,11 +531,13 @@ plotTripsByDistance <- function(tripsTable, unite.columns = character(0), united
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #'
 #' @return Bar Chart plot of distance traveled per mode
 #'
 #' @export
-plotTripDistanceByMode <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory) {
+plotTripDistanceByMode <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
+                                   only.files = FALSE) {
 
 
   # If some columns should be united
@@ -536,15 +551,7 @@ plotTripDistanceByMode <- function(tripsTable, unite.columns = character(0), uni
     group_by(main_mode) %>%
     summarize(avg_dist = mean(traveled_distance)/1000)
   attr(tripsTable,"table_name") = table_name
-  text_for_y = round(tripsTable$avg_dist,digits = 2)
 
-  fig = plot_ly(data = tripsTable,x = ~main_mode,y = ~avg_dist,
-                type = 'bar',
-                text = text_for_y,
-                textposition = "auto",
-                name = "AVG Distance traveled by a person over a day")
-  fig = fig %>% layout(yaxis = list(title = "Distance (kms)"),barmode = "group")
-  fig
 
   #files
   if (file.exists(dump.output.to)) {
@@ -598,7 +605,18 @@ plotTripDistanceByMode <- function(tripsTable, unite.columns = character(0), uni
   } else {
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
-  return(fig)
+  if(!only.files){
+    text_for_y = round(tripsTable$avg_dist,digits = 2)
+
+    fig = plot_ly(data = tripsTable,x = ~main_mode,y = ~avg_dist,
+                  type = 'bar',
+                  text = text_for_y,
+                  textposition = "auto",
+                  name = "AVG Distance traveled by a person over a day")
+    fig = fig %>% layout(yaxis = list(title = "Distance (kms)"),barmode = "group")
+    fig
+    return(fig)
+  }
 }
 
 
@@ -615,11 +633,12 @@ plotTripDistanceByMode <- function(tripsTable, unite.columns = character(0), uni
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
-#'
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #' @return Bar Chart plot of distance traveled per mode
 #'
 #' @export
-plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory) {
+plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
+                                   only.files = FALSE) {
 
 
   # If some columns should be united
@@ -656,9 +675,6 @@ plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), uni
     tableToWrite = cbind(tableToWrite,newColumn)
   }
   #print(tableToWrite)
-  fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
-  fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group")
-  fig
 
   #files
   if (file.exists(dump.output.to)) {
@@ -712,7 +728,12 @@ plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), uni
   } else {
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
-  return(fig)
+  if(!only.files){
+    fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
+    fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group")
+    fig
+    return(fig)
+  }
 }
 
 #' Scatter plot with departure time x-axis and number start activities on y-axis
@@ -727,11 +748,12 @@ plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), uni
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
-#'
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #' @return Bar Chart plot of distance traveled per mode
 #'
 #' @export
-plotStartActCountByDepTime <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory) {
+plotStartActCountByDepTime <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
+                                       only.files = FALSE) {
 
 
   # If some columns should be united
@@ -766,11 +788,6 @@ plotStartActCountByDepTime <- function(tripsTable, unite.columns = character(0),
     #print(newColumn)
     tableToWrite = cbind(tableToWrite,newColumn)
   }
-  #print(tableToWrite)
-  fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~start_activity_type)
-  fig = fig %>% layout(yaxis = list(title = "Count of start activities per departure Time"),barmode = "group")
-  fig
-
   #files
   if (file.exists(dump.output.to)) {
     htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/countTripsByDep.html"))
@@ -824,7 +841,13 @@ plotStartActCountByDepTime <- function(tripsTable, unite.columns = character(0),
   } else {
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
-  return(fig)
+  if(!only.files){
+    fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~start_activity_type)
+    fig = fig %>% layout(yaxis = list(title = "Count of start activities per departure Time"),barmode = "group")
+    fig
+    return(fig)
+  }
+
 }
 
 #' Scatter plot with arrival time x-axis and number end activities on y-axis
@@ -839,11 +862,13 @@ plotStartActCountByDepTime <- function(tripsTable, unite.columns = character(0),
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #'
 #' @return Bar Chart plot of distance traveled per mode
 #'
 #' @export
-plotEndActCountByArrTime <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory) {
+plotEndActCountByArrTime <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
+                                     only.files = FALSE) {
 
 
   # If some columns should be united
@@ -879,10 +904,7 @@ plotEndActCountByArrTime <- function(tripsTable, unite.columns = character(0), u
     #print(newColumn)
     tableToWrite = cbind(tableToWrite,newColumn)
   }
-  #print(tableToWrite)
-  fig = plot_ly(tripsTable,x = ~arr_time,y = ~n,type = "scatter",mode = "line",linetype = ~end_activity_type)
-  fig = fig %>% layout(yaxis = list(title = "Count of end activities per arrival Time"),barmode = "group")
-  fig
+
 
   #files
   if (file.exists(dump.output.to)) {
@@ -937,7 +959,13 @@ plotEndActCountByArrTime <- function(tripsTable, unite.columns = character(0), u
   } else {
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
-  return(fig)
+  if(!only.files){
+    fig = plot_ly(tripsTable,x = ~arr_time,y = ~n,type = "scatter",mode = "line",linetype = ~end_activity_type)
+    fig = fig %>% layout(yaxis = list(title = "Count of end activities per arrival Time"),barmode = "group")
+    fig
+    return(fig)
+  }
+
 }
 
 
@@ -1023,7 +1051,6 @@ plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FA
     joined$base_mode[grep(paste0(unite.columns, collapse = "|"), joined$base_mode)] <- united.name
     joined$policy_mode[grep(paste0(unite.columns, collapse = "|"), joined$policy_mode)] <- united.name
   }
-  #########################################################
   # Generating yaml and output_files
   if (file.exists(dump.output.to)) {
     write.csv2(joined, paste0(dump.output.to, "/modalShift.csv"), row.names = FALSE)
@@ -1038,7 +1065,6 @@ plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FA
 
 
 
-  ##########################################################
 
   plt = ggplot(joined, aes(y = n, axis1 = base_mode, axis2 = policy_mode)) +
     geom_alluvium(aes(fill = base_mode), width = 1 / 8, knot.pos = 0) +
@@ -1080,7 +1106,6 @@ plotModalShiftBar <- function(tripsTable1, tripsTable2, unite.columns = characte
   tripsTable2  = tripsTable2 %>% mutate(type = "policy")
 
   total_trips = rbind(tripsTable1,tripsTable2)
-  ##########################################################
 
   plt = ggplot(total_trips, aes(x =main_mode,fill = factor(type)))+
     geom_bar(position = position_dodge())+
@@ -1486,7 +1511,6 @@ compareTripTypesBarChart <- function(tripsTable1,tripsTable2,shapeTable,crs,dump
   result_table = rbind(filtered_inside1,filtered_origin1,filtered_destination1,filtered_transit1,
                        filtered_inside2,filtered_origin2,filtered_destination2,filtered_transit2)
 
-  #########################################################
   plt = ggplot(result_table, aes(x =type,fill = factor(table_num)))+
     geom_bar(position = position_dodge())+
     coord_flip()
@@ -1885,14 +1909,14 @@ prepareSimwrapperDashboardFromTable <- function(table, dump.output.to = matsimDu
       unlink(dump.output.to, recursive = TRUE)
     }
   }
-  plotModalSplitBarChart(table,dump.output.to = dump.output.to)
-  plotModalSplitPieChart(table,dump.output.to = dump.output.to)
-  plotAverageTravelWait(table,dump.output.to = dump.output.to)
-  plotTripsByDistance(table,dump.output.to = dump.output.to)
-  plotTripDistanceByMode(table,dump.output.to = dump.output.to)
-  plotTripCountByDepTime(table,dump.output.to = dump.output.to)
-  plotStartActCountByDepTime(table,dump.output.to = dump.output.to)
-  plotEndActCountByArrTime(table,dump.output.to = dump.output.to)
+  plotModalSplitBarChart(table,dump.output.to = dump.output.to,only.files = TRUE)
+  plotModalSplitPieChart(table,dump.output.to = dump.output.to,only.files = TRUE)
+  plotAverageTravelWait(table,dump.output.to = dump.output.to,only.files = TRUE)
+  plotTripsByDistance(table,dump.output.to = dump.output.to,only.files = TRUE)
+  plotTripDistanceByMode(table,dump.output.to = dump.output.to,only.files = TRUE)
+  plotTripCountByDepTime(table,dump.output.to = dump.output.to,only.files = TRUE)
+  plotStartActCountByDepTime(table,dump.output.to = dump.output.to,only.files = TRUE)
+  plotEndActCountByArrTime(table,dump.output.to = dump.output.to,only.files = TRUE)
   #Not sure if it is needed
   #plotModalShift(table, table,dump.output.to = dump.output.to)
 }
