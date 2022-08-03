@@ -227,6 +227,14 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
     count(main_mode) %>%
     arrange(desc(n))
   text_for_y = tripsTableCount$n
+
+
+  fig = plot_ly(data = tripsTableCount,x = ~main_mode,y = ~n,type = "bar",
+                text = text_for_y,
+                textposition = "auto",
+                name = "Distribution of transport type")
+  fig = fig %>% layout(yaxis = list(title = "Count"),barmode = "group")
+
   if (file.exists(dump.output.to)) {
     #ggsave(paste0(dump.output.to, "/modalSplitBarChart.png"),width = 6,height = 10, fig)
     htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/modalSplitBarChart.html"))
@@ -282,11 +290,7 @@ plotModalSplitBarChart <- function(tripsTable, unite.columns = character(0), uni
   }
   # plotting
   if(!only.files){
-    fig = plot_ly(data = tripsTableCount,x = ~main_mode,y = ~n,type = "bar",
-                  text = text_for_y,
-                  textposition = "auto",
-                  name = "Distribution of transport type")
-    fig = fig %>% layout(yaxis = list(title = "Count"),barmode = "group")
+
     fig
     return(fig)
   }
@@ -322,6 +326,10 @@ plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), unit
                                        wait_time_avg = hms::hms(seconds_to_period(mean(wait_time)))) %>%
     mutate(trav_time_avg = minute(trav_time_avg),wait_time_avg = minute(wait_time_avg))
 
+
+  fig = plot_ly(data = avg_time,x = ~main_mode,y = ~trav_time_avg,type = 'bar',name = "AVG Time Travelling")
+  fig = fig %>% add_trace(y = ~wait_time_avg,name = "AVG Time Waiting")
+  fig = fig %>% layout(yaxis = list(title = "Time spent (in minutes)"),barmode = "group")
 
   #files
   if (file.exists(dump.output.to)) {
@@ -377,9 +385,7 @@ plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), unit
   }
   #plotting
   if(!only.files){
-    fig = plot_ly(data = avg_time,x = ~main_mode,y = ~trav_time_avg,type = 'bar',name = "AVG Time Travelling")
-    fig = fig %>% add_trace(y = ~wait_time_avg,name = "AVG Time Waiting")
-    fig = fig %>% layout(yaxis = list(title = "Time spent (in minutes)"),barmode = "group")
+
     fig
     return(fig)
   }
@@ -456,6 +462,11 @@ plotTripsByDistance <- function(tripsTable, unite.columns = character(0), united
   tableToWrite = tableToWrite %>% arrange(dist_cat)
 
 
+  plt = ggplot(tripsTable_result) +
+    geom_bar(aes(x = dist_cat,fill = main_mode),position = position_dodge())+
+    ggtitle("Number of trips per travelling distance")
+  fig = plotly::ggplotly(plt)
+
   #files
   if (file.exists(dump.output.to)) {
     htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/tripsPerDistance.html"))
@@ -509,10 +520,7 @@ plotTripsByDistance <- function(tripsTable, unite.columns = character(0), united
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
   if(!only.files){
-    plt = ggplot(tripsTable_result) +
-      geom_bar(aes(x = dist_cat,fill = main_mode),position = position_dodge())+
-      ggtitle("Number of trips per travelling distance")
-    fig = plotly::ggplotly(plt)
+
     fig
     return(fig)
   }
@@ -552,6 +560,13 @@ plotTripDistanceByMode <- function(tripsTable, unite.columns = character(0), uni
     summarize(avg_dist = mean(traveled_distance)/1000)
   attr(tripsTable,"table_name") = table_name
 
+  text_for_y = round(tripsTable$avg_dist,digits = 2)
+  fig = plot_ly(data = tripsTable,x = ~main_mode,y = ~avg_dist,
+                type = 'bar',
+                text = text_for_y,
+                textposition = "auto",
+                name = "AVG Distance traveled by a person over a day")
+  fig = fig %>% layout(yaxis = list(title = "Distance (kms)"),barmode = "group")
 
   #files
   if (file.exists(dump.output.to)) {
@@ -606,14 +621,9 @@ plotTripDistanceByMode <- function(tripsTable, unite.columns = character(0), uni
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
   if(!only.files){
-    text_for_y = round(tripsTable$avg_dist,digits = 2)
 
-    fig = plot_ly(data = tripsTable,x = ~main_mode,y = ~avg_dist,
-                  type = 'bar',
-                  text = text_for_y,
-                  textposition = "auto",
-                  name = "AVG Distance traveled by a person over a day")
-    fig = fig %>% layout(yaxis = list(title = "Distance (kms)"),barmode = "group")
+
+
     fig
     return(fig)
   }
@@ -676,6 +686,9 @@ plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), uni
   }
   #print(tableToWrite)
 
+  fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
+  fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group")
+
   #files
   if (file.exists(dump.output.to)) {
     htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/countTripsByDep.html"))
@@ -729,8 +742,7 @@ plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), uni
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
   if(!only.files){
-    fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
-    fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group")
+
     fig
     return(fig)
   }
@@ -788,6 +800,11 @@ plotStartActCountByDepTime <- function(tripsTable, unite.columns = character(0),
     #print(newColumn)
     tableToWrite = cbind(tableToWrite,newColumn)
   }
+
+  fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~start_activity_type)
+  fig = fig %>% layout(yaxis = list(title = "Count of start activities per departure Time"),barmode = "group")
+
+
   #files
   if (file.exists(dump.output.to)) {
     htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/countTripsByDep.html"))
@@ -842,8 +859,6 @@ plotStartActCountByDepTime <- function(tripsTable, unite.columns = character(0),
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
   if(!only.files){
-    fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~start_activity_type)
-    fig = fig %>% layout(yaxis = list(title = "Count of start activities per departure Time"),barmode = "group")
     fig
     return(fig)
   }
@@ -905,6 +920,9 @@ plotEndActCountByArrTime <- function(tripsTable, unite.columns = character(0), u
     tableToWrite = cbind(tableToWrite,newColumn)
   }
 
+  fig = plot_ly(tripsTable,x = ~arr_time,y = ~n,type = "scatter",mode = "line",linetype = ~end_activity_type)
+  fig = fig %>% layout(yaxis = list(title = "Count of end activities per arrival Time"),barmode = "group")
+
 
   #files
   if (file.exists(dump.output.to)) {
@@ -960,8 +978,6 @@ plotEndActCountByArrTime <- function(tripsTable, unite.columns = character(0), u
     write_yaml(yaml_list, paste0(dump.output.to, "/dashboard-sum.yaml"))
   }
   if(!only.files){
-    fig = plot_ly(tripsTable,x = ~arr_time,y = ~n,type = "scatter",mode = "line",linetype = ~end_activity_type)
-    fig = fig %>% layout(yaxis = list(title = "Count of end activities per arrival Time"),barmode = "group")
     fig
     return(fig)
   }
