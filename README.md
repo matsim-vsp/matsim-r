@@ -15,7 +15,8 @@ You can install the package right now:
 - If you don't already have devtools installed, first run this:  
   - `install.packages("devtools")`
 
-- Then `devtools::install_github("matsim-vsp/matsim-r")`
+- Then run: 
+  - `devtools::install_github("matsim-vsp/matsim-r")`
 
 To install the package from specific branch use:
 `devtools::install_github("matsim-vsp/matsim-r",ref="{name of the branch}")`
