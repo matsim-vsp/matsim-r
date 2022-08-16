@@ -13,7 +13,7 @@ This work is ongoing and submissions are welcome!
 You can install the package right now:
 
 - If you don't already have devtools installed, first run this:  
-  - `install.packages("devtools")` first
+  - `install.packages("devtools")`
 
 - Then `devtools::install_github("matsim-vsp/matsim-r")`
 
