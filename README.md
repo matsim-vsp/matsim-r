@@ -10,14 +10,15 @@ This work is ongoing and submissions are welcome!
 
 ## Install
 
-You can install the package right now using:
-`devtools::install_github("matsim-vsp/matsim-r")`
+You can install the package right now:
 
+- If you don't already have devtools installed, first run this:  
+  - `install.packages("devtools")` first
+
+- Then `devtools::install_github("matsim-vsp/matsim-r")`
 
 To install the package from specific branch use:
 `devtools::install_github("matsim-vsp/matsim-r",ref="{name of the branch}")`
-
-If you don't already have devtools:  `install.packages("devtools")` first!
 
 ## Build instructions
 
