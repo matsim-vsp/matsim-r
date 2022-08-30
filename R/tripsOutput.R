@@ -1774,6 +1774,63 @@ plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {
   return(plt)
 }
 
+#' Creates an instance of ODMatrix(origin/destination) in conventional form or for the simwrapper
+#'
+#'
+#'
+#' @param tripsTable table of output trips(from readTripsTable)
+#'
+#' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#'
+#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#'
+#' @param dump.output.to that saves result of all comparisons between each base and each policy.
+#' For now it creates plotModalShiftBar() for the output_trips
+#'
+#' @return list of tibbles, list of all base and policy output_trips as tibble
+#'
+#' @export
+deriveODMatrix<- function(tripsTable,shape,crs,dump.output.to = matsimDumpOutputDirectory,simwrapper = FALSE){
+  sfTable <- transformToSf(tripsTable,crs,geometry.type = st_point())
+
+  if (st_crs(shape) == NA) {
+    st_crs(shape) <- crs
+  }
+  shape = st_transform(shape,crs = crs)
+
+  sf_table <- transformToSf(tripsTable, crs = crs, geometry.type = st_point())
+
+  sf_start = sfTable %>% select(trip_id,start_wkt)
+  st_geometry(sfTable) = "end_wkt"
+  sf_end = sfTable %>% select(trip_id,end_wkt)
+
+  #Get all intersects
+  sf_intersect_start = st_contains(shape,sf_start)
+  sf_intersect_end = st_contains(shape,sf_end)
+
+  print(sf_intersect_start)
+
+  print(sf_intersect_end)
+
+  result_tibble = as_tibble(data.frame(matrix(nrow=0,ncol=nrow(shape))))
+  colnames(result_tibble) = shape$OBJECTID
+
+  for(i in 1:length(sf_intersect_start)){
+    temp = c()
+    for(j in 1:length(sf_intersect_start)){
+      start_i = sf_intersect_start[[i]]
+      end_j = sf_intersect_end[[j]]
+
+      number_of_trips = length(intersect(start_i,end_j))
+
+      temp = append(temp,number_of_trips)
+      print(number_of_trips)
+    }
+    result_tibble = rbind(result_tibble,temp)
+  }
+  colnames(result_tibble) = shape$OBJECTID
+  return(result_tibble)
+}
 
 #' Chooses a function to compare output_trips from the folders.
 #' baseFolder contains all base outputs, policyFolder contains all policy outputs.
