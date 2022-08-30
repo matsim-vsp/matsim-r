@@ -1829,6 +1829,15 @@ deriveODMatrix<- function(tripsTable,shape,crs,dump.output.to = matsimDumpOutput
     result_tibble = rbind(result_tibble,temp)
   }
   colnames(result_tibble) = shape$OBJECTID
+
+  # Generating yaml and output_files
+  if (file.exists(dump.output.to)) {
+    write_csv2(result_tibble,paste0(dump.output.to,"/ODMatrix.csv"))
+  } else {
+    dir.create(dump.output.to)
+    write_csv2(result_tibble,paste0(dump.output.to,"/ODMatrix.csv"))
+  }
+
   return(result_tibble)
 }
 
