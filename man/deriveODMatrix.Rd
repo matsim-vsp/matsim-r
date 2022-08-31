@@ -6,24 +6,28 @@
 \usage{
 deriveODMatrix(
   tripsTable,
-  shape,
+  shapePath,
   crs,
   dump.output.to = matsimDumpOutputDirectory,
-  simwrapper = FALSE
+  simwrapper = FALSE,
+  colnames = "numeric"
 )
 }
 \arguments{
 \item{tripsTable}{table of output trips(from readTripsTable)}
 
+\item{shapePath}{full path to shapefile}
+
 \item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
 
-\item{dump.output.to}{that saves result of all comparisons between each base and each policy.
-For now it creates plotModalShiftBar() for the output_trips}
+\item{dump.output.to}{path to a folder to save csv file of ODMatrix}
 
-\item{shapeTable}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
+\item{simwrapper}{create output in a simwrapper form if set to path of the shapefile}
+
+\item{colnames}{if the specific shapefile contains known columns, they could be specified as name for columns OD}
 }
 \value{
-list of tibbles, list of all base and policy output_trips as tibble
+tibble of origin/destination matrix
 }
 \description{
 Creates an instance of ODMatrix(origin/destination) in conventional form or for the simwrapper
