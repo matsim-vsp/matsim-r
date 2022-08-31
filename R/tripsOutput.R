@@ -1784,14 +1784,17 @@ plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {
 #'
 #' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
 #'
-#' @param dump.output.to that saves result of all comparisons between each base and each policy.
-#' For now it creates plotModalShiftBar() for the output_trips
+#' @param dump.output.to path to a folder to save csv file of ODMatrix
 #'
-#' @return list of tibbles, list of all base and policy output_trips as tibble
+#' @param simwrapper create output in a simwrapper form if set to TRUE
+#'
+#' @return tibble of origin/destination matrix
 #'
 #' @export
-deriveODMatrix<- function(tripsTable,shape,crs,dump.output.to = matsimDumpOutputDirectory,simwrapper = FALSE){
+deriveODMatrix<- function(tripsTable,shape,crs,dump.output.to = matsimDumpOutputDirectory,simwrapper = FALSE,colnames = "numeric"){
   sfTable <- transformToSf(tripsTable,crs,geometry.type = st_point())
+
+
 
   if (st_crs(shape) == NA) {
     st_crs(shape) <- crs
@@ -1812,6 +1815,8 @@ deriveODMatrix<- function(tripsTable,shape,crs,dump.output.to = matsimDumpOutput
 
   #print(sf_intersect_end)
 
+
+
   result_tibble = as_tibble(data.frame(matrix(nrow=0,ncol=nrow(shape))))
   colnames(result_tibble) = 1:nrow(shape)
 
@@ -1828,15 +1833,28 @@ deriveODMatrix<- function(tripsTable,shape,crs,dump.output.to = matsimDumpOutput
     }
     result_tibble = rbind(result_tibble,temp)
   }
-  colnames(result_tibble) = sapply(1:nrow(shape),as.character)
-  rownames(result_tibble) = sapply(1:nrow(shape),as.character)
+
+  if(colnames!="numeric"){
+    colnames(result_tibble) = shape[[colnames]]
+    rownames(result_tibble) = shape[[colnames]]
+  }else{
+    colnames(result_tibble) = sapply(1:nrow(shape),as.character)
+    rownames(result_tibble) = sapply(1:nrow(shape),as.character)
+  }
+
 
   result_melt = melt(as.matrix(result_tibble))
+  colnames(result_melt) = c("origin","destination",1)
   plt = ggplot(result_melt)+
-    geom_tile(aes(X1,X2,fill = value))
+    geom_tile(aes(origin,destination,fill = 1))
   ggplotly(plt)
   # Generating yaml and output_files
-  if (file.exists(dump.output.to)) {
+  if (file.exists(dump.output.to) & simwrapper == TRUE) {
+    write.table(result_melt,paste0(dump.output.to,"/ODMatrix.csv"),row.names = FALSE,sep = ";")
+  } else if(!file.exists(dump.output.to) & simwrapper == TRUE) {
+    dir.create(dump.output.to)
+    write.table(result_melt,paste0(dump.output.to,"/ODMatrix.csv"),row.names = FALSE,sep = ";")
+  } else if (file.exists(dump.output.to) & simwrapper == FALSE) {
     write_csv2(result_tibble,paste0(dump.output.to,"/ODMatrix.csv"))
   } else {
     dir.create(dump.output.to)
