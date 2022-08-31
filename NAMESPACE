@@ -3,6 +3,7 @@
 export(compareBasePolicyOutput)
 export(compareBasePolicyShapeOutput)
 export(compareTripTypesBarChart)
+export(deriveODMatrix)
 export(filterByRegion)
 export(generateXYHexagonYaml)
 export(getCrsFromConfig)
