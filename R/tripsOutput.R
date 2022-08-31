@@ -1808,12 +1808,12 @@ deriveODMatrix<- function(tripsTable,shape,crs,dump.output.to = matsimDumpOutput
   sf_intersect_start = st_contains(shape,sf_start)
   sf_intersect_end = st_contains(shape,sf_end)
 
-  print(sf_intersect_start)
+  #print(sf_intersect_start)
 
-  print(sf_intersect_end)
+  #print(sf_intersect_end)
 
   result_tibble = as_tibble(data.frame(matrix(nrow=0,ncol=nrow(shape))))
-  colnames(result_tibble) = shape$OBJECTID
+  colnames(result_tibble) = 1:nrow(shape)
 
   for(i in 1:length(sf_intersect_start)){
     temp = c()
@@ -1824,12 +1824,17 @@ deriveODMatrix<- function(tripsTable,shape,crs,dump.output.to = matsimDumpOutput
       number_of_trips = length(intersect(start_i,end_j))
 
       temp = append(temp,number_of_trips)
-      print(number_of_trips)
+      #print(number_of_trips)
     }
     result_tibble = rbind(result_tibble,temp)
   }
-  colnames(result_tibble) = shape$OBJECTID
+  colnames(result_tibble) = sapply(1:nrow(shape),as.character)
+  rownames(result_tibble) = sapply(1:nrow(shape),as.character)
 
+  result_melt = melt(as.matrix(result_tibble))
+  plt = ggplot(result_melt)+
+    geom_tile(aes(X1,X2,fill = value))
+  ggplotly(plt)
   # Generating yaml and output_files
   if (file.exists(dump.output.to)) {
     write_csv2(result_tibble,paste0(dump.output.to,"/ODMatrix.csv"))
