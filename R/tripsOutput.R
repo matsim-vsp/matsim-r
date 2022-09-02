@@ -1780,20 +1780,22 @@ plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {
 #'
 #' @param tripsTable table of output trips(from readTripsTable)
 #'
-#' @param shapePath full path to shapefile
+#' @param shapePath full path to shapefile (if simwrapper TRUE, folder with shapeFile should contain also .dbf with the same name)
 #'
 #' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
 #'
 #' @param dump.output.to path to a folder to save csv file of ODMatrix
 #'
-#' @param colnames if the specific shapefile contains known columns, they could be specified as name for columns OD
+#' @param colnames if the specific shapefile contains known columns, they could be specified as name for columns OD. If not given then they get numeric values
 #'
 #' @param simwrapper create output in a simwrapper form if set to path of the shapefile
+#'
+#' @param outer logical that represent if the table should contain outside flow of the shape
 #'
 #' @return tibble of origin/destination matrix
 #'
 #' @export
-deriveODMatrix<- function(tripsTable,shapePath,crs,dump.output.to = matsimDumpOutputDirectory,simwrapper = FALSE,colnames = "numeric"){
+deriveODMatrix<- function(tripsTable,shapePath,crs,dump.output.to = matsimDumpOutputDirectory,simwrapper = FALSE,colnames = "numeric",outer = FALSE){
   sfTable <- transformToSf(tripsTable,crs,geometry.type = st_point())
 
   shape = st_read(shapePath)
@@ -1809,16 +1811,33 @@ deriveODMatrix<- function(tripsTable,shapePath,crs,dump.output.to = matsimDumpOu
   st_geometry(sfTable) = "end_wkt"
   sf_end = sfTable %>% select(trip_id,end_wkt)
 
-  #Get all intersects
+  #Get all inner intersects
   sf_intersect_start = st_contains(shape,sf_start)
   sf_intersect_end = st_contains(shape,sf_end)
 
-  #print(sf_intersect_start)
 
-  #print(sf_intersect_end)
+  if(outer == TRUE){
+    #Get all outer intersects
+    joined_shape = st_union(shape)
+
+    start_inside = st_contains(joined_shape,sf_start)
+    end_inside = st_contains(joined_shape,sf_end)
+
+    start_outside = 1:nrow(sf_start)
+    end_outside = 1:nrow(sf_end)
+
+    start_outside = start_outside[! start_outside %in% start_inside[[1]]]
+
+    end_outside = end_outside[! end_outside %in% end_inside[[1]]]
+
+    sf_intersect_start = append(sf_intersect_start,list(start_outside))
+    sf_intersect_end = append(sf_intersect_end,list(end_outside))
+  }
 
 
 
+
+  # Create matrix out of it
   result_tibble = as_tibble(data.frame(matrix(nrow=0,ncol=nrow(shape))))
   colnames(result_tibble) = 1:nrow(shape)
 
@@ -1838,10 +1857,16 @@ deriveODMatrix<- function(tripsTable,shapePath,crs,dump.output.to = matsimDumpOu
 
   if(colnames!="numeric"){
     colnames(result_tibble) = shape[[colnames]]
-    rownames(result_tibble) = shape[[colnames]]
+    if(outer == TRUE){
+      rownames(result_tibble) = c(shape[[colnames]],"outer")
+      colnames(result_tibble)[length(colnames(result_tibble))]  = "outer"
+    }else{
+      rownames(result_tibble) = shape[[colnames]]
+    }
+
   }else{
-    colnames(result_tibble) = sapply(1:nrow(shape),as.character)
-    rownames(result_tibble) = sapply(1:nrow(shape),as.character)
+    colnames(result_tibble) = sapply(1:length(sf_intersect_start),as.character)
+    rownames(result_tibble) = sapply(1:length(sf_intersect_start),as.character)
   }
 
 

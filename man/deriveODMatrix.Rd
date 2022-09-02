@@ -10,13 +10,14 @@ deriveODMatrix(
   crs,
   dump.output.to = matsimDumpOutputDirectory,
   simwrapper = FALSE,
-  colnames = "numeric"
+  colnames = "numeric",
+  outer = FALSE
 )
 }
 \arguments{
 \item{tripsTable}{table of output trips(from readTripsTable)}
 
-\item{shapePath}{full path to shapefile}
+\item{shapePath}{full path to shapefile (if simwrapper TRUE, folder with shapeFile should contain also .dbf with the same name)}
 
 \item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
 
@@ -24,7 +25,9 @@ deriveODMatrix(
 
 \item{simwrapper}{create output in a simwrapper form if set to path of the shapefile}
 
-\item{colnames}{if the specific shapefile contains known columns, they could be specified as name for columns OD}
+\item{colnames}{if the specific shapefile contains known columns, they could be specified as name for columns OD. If not given then they get numeric values}
+
+\item{outer}{logical that represent if the table should contain outside flow of the shape}
 }
 \value{
 tibble of origin/destination matrix
