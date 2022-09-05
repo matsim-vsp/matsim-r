@@ -15,7 +15,7 @@ deriveODMatrix(
 )
 }
 \arguments{
-\item{tripsTable}{table of output trips(from readTripsTable)}
+\item{tripsTable}{table of output trips(from readTripsTable) or path to trips_output file}
 
 \item{shapePath}{full path to shapefile (if simwrapper TRUE, folder with shapeFile should contain also .dbf with the same name)}
 
@@ -27,7 +27,7 @@ deriveODMatrix(
 
 \item{colnames}{if the specific shapefile contains known columns, they could be specified as name for columns OD. If not given then they get numeric values}
 
-\item{outer}{logical that represent if the table should contain outside flow of the shape}
+\item{outer}{logical that represent if the table should contain outside flow of the shape, it isn't}
 }
 \value{
 tibble of origin/destination matrix
