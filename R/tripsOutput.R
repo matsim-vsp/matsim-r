@@ -1778,7 +1778,7 @@ plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {
 #'
 #'
 #'
-#' @param tripsTable table of output trips(from readTripsTable)
+#' @param tripsTable table of output trips(from readTripsTable) or path to trips_output file
 #'
 #' @param shapePath full path to shapefile (if simwrapper TRUE, folder with shapeFile should contain also .dbf with the same name)
 #'
@@ -1790,12 +1790,20 @@ plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {
 #'
 #' @param simwrapper create output in a simwrapper form if set to path of the shapefile
 #'
-#' @param outer logical that represent if the table should contain outside flow of the shape
+#' @param outer logical that represent if the table should contain outside flow of the shape, it isn't
 #'
 #' @return tibble of origin/destination matrix
 #'
 #' @export
 deriveODMatrix<- function(tripsTable,shapePath,crs,dump.output.to = matsimDumpOutputDirectory,simwrapper = FALSE,colnames = "numeric",outer = FALSE){
+  defaultW <- getOption("warn")
+  options(warn = -1)
+
+  #if tripstable given as folder/file
+  if(sum(class(tripsTable) %in% c("tbl_df","tbl","data.frame"))<1){
+    tripsTable <- readTripsTable(tripsTable)
+  }
+
   sfTable <- transformToSf(tripsTable,crs,geometry.type = st_point())
 
   shape = st_read(shapePath)
@@ -1834,9 +1842,6 @@ deriveODMatrix<- function(tripsTable,shapePath,crs,dump.output.to = matsimDumpOu
     sf_intersect_end = append(sf_intersect_end,list(end_outside))
   }
 
-
-
-
   # Create matrix out of it
   result_tibble = as_tibble(data.frame(matrix(nrow=0,ncol=nrow(shape))))
   colnames(result_tibble) = 1:nrow(shape)
@@ -1855,7 +1860,7 @@ deriveODMatrix<- function(tripsTable,shapePath,crs,dump.output.to = matsimDumpOu
     result_tibble = rbind(result_tibble,temp)
   }
 
-  if(colnames!="numeric"){
+  if(colnames!="numeric" & colnames %in% colnames(shape)){
     colnames(result_tibble) = shape[[colnames]]
     if(outer == TRUE){
       rownames(result_tibble) = c(shape[[colnames]],"outer")
@@ -1872,9 +1877,6 @@ deriveODMatrix<- function(tripsTable,shapePath,crs,dump.output.to = matsimDumpOu
 
   result_melt = melt(as.matrix(result_tibble))
   colnames(result_melt) = c("origin","destination",1)
-  plt = ggplot(result_melt)+
-    geom_tile(aes(origin,destination,fill = 1))
-  ggplotly(plt)
   # Generating yaml and output_files
 
 
@@ -1899,11 +1901,13 @@ deriveODMatrix<- function(tripsTable,shapePath,crs,dump.output.to = matsimDumpOu
     dbfFile = paste0("../",substr(shapePath,start = 1,stop = nchar(shapePath)-3),"dbf"),
     scaleFactor = 1,
     lineWidth = 50,
-    csvFile = "ODMatrix.csv"
+    csvFile = "ODMatrix.csv",
+    idColumn = colnames(shape)[1]
 
   )
   write_yaml(yaml_list, paste0(dump.output.to, "/viz-od-flow.yaml"))
 
+  options(warn = defaultW)
   return(result_tibble)
 }
 
