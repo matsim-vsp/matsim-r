@@ -675,11 +675,16 @@ plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), uni
       filter(main_mode == mode) %>%
       mutate(mode = n) %>%
       select(dep_time,mode)
+    for(i in tableToWrite$dep_time){
+      if(!i %in% newColumn$dep_time){
+        newColumn = rbind(newColumn,c(i,0))
+      }
+    }
     #diff = setdiff(tableToWrite$dist_cat,newColumn$dist_cat)
     #for(dist in diff){
       #newColumn = rbind(newColumn,c(dist,0))
     #}
-    newColumn = newColumn %>%arrange(dep_time) %>% select(-dep_time) %>% mutate(mode = as.numeric(mode))
+    newColumn = newColumn %>% arrange(dep_time) %>% select(-dep_time) %>% mutate(mode = as.numeric(mode))
     colnames(newColumn)[1] = mode
     #print(newColumn)
     tableToWrite = cbind(tableToWrite,newColumn)
@@ -1047,6 +1052,7 @@ plotDistanceTraveledByType <- function(tripsTable,shapeTable,crs,dump.output.to 
 #'
 #' @export
 plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory) {
+  StatStratum <- ggalluvial::StatStratum
   if (show.onlyChanges == TRUE) {
     joined <- as_tibble(inner_join(tripsTable1, tripsTable2 %>%
       select(trip_id, main_mode), by = "trip_id") %>%
@@ -1855,7 +1861,7 @@ deriveODMatrix<- function(tripsTable,shapePath,crs,dump.output.to = matsimDumpOu
       number_of_trips = length(intersect(start_i,end_j))
 
       temp = append(temp,number_of_trips)
-      #print(number_of_trips)
+
     }
     result_tibble = rbind(result_tibble,temp)
   }
@@ -1902,7 +1908,7 @@ deriveODMatrix<- function(tripsTable,shapePath,crs,dump.output.to = matsimDumpOu
     scaleFactor = 1,
     lineWidth = 50,
     csvFile = "ODMatrix.csv",
-    idColumn = colnames(shape)[1]
+    idColumn = colnames(shape)[1] # at the moment idColumn of shapefile should be the first column
 
   )
   write_yaml(yaml_list, paste0(dump.output.to, "/viz-od-flow.yaml"))
