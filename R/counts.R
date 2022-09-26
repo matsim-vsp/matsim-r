@@ -207,7 +207,7 @@ processLinkStatsDtvDistribution <- function(joinedFrame, from = 0, to = 40000, b
 
   if((to - from) %% by != 0){
 
-    message <- "Parameter 'from', 'to' and 'by' must be valid according to: (to - from) %% by != 0"
+    message <- "Parameter 'from', 'to' and 'by' must be valid according to: (to - from) %% by == 0"
     warning(message)
     return(NA)
   }
