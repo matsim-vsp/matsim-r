@@ -31,7 +31,7 @@ readCounts <- function(file){
   bind_cols(station, volume)
 }
 
-#' Load Linkstats as Tibble into Memory
+#' Load linkstats as tibble into memory
 #'
 #' Reads Linkstats as .tsv created from LinkStats.class
 #' as dataframe into memory.
@@ -51,10 +51,10 @@ readCounts <- function(file){
 #'@export
 readLinkStats <- function(runId, file, sampleSize = NA){
 
-  message <- paste("Read in link stats from run", runId, ". Loading data from", filepath )
+  message <- paste("Read in link stats from run", runId, ". Loading data from", file )
   print(message)
 
-  linkstats <- readr::read_csv(file = filepath)
+  linkstats <- readr::read_csv(file = file)
 
   linkstats.1 <- linkstats %>%
     group_by(linkId) %>%
@@ -83,9 +83,9 @@ readLinkStats <- function(runId, file, sampleSize = NA){
 }
 
 
-#' Loads Counts, a limited number of Linkstats and Network Links as joined Tibble into Memory
+#' Load Counts, a limited number of Linkstats and Network links as joined tibble into memory
 #'
-#'Function to import and join MATSim Counts, Linkstats and Network link types
+#'Function to import and join MATSim Counts, Linkstats and network link types
 #'Linkstats will be aggregated to DTV. An additional sampleSize parameter can be
 #'used to scale DTV values.
 #'Joined tibble can be written to a .csv file to provide processed data for further uses
@@ -161,7 +161,7 @@ mergeCountsAndLinks <- function(countsFilePath, networkFilePath, linkStatsList, 
 #'
 #' Takes a tibble from mergeCountsAndLinks and prepare data for a VIA-style
 #' scatterplot for one or more runs.
-#' Only DTV Values for mode 'car' is processed.
+#' Only DTV values for mode 'car' is processed.
 #'
 #' Pattern "highway." is removed from link type, also link type is factored and
 #' convert tibble to long-format
