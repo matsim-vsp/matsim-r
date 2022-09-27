@@ -2,7 +2,7 @@
 % Please edit documentation in R/counts.R
 \name{mergeCountsAndLinks}
 \alias{mergeCountsAndLinks}
-\title{Loads Counts, a limited number of Linkstats and Network Links as joined Tibble into Memory}
+\title{Load Counts, a limited number of Linkstats and Network links as joined tibble into memory}
 \usage{
 mergeCountsAndLinks(
   countsFilePath,
@@ -27,7 +27,7 @@ mergeCountsAndLinks(
 Tibble with MATSim link id as key ("loc_id"), DTV from MATSim runs and link type
 }
 \description{
-Function to import and join MATSim Counts, Linkstats and Network link types
+Function to import and join MATSim Counts, Linkstats and network link types
 Linkstats will be aggregated to DTV. An additional sampleSize parameter can be
 used to scale DTV values.
 Joined tibble can be written to a .csv file to provide processed data for further uses

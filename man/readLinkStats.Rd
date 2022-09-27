@@ -2,7 +2,7 @@
 % Please edit documentation in R/counts.R
 \name{readLinkStats}
 \alias{readLinkStats}
-\title{Load Linkstats as Tibble into Memory}
+\title{Load linkstats as tibble into memory}
 \usage{
 readLinkStats(runId, file, sampleSize = NA)
 }

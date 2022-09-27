@@ -15,7 +15,7 @@ a long-format tibble, ready to for plotting
 \description{
 Takes a tibble from mergeCountsAndLinks and prepare data for a VIA-style
 scatterplot for one or more runs.
-Only DTV Values for mode 'car' is processed.
+Only DTV values for mode 'car' is processed.
 }
 \details{
 Pattern "highway." is removed from link type, also link type is factored and
