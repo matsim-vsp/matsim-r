@@ -4,17 +4,12 @@
 \alias{mergeCountsAndLinks}
 \title{Loads Counts, a limited number of Linkstats and Network Links as joined Tibble into Memory}
 \usage{
-
-runList = list("run_1" = "path/to/linkstats_1",
-               "run_2" = "path/to/linkstats_2"
-               )
-
 mergeCountsAndLinks(
-  countsFilePath = "path/to/counts.xml",
-  networkFilePath = "path/to/matsim-network.xml.gz",
-  linkStatsList = runList,
-  sampleSize = 0.25,
-  outputFilePath = "path/to/desired/output/file.csv"
+  countsFilePath,
+  networkFilePath,
+  linkStatsList,
+  sampleSize = NA,
+  outputFilePath = NA
 )
 }
 \arguments{
@@ -37,4 +32,20 @@ Linkstats will be aggregated to DTV. An additional sampleSize parameter can be
 used to scale DTV values.
 Joined tibble can be written to a .csv file to provide processed data for further uses
 and to save some run time.
+}
+\examples{
+
+runList = list("run_1" = "path/to/linkstats_1",
+              "run_2" = "path/to/linkstats_2"
+              )
+
+mergeCountsAndLinks(
+ countsFilePath = "path/to/counts.xml",
+ networkFilePath = "path/to/matsim-network.xml.gz",
+ linkStatsList = runList,
+ sampleSize = 0.25,
+ outputFilePath = "path/to/desired/output/file.csv"
+ )
+
+
 }

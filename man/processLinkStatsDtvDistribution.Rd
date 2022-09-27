@@ -4,10 +4,16 @@
 \alias{processLinkStatsDtvDistribution}
 \title{Categorize DTV and calculate DTV distribution}
 \usage{
-processLinkStatsDtvDistribution(joinedFrame)
+processLinkStatsDtvDistribution(joinedFrame, from = 0, to = 40000, by = 5000)
 }
 \arguments{
 \item{joinedFrame}{A tibble from mergeCountsAndLinks}
+
+\item{from}{Lower limit for count bin}
+
+\item{to}{Upper limit for count bins}
+
+\item{by}{Size of each count bin}
 }
 \value{
 A long-format tibble which contains share of DTV Categories

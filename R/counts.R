@@ -104,6 +104,21 @@ readLinkStats <- function(runId, file, sampleSize = NA){
 #'
 #'@return Tibble with MATSim link id as key ("loc_id"), DTV from MATSim runs and link type
 #'
+#'@examples
+#'
+#'runList = list("run_1" = "path/to/linkstats_1",
+#'               "run_2" = "path/to/linkstats_2"
+#'               )
+#'
+#'mergeCountsAndLinks(
+#'  countsFilePath = "path/to/counts.xml",
+#'  networkFilePath = "path/to/matsim-network.xml.gz",
+#'  linkStatsList = runList,
+#'  sampleSize = 0.25,
+#'  outputFilePath = "path/to/desired/output/file.csv"
+#'  )
+#'
+#'
 #'@export
 mergeCountsAndLinks <- function(countsFilePath, networkFilePath, linkStatsList, sampleSize = NA, outputFilePath = NA){
 
@@ -250,15 +265,21 @@ processLinkStatsDtvDistribution <- function(joinedFrame, from = 0, to = 40000, b
 #' Deviation between count volumes and Linkstats is calculated
 #' (e.g. deviation of 1.2 means 20 percent more DTV in MATSim than in counts) and
 #' categorized.
-#' Data will be aggregated for each run and link type.
+#' If parameter 'aggr' is set to TRUE, data will be aggregated for each run and link type.
 #' Can be used to visualize model quality by link type and to compare several runs.
 #'
-#' @param joinedFrame A tibble from mergeCountsAndLinks
+#' Estimation quality is determinated by the 'cut' function, limits for the label
+#' 'exact' can be adjusted by tuning the parameter 'll' and 'ul'
 #'
-#' @return A long-format tibble, which contains share of estimation quality for each scenario and link type
+#' @param joinedFrame A tibble from mergeCountsAndLinks
+#' @param aggr Boolean, if categorized data should returned aggregated
+#' @param ll Double, lower limit for the quality label 'exact' default = 0.8
+#' @param ul Double, upper limit for the quality label 'exact', default = 1.2
+#'
+#' @return A long-format tibble, which contains share of estimation quality for each scenario and link type, if aggr is FALSE disaggregated data is returned
 #'
 #' @export
-processDtvEstimationQuality <- function(joinedFrame){
+processDtvEstimationQuality <- function(joinedFrame, aggr = c(T,F), ll = 0.8, ul = 1.2){
 
   join.1 = joinedFrame %>%
     filter(!is.na(type)) %>%
@@ -282,7 +303,7 @@ processDtvEstimationQuality <- function(joinedFrame){
   pv_longer_cols <- colnames(join.1)
   pv_longer_cols = pv_longer_cols[str_detect(pv_longer_cols, pattern = "rel_vol")]
 
-  est.breaks = c(-Inf, 0.8, 1.2, Inf)
+  est.breaks = c(-Inf, ul, ll, Inf)
   est.labels = c("less", "exact", "more")
 
   join.2 <- join.1 %>%
@@ -291,11 +312,17 @@ processDtvEstimationQuality <- function(joinedFrame){
     mutate(quality = cut(rel_vol, breaks = est.breaks, labels = est.labels)) %>%
     filter(! type %in% c("residential", "unclassified")) %>%
     mutate(rel_vol_round = round(rel_vol, 2),
-           estimation = cut(rel_vol_round, breaks = est.breaks, labels = est.labels)) %>%
-    group_by(src, type, estimation) %>%
-    summarise(n = n()) %>%
-    mutate(share = n / sum(n)) %>%
-    ungroup()
+           estimation = cut(rel_vol_round, breaks = est.breaks, labels = est.labels))
+
+  if(aggr){
+    join.2.1 <- join.2 %>%
+      group_by(src, type, estimation) %>%
+      summarise(n = n()) %>%
+      mutate(share = n / sum(n)) %>%
+      ungroup()
+
+    return(join.2.1)
+  }
 
   join.2
 }

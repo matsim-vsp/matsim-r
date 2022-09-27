@@ -4,19 +4,29 @@
 \alias{processDtvEstimationQuality}
 \title{Categorize DTV deviation and aggregate data}
 \usage{
-processDtvEstimationQuality(joinedFrame)
+processDtvEstimationQuality(joinedFrame, aggr = c(T, F), ll = 0.8, ul = 1.2)
 }
 \arguments{
 \item{joinedFrame}{A tibble from mergeCountsAndLinks}
+
+\item{aggr}{Boolean, if categorized data should returned aggregated}
+
+\item{ll}{Double, lower limit for the quality label 'exact' default = 0.8}
+
+\item{ul}{Double, upper limit for the quality label 'exact', default = 1.2}
 }
 \value{
-A long-format tibble, which contains share of estimation quality for each scenario and link type
+A long-format tibble, which contains share of estimation quality for each scenario and link type, if aggr is FALSE disaggregated data is returned
 }
 \description{
 Takes a tibble from mergeCountsAndLinks.
 Deviation between count volumes and Linkstats is calculated
 (e.g. deviation of 1.2 means 20 percent more DTV in MATSim than in counts) and
 categorized.
-Data will be aggregated for each run and link type.
+If parameter 'aggr' is set to TRUE, data will be aggregated for each run and link type.
 Can be used to visualize model quality by link type and to compare several runs.
+}
+\details{
+Estimation quality is determinated by the 'cut' function, limits for the label
+'exact' can be adjusted by tuning the parameter 'll' and 'ul'
 }
