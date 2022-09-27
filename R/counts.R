@@ -151,10 +151,12 @@ mergeCountsAndLinks <- function(countsFilePath, networkFilePath, linkStatsList, 
     join <- left_join(x = join, y = linkStats, by = c("loc_id" = "linkId"))
   }
 
-  if(!is.na(outputFilePath)) readr::write_csv(join, file = outputFilePath)
-
-  join %>%
+  join.output <- join %>%
     rename("vol_car_count_station" = "val")
+
+  if(!is.na(outputFilePath)) readr::write_csv(join.output, file = outputFilePath)
+
+  join.output
 }
 
 #'Prepares Linkstats and counts for VIA-style scatter plot
