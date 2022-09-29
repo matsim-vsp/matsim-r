@@ -51,6 +51,9 @@ readCounts <- function(file){
 #'@export
 readLinkStats <- function(runId, file, sampleSize = NA){
 
+  # TODO: car and bike is hard coded. Often there are no bikes
+  # TODO: data should not be already aggregated here
+
   message <- paste("Read in link stats from run", runId, ". Loading data from", file )
   print(message)
 
@@ -122,6 +125,10 @@ readLinkStats <- function(runId, file, sampleSize = NA){
 #'@export
 mergeCountsAndLinks <- function(countsFilePath, networkFilePath, linkStatsList, sampleSize = NA, outputFilePath = NA){
 
+  # TODO: Output path is not necesarry, one can write this with one line
+  # TODO: I would rather operate on the dataframes and not on the files paths, this way dataframes could be reused0
+  # TODO: maybe this function could select and filter the wanted modes and unify it so it does not need to be specified or hardcoded in the other functions
+
   if(!is.list(linkStatsList)){
     message <- "linkStatsList needs to be a list, like list(runId = filepath)"
     warning(message)
@@ -175,6 +182,8 @@ mergeCountsAndLinks <- function(countsFilePath, networkFilePath, linkStatsList, 
 #'@export
 processLinkStatsForScatterPlot <- function(joinedFrame){
 
+  # hard-coded car and bike volumes
+
   if(!is.data.frame(joinedFrame)){
 
     message <- "joinedFrame needs to be a data frame, created from method mergeCountsAndLinks!"
@@ -214,6 +223,8 @@ processLinkStatsForScatterPlot <- function(joinedFrame){
 #'
 #' @export
 processLinkStatsDtvDistribution <- function(joinedFrame, from = 0, to = 40000, by = 5000){
+
+  # TODO: hard-coded car and bike volumes
 
   if(!is.data.frame(joinedFrame)){
 
@@ -275,13 +286,16 @@ processLinkStatsDtvDistribution <- function(joinedFrame, from = 0, to = 40000, b
 #'
 #' @param joinedFrame A tibble from mergeCountsAndLinks
 #' @param aggr Boolean, if categorized data should returned aggregated
-#' @param ll Double, lower limit for the quality label 'exact' default = 0.8
-#' @param ul Double, upper limit for the quality label 'exact', default = 1.2
+#' @param ll Double, lower limit for the quality label 'exact' default = 0.8*x - 200
+#' @param ul Double, upper limit for the quality label 'exact', default = 1.2*x + 200
 #'
 #' @return A long-format tibble, which contains share of estimation quality for each scenario and link type, if aggr is FALSE disaggregated data is returned
 #'
 #' @export
-processDtvEstimationQuality <- function(joinedFrame, aggr = c(T,F), ll = 0.8, ul = 1.2){
+processDtvEstimationQuality <- function(joinedFrame, aggr = c(T,F), ll = ~ .x *0.8 - 200, ul = ~ .x * 1.2 + 200){
+
+  # TODO: changed ul and ll to be function, but other code needs to be adapted
+  # TODO: hard-coded car and bike types
 
   join.1 = joinedFrame %>%
     filter(!is.na(type)) %>%
