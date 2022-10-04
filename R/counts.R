@@ -132,7 +132,7 @@ mergeCountsAndLinks <- function(counts, network, linkStats, sampleSize = 0.25, n
   # TODO: I would rather operate on the dataframes and not on the files paths, this way dataframes could be reused0
   # TODO: maybe this function could select and filter the wanted modes and unify it so it does not need to be specified or hardcoded in the other functions
 
-  if(!is.vector(linkStatsList)){
+  if(!is.vector(linkStats)){
     message <- "linkStatsList needs to be a vector1"
     warning(message)
 
