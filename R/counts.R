@@ -51,17 +51,18 @@ readCounts <- function(file){
 #'@return Tibble with DTV values for each count station for each qsim mode
 #'
 #'@export
-readLinkStats <- function(runId, file, sampleSize = 0.25, networkModes){
+readLinkStats <- function(runId, file, sampleSize = 0.25){
 
   message <- paste("Read in link stats from run", runId, ". Loading data from", file )
   print(message)
 
   linkstats <- readr::read_csv(file = file)
 
-  volumeModes <- paste0("vol_", networkModes)
+  volumeModes <- linkstats %>%
+    select(starts_with("vol_")) %>%
+    colnames()
 
   linkstats.1 <- linkstats %>%
-    select(linkId, time, avgTravelTime, volumeModes) %>%
     mutate_at(volumeModes, function(x){ x * (1 / sampleSize)})
 
   names = colnames(linkstats.1)
@@ -119,14 +120,14 @@ readLinkStats <- function(runId, file, sampleSize = 0.25, networkModes){
 #'
 #'
 #'@export
-mergeCountsAndLinks <- function(counts, network, linkStatsList, sampleSize = 0.25, networkModes = c("car")){
+mergeCountsAndLinks <- function(counts, network, linkStats, sampleSize = 0.25, networkModes = c("car"), aggr = c(TRUE, FALSE), earliest = 0, latest = 86400){
 
   # TODO: Output path is not necesarry, one can write this with one line, DONE
   # TODO: I would rather operate on the dataframes and not on the files paths, this way dataframes could be reused0
   # TODO: maybe this function could select and filter the wanted modes and unify it so it does not need to be specified or hardcoded in the other functions
 
-  if(!is.list(linkStatsList)){
-    message <- "linkStatsList needs to be a list, like list(runId = filepath)"
+  if(!is.vector(linkStatsList)){
+    message <- "linkStatsList needs to be a vector1"
     warning(message)
 
     return(NA)
@@ -139,8 +140,8 @@ mergeCountsAndLinks <- function(counts, network, linkStatsList, sampleSize = 0.2
     return(NA)
   }
 
-  if(!is.data.frame(network)){
-    message <- "network needs to be a data frame!"
+  if(!is.list(network)){
+    message <- "network needs to be a list!"
     warning(message)
 
     return(NA)
@@ -152,16 +153,14 @@ mergeCountsAndLinks <- function(counts, network, linkStatsList, sampleSize = 0.2
   join <- left_join(x = counts, y = links, by = c("loc_id" = "id"))
   rm(counts, links)
 
-  #Load linkstats
-  names <- names(linkStatsList)
-
-  for(n in names){
-    runId <- n
-    filepath <- linkStatsList[[n]]
-
-    linkStats <- readLinkStats(runId = runId, file = filepath, sampleSize = sampleSize, networkModes = networkModes)
-    join <- left_join(x = join, y = linkStats, by = c("loc_id" = "linkId"))
+  for(frame in linkStats){
+    join <- left_join(x = join, y = frame, by = c("loc_id" = "linkId"))
   }
+
+  join %>%
+    pivot_longer(cols = starts_with("vol_"), names_to = "name", names_prefix = "vol_", values_to = "volume") %>%
+    mutate(split = unlist(str_split(name, pattern = "_")),
+           src =
 
   join
 }
