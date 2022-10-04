@@ -28,16 +28,17 @@ readCounts <- function(file){
     purrr::map_df(~as.list(.)) %>%
     readr::type_convert()
 
-  bind_cols(station, volume)
+  bind_cols(station, volume) %>%
+    rename("vol_car_count_station" = "val")
 }
 
 #' Load linkstats as tibble into memory
 #'
 #' Reads Linkstats as .tsv created from LinkStats.class
 #' as dataframe into memory.
-#' Counts can be provided in any time bins, data will be aggregated
-#' daily traffic volume (DTV).
-#' Counts can be provided for any qsim mode.
+#' Counts can be provided in any time bins.
+#' Counts can be provided for any qsim mode. The argument networkModes is used to
+#' select and filter the columns.
 #'
 #'
 #'@param file File to load. Must be an .csv or .tsv file with comma separator
@@ -46,27 +47,23 @@ readCounts <- function(file){
 #'
 #'@param sampleSize sample size of the MATSim scenario to scale DTV values
 #'
+#'@param networkModes a vector with network modes, which are needed for analysis
+#'
 #'@return Tibble with DTV values for each count station for each qsim mode
 #'
 #'@export
-readLinkStats <- function(runId, file, sampleSize = NA){
-
-  # TODO: car and bike is hard coded. Often there are no bikes
-  # TODO: data should not be already aggregated here
+readLinkStats <- function(runId, file, sampleSize = 0.25, networkModes){
 
   message <- paste("Read in link stats from run", runId, ". Loading data from", file )
   print(message)
 
   linkstats <- readr::read_csv(file = file)
 
-  linkstats.1 <- linkstats %>%
-    group_by(linkId) %>%
-    summarise_at(c("vol_car", "vol_bike"), sum)
+  volumeModes <- paste0("vol_", networkModes)
 
-  if(!is.na(sampleSize)){
-    linkstats.1 = linkstats.1 %>%
-      mutate_at(c("vol_car", "vol_bike"), function(x){ x * (1 / sampleSize)})
-  }
+  linkstats.1 <- linkstats %>%
+    select(linkId, time, avgTravelTime, volumeModes) %>%
+    mutate_at(volumeModes, function(x){ x * (1 / sampleSize)})
 
   names = colnames(linkstats.1)
   newNames = character()
@@ -91,19 +88,19 @@ readLinkStats <- function(runId, file, sampleSize = NA){
 #'Function to import and join MATSim Counts, Linkstats and network link types
 #'Linkstats will be aggregated to DTV. An additional sampleSize parameter can be
 #'used to scale DTV values.
-#'Joined tibble can be written to a .csv file to provide processed data for further uses
-#'and to save some run time.
+#'The parameter networkModes contains a set of network modes to filter and select
+#'columns of link stats.
 #'
 #'
-#'@param countsFilePath Path to MATSim counts file
+#'@param counts Tibble with counts data
 #'
-#'@param networkFilePath Path to MATSim network file
+#'@param network Tibble with network nodes and links
 #'
 #'@param linkStatsList List with filepaths to Linkstats, uses the runId as key, and filepath as value
 #'
 #'@param sampleSize sample size of the scenario between 0 and 1 to rescale DTV values
 #'
-#'@param outputFilePath output file path to write joined tibble to .csv file
+#'@param networkModes a vector with network modes, which are needed for analysis
 #'
 #'@return Tibble with MATSim link id as key ("loc_id"), DTV from MATSim runs and link type
 #'
@@ -114,18 +111,18 @@ readLinkStats <- function(runId, file, sampleSize = NA){
 #'               )
 #'
 #'mergeCountsAndLinks(
-#'  countsFilePath = "path/to/counts.xml",
-#'  networkFilePath = "path/to/matsim-network.xml.gz",
+#'  counts = countsDataFrame,
+#'  network = networkDataFrame,
 #'  linkStatsList = runList,
 #'  sampleSize = 0.25,
-#'  outputFilePath = "path/to/desired/output/file.csv"
+#'  networkModes = c("car", "bike", "freight")
 #'  )
 #'
 #'
 #'@export
-mergeCountsAndLinks <- function(countsFilePath, networkFilePath, linkStatsList, sampleSize = NA, outputFilePath = NA){
+mergeCountsAndLinks <- function(counts, network, linkStatsList, sampleSize = 0.25, networkModes = c("car")){
 
-  # TODO: Output path is not necesarry, one can write this with one line
+  # TODO: Output path is not necesarry, one can write this with one line, DONE
   # TODO: I would rather operate on the dataframes and not on the files paths, this way dataframes could be reused0
   # TODO: maybe this function could select and filter the wanted modes and unify it so it does not need to be specified or hardcoded in the other functions
 
@@ -136,13 +133,22 @@ mergeCountsAndLinks <- function(countsFilePath, networkFilePath, linkStatsList, 
     return(NA)
   }
 
-  counts <- readCounts(file = countsFilePath)
+  if(!is.data.frame(counts)){
+    message <- "counts needs to be a data frame!"
+    warning(message)
 
-  network <- loadNetwork(filename = networkFilePath)
+    return(NA)
+  }
+
+  if(!is.data.frame(network)){
+    message <- "network needs to be a data frame!"
+    warning(message)
+
+    return(NA)
+  }
+
   links <- network$links %>%
     select(id, type)
-
-  rm(network)
 
   join <- left_join(x = counts, y = links, by = c("loc_id" = "id"))
   rm(counts, links)
@@ -154,16 +160,11 @@ mergeCountsAndLinks <- function(countsFilePath, networkFilePath, linkStatsList, 
     runId <- n
     filepath <- linkStatsList[[n]]
 
-    linkStats <- readLinkStats(runId = runId, file = filepath, sampleSize = sampleSize)
+    linkStats <- readLinkStats(runId = runId, file = filepath, sampleSize = sampleSize, networkModes = networkModes)
     join <- left_join(x = join, y = linkStats, by = c("loc_id" = "linkId"))
   }
 
-  join.output <- join %>%
-    rename("vol_car_count_station" = "val")
-
-  if(!is.na(outputFilePath)) readr::write_csv(join.output, file = outputFilePath)
-
-  join.output
+  join
 }
 
 #'Prepares Linkstats and counts for VIA-style scatter plot

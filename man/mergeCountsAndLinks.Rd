@@ -5,23 +5,23 @@
 \title{Load Counts, a limited number of Linkstats and Network links as joined tibble into memory}
 \usage{
 mergeCountsAndLinks(
-  countsFilePath,
-  networkFilePath,
+  counts,
+  network,
   linkStatsList,
-  sampleSize = NA,
-  outputFilePath = NA
+  sampleSize = 0.25,
+  networkModes = c("car")
 )
 }
 \arguments{
-\item{countsFilePath}{Path to MATSim counts file}
+\item{counts}{Tibble with counts data}
 
-\item{networkFilePath}{Path to MATSim network file}
+\item{network}{Tibble with network nodes and links}
 
 \item{linkStatsList}{List with filepaths to Linkstats, uses the runId as key, and filepath as value}
 
 \item{sampleSize}{sample size of the scenario between 0 and 1 to rescale DTV values}
 
-\item{outputFilePath}{output file path to write joined tibble to .csv file}
+\item{networkModes}{a vector with network modes, which are needed for analysis}
 }
 \value{
 Tibble with MATSim link id as key ("loc_id"), DTV from MATSim runs and link type
@@ -30,8 +30,8 @@ Tibble with MATSim link id as key ("loc_id"), DTV from MATSim runs and link type
 Function to import and join MATSim Counts, Linkstats and network link types
 Linkstats will be aggregated to DTV. An additional sampleSize parameter can be
 used to scale DTV values.
-Joined tibble can be written to a .csv file to provide processed data for further uses
-and to save some run time.
+The parameter networkModes contains a set of network modes to filter and select
+columns of link stats.
 }
 \examples{
 
@@ -40,11 +40,11 @@ runList = list("run_1" = "path/to/linkstats_1",
               )
 
 mergeCountsAndLinks(
- countsFilePath = "path/to/counts.xml",
- networkFilePath = "path/to/matsim-network.xml.gz",
+ counts = countsDataFrame,
+ network = networkDataFrame,
  linkStatsList = runList,
  sampleSize = 0.25,
- outputFilePath = "path/to/desired/output/file.csv"
+ networkModes = c("car", "bike", "freight")
  )
 
 

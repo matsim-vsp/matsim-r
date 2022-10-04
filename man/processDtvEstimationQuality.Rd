@@ -4,16 +4,21 @@
 \alias{processDtvEstimationQuality}
 \title{Categorize DTV deviation and aggregate data}
 \usage{
-processDtvEstimationQuality(joinedFrame, aggr = c(T, F), ll = 0.8, ul = 1.2)
+processDtvEstimationQuality(
+  joinedFrame,
+  aggr = c(T, F),
+  ll = ~.x * 0.8 - 200,
+  ul = ~.x * 1.2 + 200
+)
 }
 \arguments{
 \item{joinedFrame}{A tibble from mergeCountsAndLinks}
 
 \item{aggr}{Boolean, if categorized data should returned aggregated}
 
-\item{ll}{Double, lower limit for the quality label 'exact' default = 0.8}
+\item{ll}{Double, lower limit for the quality label 'exact' default = 0.8*x - 200}
 
-\item{ul}{Double, upper limit for the quality label 'exact', default = 1.2}
+\item{ul}{Double, upper limit for the quality label 'exact', default = 1.2*x + 200}
 }
 \value{
 A long-format tibble, which contains share of estimation quality for each scenario and link type, if aggr is FALSE disaggregated data is returned

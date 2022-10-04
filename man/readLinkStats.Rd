@@ -4,7 +4,7 @@
 \alias{readLinkStats}
 \title{Load linkstats as tibble into memory}
 \usage{
-readLinkStats(runId, file, sampleSize = NA)
+readLinkStats(runId, file, sampleSize = 0.25, networkModes)
 }
 \arguments{
 \item{runId}{Id to tag columns with DTV}
@@ -12,6 +12,8 @@ readLinkStats(runId, file, sampleSize = NA)
 \item{file}{File to load. Must be an .csv or .tsv file with comma separator}
 
 \item{sampleSize}{sample size of the MATSim scenario to scale DTV values}
+
+\item{networkModes}{a vector with network modes, which are needed for analysis}
 }
 \value{
 Tibble with DTV values for each count station for each qsim mode
@@ -19,7 +21,7 @@ Tibble with DTV values for each count station for each qsim mode
 \description{
 Reads Linkstats as .tsv created from LinkStats.class
 as dataframe into memory.
-Counts can be provided in any time bins, data will be aggregated
-daily traffic volume (DTV).
-Counts can be provided for any qsim mode.
+Counts can be provided in any time bins.
+Counts can be provided for any qsim mode. The argument networkModes is used to
+select and filter the columns.
 }
