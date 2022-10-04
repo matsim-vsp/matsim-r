@@ -28,8 +28,7 @@ readCounts <- function(file){
     purrr::map_df(~as.list(.)) %>%
     readr::type_convert()
 
-  bind_cols(station, volume) %>%
-    rename("vol_car_count_station" = "val")
+  bind_cols(station, volume)
 }
 
 #' Load linkstats as tibble into memory
