@@ -165,10 +165,21 @@ mergeCountsAndLinks <- function(counts, network, linkStats, sampleSize = 0.25, n
 
   join.long <- join %>%
     pivot_longer(cols = starts_with("vol_"), names_to = "name", names_prefix = "vol_", values_to = "volume") %>%
-    mutate(split = unlist(str_split(name, pattern = "_"))[1],
+    mutate(mode = unlist(str_split(name, pattern = "_"))[1],
            src = unlist(str_split(name, pattern = "_"))[2]) %>%
     select(-name) %>%
-    filter()
+    filter(time.x < latest & time.x > earliest)
+
+  if(aggr){
+
+    join.aggr <- join.long %>%
+      group_by(linkId, mode, src) %>%
+      summarise(
+        volume = sum(volume)
+      )
+
+    return(join.aggr)
+  }
 
   join.long
 }
