@@ -46,9 +46,7 @@ readCounts <- function(file){
 #'
 #'@param sampleSize sample size of the MATSim scenario to scale DTV values
 #'
-#'@param networkModes a vector with network modes, which are needed for analysis
-#'
-#'@return Tibble with DTV values for each count station for each qsim mode
+#'@return Tibble with link stats for each qsim mode
 #'
 #'@export
 readLinkStats <- function(runId, file, sampleSize = 0.25){
@@ -91,49 +89,32 @@ readLinkStats <- function(runId, file, sampleSize = 0.25){
 
 #' Load Counts, a limited number of Linkstats and Network links as joined tibble into memory
 #'
-#'Function to import and join MATSim Counts, Linkstats and network link types
-#'Linkstats will be aggregated to DTV. An additional sampleSize parameter can be
-#'used to scale DTV values.
-#'The parameter networkModes contains a set of network modes to filter and select
-#'columns of link stats.
+#'Function to join counts, network links and several matsim link stats. Data can be aggregated
+#'and filtered by time or network mode.
 #'
 #'
 #'@param counts Tibble with counts data
 #'
 #'@param network Tibble with network nodes and links
 #'
-#'@param linkStatsList List with filepaths to Linkstats, uses the runId as key, and filepath as value
-#'
-#'@param sampleSize sample size of the scenario between 0 and 1 to rescale DTV values
+#'@param linkStats List with link stats tibbles
 #'
 #'@param networkModes a vector with network modes, which are needed for analysis
 #'
-#'@return Tibble with MATSim link id as key ("loc_id"), DTV from MATSim runs and link type
+#'@param aggr Boolean, if data should be aggregated
 #'
-#'@examples
+#'@param earliest Lower limit to filter link stats by time, default is 0
 #'
-#'runList = list("run_1" = "path/to/linkstats_1",
-#'               "run_2" = "path/to/linkstats_2"
-#'               )
+#'@param latest Upper limit to filter link stats by time, default is 86400 (midnight)
 #'
-#'mergeCountsAndLinks(
-#'  counts = countsDataFrame,
-#'  network = networkDataFrame,
-#'  linkStatsList = runList,
-#'  sampleSize = 0.25,
-#'  networkModes = c("car", "bike", "freight")
-#'  )
+#'@return Long-format tibble with MATSim link id as key ("loc_id"), traffic volume from MATSim runs and link type
 #'
 #'
 #'@export
-mergeCountsAndLinks <- function(counts, network, linkStats, sampleSize = 0.25, networkModes = c("car"), aggr = c(TRUE, FALSE), earliest = 0, latest = 86400){
+mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("car"), aggr = TRUE, earliest = 0, latest = 86400){
 
-  # TODO: Output path is not necesarry, one can write this with one line, DONE
-  # TODO: I would rather operate on the dataframes and not on the files paths, this way dataframes could be reused0
-  # TODO: maybe this function could select and filter the wanted modes and unify it so it does not need to be specified or hardcoded in the other functions
-
-  if(!is.vector(linkStats)){
-    message <- "linkStatsList needs to be a vector1"
+  if(!is.list(linkStats)){
+    message <- "linkStatsList needs to be a list!"
     warning(message)
 
     return(NA)
@@ -157,66 +138,51 @@ mergeCountsAndLinks <- function(counts, network, linkStats, sampleSize = 0.25, n
     select(id, type)
 
   join <- left_join(x = counts, y = links, by = c("loc_id" = "id"))
-  rm(counts, links)
+  rm(links)
 
-  for(frame in linkStats){
-    join <- left_join(x = join, y = frame, by = c("loc_id" = "linkId"))
+  for(i in 1:length(linkStats)){
+    frame <- linkStats[[i]]
+
+    if(i == 1){
+
+      join = left_join(x = join, y = frame, by = c("loc_id" = "linkId"))
+      join = join %>%
+        mutate(key = paste0(loc_id, "-", time))
+
+    } else {
+
+      frame = frame %>%
+        mutate(key = paste0(linkId, "-", time))
+      join = left_join(x = join, y = frame, by = "key")
+    }
+    rm(frame)
   }
 
   join.long <- join %>%
+    rename("time" = "time.x",
+           "count" = "val") %>%
+    select(-c(ends_with(".x"), ends_with(".y"), key)) %>%
     pivot_longer(cols = starts_with("vol_"), names_to = "name", names_prefix = "vol_", values_to = "volume") %>%
-    mutate(mode = unlist(str_split(name, pattern = "_"))[1],
-           src = unlist(str_split(name, pattern = "_"))[2]) %>%
-    select(-name) %>%
-    filter(time.x < latest & time.x > earliest)
+    separate(col = name, into = c("mode", "src"), sep = "_") %>%
+    mutate(type = str_remove(type, pattern = "highway."),
+           type = factor(type, levels = c("motorway", "primary", "secondary", "tertiary", "residential", "unclassified", "motorway_link", "primary_link", "trunk_link"))) %>%
+    filter(time < latest & time > earliest) %>%
+    filter(mode %in% networkModes)
 
   if(aggr){
 
     join.aggr <- join.long %>%
-      group_by(linkId, mode, src) %>%
+      group_by(loc_id, mode, src) %>%
       summarise(
-        volume = sum(volume)
+        volume = sum(volume, na.rm = T),
+        count = first(count),
+        type = first(type)
       )
 
     return(join.aggr)
   }
 
   join.long
-}
-
-#'Prepares Linkstats and counts for VIA-style scatter plot
-#'
-#' Takes a tibble from mergeCountsAndLinks and prepare data for a VIA-style
-#' scatterplot for one or more runs.
-#' Only DTV values for mode 'car' is processed.
-#'
-#' Pattern "highway." is removed from link type, also link type is factored and
-#' convert tibble to long-format
-#'
-#'@param joinedFrame a tibble, created from function mergeCountsAndLinks
-#'
-#'@return a long-format tibble, ready to for plotting
-#'
-#'@export
-processLinkStatsForScatterPlot <- function(joinedFrame){
-
-  if(!is.data.frame(joinedFrame)){
-
-    message <- "joinedFrame needs to be a data frame, created from method mergeCountsAndLinks!"
-    warning(message)
-    return(NA)
-  }
-
-  join.1 = joinedFrame %>%
-    filter(!is.na(type)) %>%
-    filter(vol_car_count_station > 0) %>%
-    select(loc_id, vol_car_count_station, starts_with("vol_"),type) %>%
-    mutate(type = str_remove(type, pattern = "highway."),
-           type = factor(type, levels = c("motorway", "primary", "secondary", "tertiary", "residential", "unclassified", "motorway_link", "primary_link", "trunk_link"))) %>%
-    select(-c(starts_with("vol_bike"), starts_with("vol_freight"))) %>%
-    pivot_longer(cols = c(vol_car_v1.0_run039, vol_car_v1.2_run007), names_to = "runId", values_to = "vol_sim", names_prefix = "vol_car_")
-
-  join.1
 }
 
 #' Categorize DTV and calculate DTV distribution
@@ -239,8 +205,6 @@ processLinkStatsForScatterPlot <- function(joinedFrame){
 #'
 #' @export
 processLinkStatsDtvDistribution <- function(joinedFrame, from = 0, to = 40000, by = 5000){
-
-  # TODO: hard-coded car and bike volumes
 
   if(!is.data.frame(joinedFrame)){
 
@@ -268,15 +232,15 @@ processLinkStatsDtvDistribution <- function(joinedFrame, from = 0, to = 40000, b
     rm(label)
   }
 
+  wider_cols <- unique(joinedFrame$src)
+
   join.1 = joinedFrame %>%
     filter(!is.na(type)) %>%
-    filter(vol_car_count_station > 0) %>%
-    select(loc_id, vol_car_count_station, starts_with("vol_"),type) %>%
-    mutate(type = str_remove(type, pattern = "highway."),
-           type = factor(type, levels = c("motorway", "primary", "secondary", "tertiary", "residential", "unclassified", "motorway_link", "primary_link", "trunk_link"))) %>%
-    pivot_longer(cols = starts_with("vol_"), names_to = "src", names_prefix = "vol_", values_to = "traffic_vol") %>%
-    mutate(src = str_remove(src, pattern = "_vol"),
-           traffic_bin = cut(traffic_vol, labels = labels, breaks = breaks, right = T)) %>%
+    filter(count > 0) %>%
+    select(loc_id, src, volume, type, count) %>%
+    pivot_wider(names_from = src, values_from = volume) %>%
+    pivot_longer(cols = c(wider_cols, "count"), names_to = "src", values_to = "volume") %>%
+    mutate(traffic_bin = cut(volume, labels = labels, breaks = breaks, right = T)) %>%
     group_by(type, src, traffic_bin) %>%
     summarise(n = n()) %>%
     group_by(type, src) %>%
@@ -312,32 +276,11 @@ processDtvEstimationQuality <- function(joinedFrame, aggr = c(T,F), ll = ~ .x *0
   # TODO: changed ul and ll to be function, but other code needs to be adapted
   # TODO: hard-coded car and bike types
 
-  join.1 = joinedFrame %>%
-    filter(!is.na(type)) %>%
-    filter(vol_car_count_station > 0) %>%
-    select(loc_id, vol_car_count_station, starts_with("vol_car_"),type) %>%
-    mutate(type = str_remove(type, pattern = "highway."),
-           type = factor(type, levels = c("motorway", "primary", "secondary", "tertiary", "residential", "unclassified", "motorway_link", "primary_link", "trunk_link"))) %>%
-    select(-starts_with("vol_bike"))
-
-  names <- colnames(join.1)
-  cs_col <- names[str_detect(names, "count_station")][1]
-  names = names[str_detect(names, pattern = "vol_car")]
-  names = names[!str_detect(names, pattern = "count_station")]
-
-  for(n in names){
-
-    n_fixed = str_remove(n, pattern = "vol_car_")
-    join.1[paste0("rel_vol_", n_fixed)] = join.1[n] / join.1[cs_col]
-  }
-
-  pv_longer_cols <- colnames(join.1)
-  pv_longer_cols = pv_longer_cols[str_detect(pv_longer_cols, pattern = "rel_vol")]
-
   est.breaks = c(-Inf, ul, ll, Inf)
   est.labels = c("less", "exact", "more")
 
-  join.2 <- join.1 %>%
+  join.1 <- joinedFrame %>%
+    mutate(rel_vol = volume / count) %>%
     select(- starts_with("vol_car_")) %>%
     pivot_longer(cols = pv_longer_cols, names_prefix = "rel_vol_", names_to = "src", values_to = "rel_vol") %>%
     mutate(quality = cut(rel_vol, breaks = est.breaks, labels = est.labels)) %>%

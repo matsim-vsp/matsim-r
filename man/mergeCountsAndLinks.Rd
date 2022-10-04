@@ -7,9 +7,11 @@
 mergeCountsAndLinks(
   counts,
   network,
-  linkStatsList,
-  sampleSize = 0.25,
-  networkModes = c("car")
+  linkStats,
+  networkModes = c("car"),
+  aggr = TRUE,
+  earliest = 0,
+  latest = 86400
 )
 }
 \arguments{
@@ -17,35 +19,20 @@ mergeCountsAndLinks(
 
 \item{network}{Tibble with network nodes and links}
 
-\item{linkStatsList}{List with filepaths to Linkstats, uses the runId as key, and filepath as value}
-
-\item{sampleSize}{sample size of the scenario between 0 and 1 to rescale DTV values}
+\item{linkStats}{List with link stats tibbles}
 
 \item{networkModes}{a vector with network modes, which are needed for analysis}
+
+\item{aggr}{Boolean, if data should be aggregated}
+
+\item{earliest}{Lower limit to filter link stats by time, default is 0}
+
+\item{latest}{Upper limit to filter link stats by time, default is 86400 (midnight)}
 }
 \value{
-Tibble with MATSim link id as key ("loc_id"), DTV from MATSim runs and link type
+Long-format tibble with MATSim link id as key ("loc_id"), traffic volume from MATSim runs and link type
 }
 \description{
-Function to import and join MATSim Counts, Linkstats and network link types
-Linkstats will be aggregated to DTV. An additional sampleSize parameter can be
-used to scale DTV values.
-The parameter networkModes contains a set of network modes to filter and select
-columns of link stats.
-}
-\examples{
-
-runList = list("run_1" = "path/to/linkstats_1",
-              "run_2" = "path/to/linkstats_2"
-              )
-
-mergeCountsAndLinks(
- counts = countsDataFrame,
- network = networkDataFrame,
- linkStatsList = runList,
- sampleSize = 0.25,
- networkModes = c("car", "bike", "freight")
- )
-
-
+Function to join counts, network links and several matsim link stats. Data can be aggregated
+and filtered by time or network mode.
 }
