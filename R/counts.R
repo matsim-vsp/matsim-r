@@ -53,6 +53,12 @@ readCounts <- function(file){
 #'@export
 readLinkStats <- function(runId, file, sampleSize = 0.25){
 
+  if(str_detect(string = runId, pattern = "_")){
+    message <- "runId cannot contain '_'..."
+    warning(message)
+    return(NA)
+  }
+
   message <- paste("Read in link stats from run", runId, ". Loading data from", file )
   print(message)
 
@@ -157,12 +163,14 @@ mergeCountsAndLinks <- function(counts, network, linkStats, sampleSize = 0.25, n
     join <- left_join(x = join, y = frame, by = c("loc_id" = "linkId"))
   }
 
-  join %>%
+  join.long <- join %>%
     pivot_longer(cols = starts_with("vol_"), names_to = "name", names_prefix = "vol_", values_to = "volume") %>%
-    mutate(split = unlist(str_split(name, pattern = "_")),
-           src =
+    mutate(split = unlist(str_split(name, pattern = "_"))[1],
+           src = unlist(str_split(name, pattern = "_"))[2]) %>%
+    select(-name) %>%
+    filter()
 
-  join
+  join.long
 }
 
 #'Prepares Linkstats and counts for VIA-style scatter plot
