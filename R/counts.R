@@ -183,8 +183,6 @@ mergeCountsAndLinks <- function(counts, network, linkStatsList, sampleSize = 0.2
 #'@export
 processLinkStatsForScatterPlot <- function(joinedFrame){
 
-  # hard-coded car and bike volumes
-
   if(!is.data.frame(joinedFrame)){
 
     message <- "joinedFrame needs to be a data frame, created from method mergeCountsAndLinks!"
@@ -195,7 +193,7 @@ processLinkStatsForScatterPlot <- function(joinedFrame){
   join.1 = joinedFrame %>%
     filter(!is.na(type)) %>%
     filter(vol_car_count_station > 0) %>%
-    select(loc_id, vol_car_count_station, starts_with("vol_car_"),type) %>%
+    select(loc_id, vol_car_count_station, starts_with("vol_"),type) %>%
     mutate(type = str_remove(type, pattern = "highway."),
            type = factor(type, levels = c("motorway", "primary", "secondary", "tertiary", "residential", "unclassified", "motorway_link", "primary_link", "trunk_link"))) %>%
     select(-c(starts_with("vol_bike"), starts_with("vol_freight"))) %>%
@@ -256,11 +254,10 @@ processLinkStatsDtvDistribution <- function(joinedFrame, from = 0, to = 40000, b
   join.1 = joinedFrame %>%
     filter(!is.na(type)) %>%
     filter(vol_car_count_station > 0) %>%
-    select(loc_id, vol_car_count_station, starts_with("vol_car_"),type) %>%
+    select(loc_id, vol_car_count_station, starts_with("vol_"),type) %>%
     mutate(type = str_remove(type, pattern = "highway."),
            type = factor(type, levels = c("motorway", "primary", "secondary", "tertiary", "residential", "unclassified", "motorway_link", "primary_link", "trunk_link"))) %>%
-    select(-starts_with("vol_bike")) %>%
-    pivot_longer(cols = starts_with("vol_car"), names_to = "src", names_prefix = "vol_car_", values_to = "traffic_vol") %>%
+    pivot_longer(cols = starts_with("vol_"), names_to = "src", names_prefix = "vol_", values_to = "traffic_vol") %>%
     mutate(src = str_remove(src, pattern = "_vol"),
            traffic_bin = cut(traffic_vol, labels = labels, breaks = breaks, right = T)) %>%
     group_by(type, src, traffic_bin) %>%
