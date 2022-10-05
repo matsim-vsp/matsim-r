@@ -323,9 +323,6 @@ processDtvEstimationQuality <- function(joinedFrame, aggr = TRUE, ll =  ~ x *0.8
 #' @export
 createCountScatterPlot <- function(joinedFrame, ll = ~ 0.8* - 200, ul = ~ x * 1.2 + 200, threshold = 100){
 
-  join.scatterplot <- processDtvEstimationQuality(joinedFrame = joinedFrame, ll = ll, ul = ul, aggr = F)
-
-  ## Scatterplot
   line.size <- 0.7
 
   x <- seq(threshold, round(max(joinedFrame$count), -2), 10)
@@ -333,15 +330,23 @@ createCountScatterPlot <- function(joinedFrame, ll = ~ 0.8* - 200, ul = ~ x * 1.
   middle.line <- data.frame(x = x,
                             y = x)
 
-  ggplot(join.scatterplot, aes(x = count, y = volume, color = type)) +
+  ll.call <- ll[[length(ll)]]
+  ul.call <- ul[[length(ul)]]
+
+  x <- middle.line$x
+
+  middle.line$ul <- eval(expr = ul.call)
+  middle.line$ll <- eval(expr = ll.call)
+
+  ggplot(joinedFrame, aes(x = count, y = volume, color = type)) +
 
     geom_point() +
 
-    geom_line(mapping = aes(x = count, y = ul), color = "black", size = line.size + 0.1) +
+    geom_line(data = middle.line, mapping = aes(x = x, y = ul), color = "black", size = line.size + 0.1) +
 
-    geom_line(mapping = aes(x = count, y = ll), color = "black", size = line.size + 0.1) +
+    geom_line(mapping = aes(x = x, y = ll), color = "black", size = line.size + 0.1) +
 
-    geom_line(data = middle.line, mapping = aes(x, y), size = line.size, linetype = "dashed", color = "grey60") +
+    geom_line(mapping = aes(x, y), size = line.size, linetype = "dashed", color = "grey60") +
 
     geom_vline(xintercept = threshold, linetype = "dashed") +
 
