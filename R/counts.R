@@ -271,25 +271,27 @@ processLinkStatsDtvDistribution <- function(joinedFrame, from = 0, to = 40000, b
 #' @return A long-format tibble, which contains share of estimation quality for each scenario and link type, if aggr is FALSE disaggregated data is returned
 #'
 #' @export
-processDtvEstimationQuality <- function(joinedFrame, aggr = c(T,F), ll = ~ .x *0.8 - 200, ul = ~ .x * 1.2 + 200){
+processDtvEstimationQuality <- function(joinedFrame, aggr = TRUE, ll = y ~ x *0.8 - 200, ul = ~ x * 1.2 + 200){
 
-  # TODO: changed ul and ll to be function, but other code needs to be adapted
-  # TODO: hard-coded car and bike types
+  ll.call <- ll[[length(ll)]]
+  ul.call <- ul[[length(ul)]]
+
+  x <- joinedFrame$count
+
+  joinedFrame$ul <- eval(expr = ul.call)
+  joinedFrame$ll <- eval(expr = ll.call)
 
   est.breaks = c(-Inf, ul, ll, Inf)
   est.labels = c("less", "exact", "more")
 
   join.1 <- joinedFrame %>%
-    mutate(rel_vol = volume / count) %>%
-    select(- starts_with("vol_car_")) %>%
-    pivot_longer(cols = pv_longer_cols, names_prefix = "rel_vol_", names_to = "src", values_to = "rel_vol") %>%
-    mutate(quality = cut(rel_vol, breaks = est.breaks, labels = est.labels)) %>%
-    filter(! type %in% c("residential", "unclassified")) %>%
-    mutate(rel_vol_round = round(rel_vol, 2),
-           estimation = cut(rel_vol_round, breaks = est.breaks, labels = est.labels))
+    mutate(estimation = ifelse(volume < ll, "less",
+                            ifelse(volume > ul, "more",
+                                   "exact"))) %>%
+    select(-c(ul, ll))
 
   if(aggr){
-    join.2.1 <- join.2 %>%
+    join.2 <- join.1 %>%
       group_by(src, type, estimation) %>%
       summarise(n = n()) %>%
       mutate(share = n / sum(n)) %>%
@@ -298,5 +300,5 @@ processDtvEstimationQuality <- function(joinedFrame, aggr = c(T,F), ll = ~ .x *0
     return(join.2.1)
   }
 
-  join.2
+  join.1
 }
