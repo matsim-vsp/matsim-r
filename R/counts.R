@@ -325,7 +325,6 @@ createCountScatterPlot <- function(joinedFrame, ll = ~ 0.8* - 200, ul = ~ x * 1.
 
   join.scatterplot <- processDtvEstimationQuality(joinedFrame = joinedFrame, ll = ll, ul = ul, aggr = F)
 
-
   ## Scatterplot
   line.size <- 0.7
 
@@ -334,7 +333,7 @@ createCountScatterPlot <- function(joinedFrame, ll = ~ 0.8* - 200, ul = ~ x * 1.
   middle.line <- data.frame(x = x,
                             y = x)
 
-  ggplot(join, aes(x = count, y = volume, color = type)) +
+  ggplot(join.scatterplot, aes(x = count, y = volume, color = type)) +
 
     geom_point() +
 
