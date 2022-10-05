@@ -344,9 +344,9 @@ createCountScatterPlot <- function(joinedFrame, ll = ~ 0.8* - 200, ul = ~ x * 1.
 
     geom_line(data = middle.line, mapping = aes(x = x, y = ul), color = "black", size = line.size + 0.1) +
 
-    geom_line(mapping = aes(x = x, y = ll), color = "black", size = line.size + 0.1) +
+    geom_line(data = middle.line, mapping = aes(x = x, y = ll), color = "black", size = line.size + 0.1) +
 
-    geom_line(mapping = aes(x, y), size = line.size, linetype = "dashed", color = "grey60") +
+    geom_line(data = middle.line, mapping = aes(x, y), size = line.size, linetype = "dashed", color = "grey60") +
 
     geom_vline(xintercept = threshold, linetype = "dashed") +
 
