@@ -6,7 +6,7 @@
 \usage{
 createCountScatterPlot(
   joinedFrame,
-  ll = ~0.8 * -200,
+  ll = ~x * 0.8 - 200,
   ul = ~x * 1.2 + 200,
   threshold = 100
 )
