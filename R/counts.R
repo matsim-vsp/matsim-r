@@ -338,6 +338,9 @@ createCountScatterPlot <- function(joinedFrame, ll = ~ 0.8* - 200, ul = ~ x * 1.
   middle.line$ul <- eval(expr = ul.call)
   middle.line$ll <- eval(expr = ll.call)
 
+  middle.line = middle.line %>%
+    mutate(ll = ifelse(ll < 0, 0, ll))
+
   ggplot(joinedFrame, aes(x = count, y = volume, color = type)) +
 
     geom_point() +
