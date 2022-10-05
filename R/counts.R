@@ -1,5 +1,7 @@
 library(xml2)
 library(tidyverse)
+library(scales)
+library(geomtextpath)
 
 #' Load a MATSim Counts file into memory
 #'
@@ -286,8 +288,7 @@ processDtvEstimationQuality <- function(joinedFrame, aggr = TRUE, ll =  ~ x *0.8
            estimation = ifelse(volume < ll, "less",
                             ifelse(volume > ul, "more",
                                    "exact")),
-           estimation = factor(estimation, levels = c("less", "exact", "more"))) %>%
-    select(-c(ul, ll))
+           estimation = factor(estimation, levels = c("less", "exact", "more")))
 
   if(aggr){
     join.2 <- join.1 %>%
@@ -300,4 +301,104 @@ processDtvEstimationQuality <- function(joinedFrame, aggr = TRUE, ll =  ~ x *0.8
   }
 
   join.1
+}
+
+#' Creates a Via-Style scatterplot for each run
+#'
+#' Takes a tibble from mergeCountsAndLinks.
+#' A scatterplot with counts on the x axis and matsim dtv on the y axis is created and colored
+#' by the road type.
+#' Lower and upper Limits define the section which is considered as an 'exact' estimation. Limits
+#' are defined by custom formulas.
+#'
+#' The function calls the matsim-r function processDtvEstimationQuality which is handeling the limits.
+#'
+#' @param joinedFrame A tibble from mergeCountsAndLinks
+#' @param ll Formula to calculate lower limit of the quality label 'exact', default = 0.8*x - 200
+#' @param ul Formula to calculate lower limit of the quality label 'exact', default = 1.2*x + 200
+#' @param threshold Threshold from which data is scaled to log10.
+#'
+#' @return A ggplot Scatterplotplot, which can be adjusted, if needed.
+#'
+#' @export
+createCountScatterPlot <- function(joinedFrame, ll = ~ 0.8* - 200, ul = ~ x * 1.2 + 200, threshold = 100){
+
+  join.scatterplot <- processDtvEstimationQuality(joinedFrame = joinedFrame, ll = ll, ul = ul, aggr = F)
+
+
+  ## Scatterplot
+  line.size <- 0.7
+
+  x <- seq(threshold, round(max(join$count), -2), 10)
+
+  ggplot(join, aes(x = count, y = volume, color = type)) +
+
+    geom_point() +
+
+    geom_line(data = middle.line, mapping = aes(x, y), size = line.size, linetype = "dashed", color = "grey60") +
+
+    geom_line(mapping = aes(x = count, y = ul), color = "black", size = line.size + 0.1) +
+
+    geom_line(mapping = aes(x = count, y = ll), color = "black", size = line.size + 0.1) +
+
+    geom_vline(xintercept = threshold, linetype = "dashed") +
+
+    geom_textvline(xintercept = threshold, label = "x = 100", linetype = "dashed", vjust = -0.3) +
+
+    scale_x_continuous(trans = symlog_trans(thr = threshold, scale = 1000), breaks = c(0, 300, 1000, 3000, 10000, 30000, 100000)) +
+
+    scale_y_continuous(trans = "log10", breaks = c(3, 10, 30, 100, 300, 1000, 3000, 10000, 30000)) +
+
+    facet_wrap(.~ src) +
+
+    labs(x = "Daily traffic volume from Count Stations", y = "Daily traffic volume from MATSim Data", color = "Road type:") +
+
+    theme_bw() +
+
+    theme(legend.position = "bottom", panel.background = element_rect(fill = "grey90"),
+          panel.grid = element_line(colour = "white"))
+}
+
+
+#' A function to create symlog scaling for a plot
+#'
+#' Can be used to symlog scale the axis of a ggplot object. Is called in createCountScatterPlot.
+#' Note that this function is taken from Stackoverflow!
+#' For more informations, see the thread here:
+#' https://stackoverflow.com/questions/14613355/how-to-get-something-like-matplotlibs-symlog-scale-in-ggplot-or-lattice
+#'
+#' @param base base for log
+#' @param thr threshold from which data is scaled to log
+#'
+#' @export
+symlog_trans <- function(base = 10, thr = 1, scale = 1){
+  trans <- function(x)
+    ifelse(abs(x) < thr, x, sign(x) *
+             (thr + scale * suppressWarnings(log(sign(x) * x / thr, base))))
+
+  inv <- function(x)
+    ifelse(abs(x) < thr, x, sign(x) *
+             base^((sign(x) * x - thr) / scale) * thr)
+
+  breaks <- function(x){
+    sgn <- sign(x[which.max(abs(x))])
+    if(all(abs(x) < thr))
+      pretty_breaks()(x)
+    else if(prod(x) >= 0){
+      if(min(abs(x)) < thr)
+        sgn * unique(c(pretty_breaks()(c(min(abs(x)), thr)),
+                       log_breaks(base)(c(max(abs(x)), thr))))
+      else
+        sgn * log_breaks(base)(sgn * x)
+    } else {
+      if(min(abs(x)) < thr)
+        unique(c(sgn * log_breaks()(c(max(abs(x)), thr)),
+                 pretty_breaks()(c(sgn * thr, x[which.min(abs(x))]))))
+      else
+        unique(c(-log_breaks(base)(c(thr, -x[1])),
+                 pretty_breaks()(c(-thr, thr)),
+                 log_breaks(base)(c(thr, x[2]))))
+    }
+  }
+  trans_new(paste("symlog", thr, base, scale, sep = "-"), trans, inv, breaks)
 }
