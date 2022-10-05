@@ -282,7 +282,7 @@ processDtvEstimationQuality <- function(joinedFrame, aggr = TRUE, ll =  ~ x *0.8
   joinedFrame$ll <- eval(expr = ll.call)
 
   join.1 <- joinedFrame %>%
-    mutate(ul = ifelse(ul < 0, 0, ul),
+    mutate(ll = ifelse(ll < 0, 0, ll),
            estimation = ifelse(volume < ll, "less",
                             ifelse(volume > ul, "more",
                                    "exact"))) %>%
@@ -295,7 +295,7 @@ processDtvEstimationQuality <- function(joinedFrame, aggr = TRUE, ll =  ~ x *0.8
       mutate(share = n / sum(n)) %>%
       ungroup()
 
-    return(join.2.1)
+    return(join.2)
   }
 
   join.1
