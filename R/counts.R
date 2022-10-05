@@ -329,7 +329,10 @@ createCountScatterPlot <- function(joinedFrame, ll = ~ 0.8* - 200, ul = ~ x * 1.
   ## Scatterplot
   line.size <- 0.7
 
-  x <- seq(threshold, round(max(join$count), -2), 10)
+  x <- seq(threshold, round(max(joinedFrame$count), -2), 10)
+
+  middle.line <- data.frame(x = x,
+                            y = x)
 
   ggplot(join, aes(x = count, y = volume, color = type)) +
 
