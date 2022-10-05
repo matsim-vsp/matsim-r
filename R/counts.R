@@ -321,7 +321,7 @@ processDtvEstimationQuality <- function(joinedFrame, aggr = TRUE, ll =  ~ x *0.8
 #' @return A ggplot Scatterplotplot, which can be adjusted, if needed.
 #'
 #' @export
-createCountScatterPlot <- function(joinedFrame, ll = ~ 0.8* - 200, ul = ~ x * 1.2 + 200, threshold = 100){
+createCountScatterPlot <- function(joinedFrame, ll = ~ x * 0.8 - 200, ul = ~ x * 1.2 + 200, threshold = 100){
 
   line.size <- 0.7
 
