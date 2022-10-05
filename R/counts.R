@@ -286,7 +286,7 @@ processDtvEstimationQuality <- function(joinedFrame, aggr = TRUE, ll =  ~ x *0.8
            estimation = ifelse(volume < ll, "less",
                             ifelse(volume > ul, "more",
                                    "exact")),
-           estimation = factor(estimation, levels = "less", "exact", "more")) %>%
+           estimation = factor(estimation, levels = c("less", "exact", "more"))) %>%
     select(-c(ul, ll))
 
   if(aggr){
