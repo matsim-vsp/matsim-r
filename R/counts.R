@@ -265,13 +265,13 @@ processLinkStatsDtvDistribution <- function(joinedFrame, from = 0, to = 40000, b
 #'
 #' @param joinedFrame A tibble from mergeCountsAndLinks
 #' @param aggr Boolean, if categorized data should returned aggregated
-#' @param ll Double, lower limit for the quality label 'exact' default = 0.8*x - 200
-#' @param ul Double, upper limit for the quality label 'exact', default = 1.2*x + 200
+#' @param ll Formula to calculate lower limit of the quality label 'exact', default = 0.8*x - 200
+#' @param ul Formula to calculate lower limit of the quality label 'exact', default = 1.2*x + 200
 #'
 #' @return A long-format tibble, which contains share of estimation quality for each scenario and link type, if aggr is FALSE disaggregated data is returned
 #'
 #' @export
-processDtvEstimationQuality <- function(joinedFrame, aggr = TRUE, ll = y ~ x *0.8 - 200, ul = ~ x * 1.2 + 200){
+processDtvEstimationQuality <- function(joinedFrame, aggr = TRUE, ll =  ~ x *0.8 - 200, ul = ~ x * 1.2 + 200){
 
   ll.call <- ll[[length(ll)]]
   ul.call <- ul[[length(ul)]]
@@ -281,11 +281,9 @@ processDtvEstimationQuality <- function(joinedFrame, aggr = TRUE, ll = y ~ x *0.
   joinedFrame$ul <- eval(expr = ul.call)
   joinedFrame$ll <- eval(expr = ll.call)
 
-  est.breaks = c(-Inf, ul, ll, Inf)
-  est.labels = c("less", "exact", "more")
-
   join.1 <- joinedFrame %>%
-    mutate(estimation = ifelse(volume < ll, "less",
+    mutate(ul = ifelse(ul < 0, 0, ul),
+           estimation = ifelse(volume < ll, "less",
                             ifelse(volume > ul, "more",
                                    "exact"))) %>%
     select(-c(ul, ll))
