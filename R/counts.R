@@ -3,6 +3,11 @@ library(tidyverse)
 library(scales)
 library(geomtextpath)
 
+#'@import tidyverse
+#'@import scales
+#'@import xml2
+#'@import geomtextpath
+#'
 #' Load a MATSim Counts file into memory
 #'
 #' Loads a MATSim Counts XML-File as Dataframe into memory
@@ -20,17 +25,32 @@ readCounts <- function(file){
 
   counts.xml <- read_xml(file)
 
-  station = xml_find_all(counts.xml, "//count") %>%
-    xml2::xml_attrs() %>%
-    purrr::map_df(~as.list(.)) %>%
-    readr::type_convert()
+  children <- xml_children(counts.xml)
 
-  volume = xml_find_all(counts.xml, "//volume") %>%
-    xml2::xml_attrs() %>%
-    purrr::map_df(~as.list(.)) %>%
-    readr::type_convert()
+  result <- tibble("cs_id" = character(),
+                   "loc_id" = character(),
+                   "h" = numeric(),
+                   "val" = numeric())
 
-  bind_cols(station, volume)
+  for(c in children){
+
+    station <- xml_attrs(c)
+
+    volume <- xml_find_all(c, "volume") %>%
+      xml_attrs() %>%
+      purrr::map_df(~as.list(.)) %>%
+      readr::type_convert()
+
+    length <- nrow(volume)
+
+    loc_col <- rep(station["loc_id"], length) %>% unname()
+    station_col <- rep(station["cs_id"], length) %>% unname()
+
+    counts.frame <- data.frame("cs_id" = station_col,"loc_id" = loc_col) %>% bind_cols(volume)
+    result = bind_rows(result, counts.frame)
+  }
+
+  result
 }
 
 #' Load linkstats as tibble into memory
