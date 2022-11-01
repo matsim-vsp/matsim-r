@@ -1,21 +1,19 @@
-library(xml2)
-library(tidyverse)
-library(scales)
-library(geomtextpath)
-
 #'@import tidyverse
 #'@import scales
 #'@import xml2
 #'@import geomtextpath
+#'@import readr
+
+# ------
 #'
-#' Load a MATSim Counts file into memory
+#'@title Load a MATSim Counts file into memory
 #'
-#' Loads a MATSim Counts XML-File as Dataframe into memory
+#'@description Loads a MATSim Counts XML-File as tibble into memory
 #'
 #'
 #'@param file File to load. Must be an .xml file
 #'
-#'@return dataframe containing with MATSim Link id as "loc_id" as key
+#'@return tibble containing with MATSim Link id as "loc_id" as key
 #'
 #'@export
 readCounts <- function(file){
@@ -27,8 +25,8 @@ readCounts <- function(file){
 
   children <- xml_children(counts.xml)
 
-  result <- tibble("cs_id" = character(),
-                   "loc_id" = character(),
+  result <- tibble("loc_id" = character(),
+                   "cs_id" = character(),
                    "h" = numeric(),
                    "val" = numeric())
 
@@ -39,7 +37,7 @@ readCounts <- function(file){
     volume <- xml_find_all(c, "volume") %>%
       xml_attrs() %>%
       purrr::map_df(~as.list(.)) %>%
-      readr::type_convert()
+      type_convert()
 
     length <- nrow(volume)
 
