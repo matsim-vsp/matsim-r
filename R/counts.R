@@ -131,7 +131,7 @@ readLinkStats <- function(runId, file, sampleSize = 0.25){
 #'
 #'
 #'@export
-mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("car"), aggr = TRUE, earliest = 0, latest = 86400){
+mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("car"), aggr_to = c("day", "hour"), aggr = TRUE, earliest = 0, latest = 86400){
 
   if(!is.list(linkStats)){
     message <- "linkStatsList needs to be a list!"
@@ -157,51 +157,87 @@ mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("ca
   links <- network$links %>%
     select(id, type)
 
-  join <- left_join(x = counts, y = links, by = c("loc_id" = "id"))
+  if(aggr_to == "day"){
+
+    counts = counts %>%
+      group_by(loc_id) %>%
+      summarise(cs_id = first(cs_id),
+                h = first(h),
+                val = sum(val)) %>%
+      mutate(time = h)
+  }
+
+  print("Join counts and network links.")
+  join <- left_join(x = counts, y = links, by = c("loc_id" = "id"))  %>%
+    mutate(key = paste0(loc_id, "-", h))
+
   rm(links)
 
+  print("Aggregate link stats.")
   for(i in 1:length(linkStats)){
     frame <- linkStats[[i]]
 
-    if(i == 1){
+    time_value <- unique(frame$time)
+    hours <- seq(0, 24 * 3600, 3600)
 
-      join = left_join(x = join, y = frame, by = c("loc_id" = "linkId"))
-      join = join %>%
-        mutate(key = paste0(loc_id, "-", time))
+    ids <- counts %>% distinct(loc_id)
 
-    } else {
+    if(aggr_to == "day"){
 
-      frame = frame %>%
-        mutate(key = paste0(linkId, "-", time))
-      join = left_join(x = join, y = frame, by = "key")
+      sum_cols <- frame %>%
+        select(starts_with("vol_")) %>%
+        colnames()
+
+      frame = left_join(ids, frame, by = c("loc_id" = "linkId")) %>%
+        group_by(loc_id) %>%
+        summarise_at(sum_cols, sum)
+
+      join = left_join(join, frame, by = "loc_id")
+    }
+
+    if(aggr_to == "hour"){
+
+      hours <- seq(0, 24 * 3600, 3600)
+      labels <- seq(1, 24, 1) %>% as.character()
+
+      sum_cols <- frame %>%
+        select(starts_with("vol_")) %>%
+        colnames()
+
+      frame.1 = left_join(ids, frame, by = c("loc_id" = "linkId")) %>%
+        mutate(hour = cut(time, labels = labels, breaks = hours, right = F)) %>%
+        group_by(loc_id, hour) %>%
+        summarise_at(sum_cols, sum, na.rm = T) %>%
+        ungroup() %>%
+        mutate(time = as.numeric(hour) * 3600,
+               key = paste0(loc_id, "-", hour)) %>%
+        select(-c(loc_id, hour))
+
+      join = left_join(join, frame.1, by = "key")
     }
     rm(frame)
   }
 
+  if("time.x" %in% colnames(join)){
+    join = mutate(join, time = time.x)
+  }
+
+  if("key" %in% colnames(join)){
+    join = join %>% select(-key)
+  }
+
+  print("Cleaning up ...")
   join.long <- join %>%
-    mutate(time = time.x,
-           count = val) %>%
-    select(-c(ends_with(".x"), ends_with(".y"), key, val)) %>%
+    mutate(count = val) %>%
+    select(-c(ends_with(".x"), ends_with(".y"), val)) %>%
     pivot_longer(cols = starts_with("vol_"), names_to = "name", names_prefix = "vol_", values_to = "volume") %>%
     separate(col = name, into = c("mode", "src"), sep = "_") %>%
     mutate(type = str_remove(type, pattern = "highway."),
            type = factor(type, levels = c("motorway", "primary", "secondary", "tertiary", "residential", "unclassified", "motorway_link", "primary_link", "trunk_link"))) %>%
-    filter(time < latest & time > earliest) %>%
+    filter(time <= latest & time >= earliest) %>%
     filter(mode %in% networkModes)
 
-  if(aggr){
-
-    join.aggr <- join.long %>%
-      group_by(loc_id, mode, src) %>%
-      summarise(
-        volume = sum(volume, na.rm = T),
-        count = first(count),
-        type = first(type)
-      )
-
-    return(join.aggr)
-  }
-
+  print("Done!")
   join.long
 }
 
