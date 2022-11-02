@@ -189,6 +189,7 @@ mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("ca
         colnames()
 
       frame = left_join(ids, frame, by = c("loc_id" = "linkId")) %>%
+        filter(time <= latest & time >= earliest) %>%
         group_by(loc_id) %>%
         summarise_at(sum_cols, sum)
 
@@ -205,6 +206,7 @@ mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("ca
         colnames()
 
       frame.1 = left_join(ids, frame, by = c("loc_id" = "linkId")) %>%
+        filter(time <= latest & time >= earliest) %>%
         mutate(hour = cut(time, labels = labels, breaks = hours, right = F)) %>%
         group_by(loc_id, hour) %>%
         summarise_at(sum_cols, sum, na.rm = T) %>%
@@ -234,7 +236,6 @@ mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("ca
     separate(col = name, into = c("mode", "src"), sep = "_") %>%
     mutate(type = str_remove(type, pattern = "highway."),
            type = factor(type, levels = c("motorway", "primary", "secondary", "tertiary", "residential", "unclassified", "motorway_link", "primary_link", "trunk_link"))) %>%
-    filter(time <= latest & time >= earliest) %>%
     filter(mode %in% networkModes)
 
   print("Done!")
