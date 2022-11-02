@@ -121,7 +121,7 @@ readLinkStats <- function(runId, file, sampleSize = 0.25){
 #'
 #'@param networkModes a vector with network modes, which are needed for analysis
 #'
-#'@param aggr Boolean, if data should be aggregated
+#'@param aggr_to Determinates if data should be aggregated to hour values or DTV, can either be "day" or "hour"
 #'
 #'@param earliest Lower limit to filter link stats by time, default is 0
 #'
@@ -131,7 +131,7 @@ readLinkStats <- function(runId, file, sampleSize = 0.25){
 #'
 #'
 #'@export
-mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("car"), aggr_to = c("day", "hour"), aggr = TRUE, earliest = 0, latest = 86400){
+mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("car"), aggr_to = c("day", "hour"), earliest = 0, latest = 86400){
 
   if(!is.list(linkStats)){
     message <- "linkStatsList needs to be a list!"

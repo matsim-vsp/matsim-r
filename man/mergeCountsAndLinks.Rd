@@ -9,7 +9,7 @@ mergeCountsAndLinks(
   network,
   linkStats,
   networkModes = c("car"),
-  aggr = TRUE,
+  aggr_to = c("day", "hour"),
   earliest = 0,
   latest = 86400
 )
@@ -23,7 +23,7 @@ mergeCountsAndLinks(
 
 \item{networkModes}{a vector with network modes, which are needed for analysis}
 
-\item{aggr}{Boolean, if data should be aggregated}
+\item{aggr_to}{Determinates if data should be aggregated to hour values or DTV, can either be "day" or "hour"}
 
 \item{earliest}{Lower limit to filter link stats by time, default is 0}
 
