@@ -1118,8 +1118,10 @@ plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FA
 #' @return Alluvial diagram that represents changes in transport mode distribution of trip tables
 #'
 #' @export
-plotModalShiftBar <- function(tripsTable1, tripsTable2, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory) {
+plotModalShiftBar <- function(tripsTable1, tripsTable2, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory,
+                              output.name = "modalShiftBarChart") {
   # If the unite.columns is specified, then
+  print(dump.output.to)
   if (length(unite.columns) != 0) {
     tripsTable1$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable1$main_mode)] <- united.name
     tripsTable2$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable2$main_mode)] <- united.name
@@ -1135,10 +1137,10 @@ plotModalShiftBar <- function(tripsTable1, tripsTable2, unite.columns = characte
   plotly::ggplotly(plt)
 
   if (file.exists(dump.output.to)) {
-    ggsave(paste0(dump.output.to, "/modalShiftBarChart.png"), plt)
+    ggsave(paste0(dump.output.to,"/",output.name,".png"), plt,device = "png")
   } else {
     dir.create(dump.output.to)
-    ggsave(paste0(dump.output.to, "/modalShiftBarChart.png"), plt)
+    ggsave(paste0(dump.output.to,"/",output.name,".png"), plt,device = "png")
   }
 
   return(plotly::ggplotly(plt))
@@ -1963,6 +1965,7 @@ compareBasePolicyOutput <- function(baseFolder,policyFolder,dump.output.to = mat
   }
   i = 0;
 
+  print(dump.output.to)
   if (!file.exists(dump.output.to)) {
     dir.create(dump.output.to)
   }
@@ -1970,9 +1973,11 @@ compareBasePolicyOutput <- function(baseFolder,policyFolder,dump.output.to = mat
 
     for(policy in policy_trips){
       print(paste0(i," comparison"))
+      name = paste0(i,"_",attr(base,"table_name"),"--",attr(policy,"table_name"))
       plotModalShiftBar(base,
                         policy,
-                        dump.output.to = paste0(dump.output.to,"/",i,"_",attr(base,"table_name"),"--",attr(policy,"table_name")))
+                        dump.output.to = dump.output.to,
+                        output.name = name)
 
       i=i+1
     }
