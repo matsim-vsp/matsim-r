@@ -23,10 +23,10 @@ docs: .sentinel-make-docs
 
 .sentinel-make-docs: $(shell find R -type f)
 > R -e 'devtools::document()'
-> R -e 'source("R/util.R"); generate_html_docs("matsim")'
+> R -e 'pkgdown::build_site()'
 > touch $@
 
 clean:
-> rm -rf html
+> rm -rf docs
 > rm -rf man
 .PHONY: clean
