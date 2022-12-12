@@ -8,7 +8,7 @@ Currently network files are supported, and many summarization plots based on the
 
 One very useful command builds a [SimWrapper](https://vsp.berlin/simwrapper) dashboard from the standard MATSim `output_trips.xml.gz` file:
 
-- `R -e "prepareSimwrapperDashboardFromFolder()"`
+- `R -e "matsim::prepareSimwrapperDashboardFromFolder()"`
 
 This work is preliminary and ongoing -- submissions are welcome!
 
