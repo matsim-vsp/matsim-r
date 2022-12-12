@@ -51,19 +51,21 @@ prepareSimwrapperDashboardFromFolder <- function(folder = "./", dump.output.to =
   table = readTripsTable(folder)
   path = attr(table,"table_name")
   prepareSimwrapperDashboardFromTable(table,dump.output.to,append)
+
   crs = getCrsFromConfig(folder)
   if(!is.na(crs)){
-    generateXYHexagonYaml(attr(table,"table_name"),crs,dump.output.to = dump.output.to)
+    generateXYHexagonYaml(attr(table,"table_name"), crs, dump.output.to=dump.output.to)
+    generateTransitYaml(folder, crs, dump.output.to=dump.output.to)
+    generateCarrierYaml(folder, crs, dump.output.to=dump.output.to)
   }
+
   return(table)
 }
 
 #' Creates/adds XY hexagon definition of output trips to a summary dashboard
 #'
 #' @param pathToOutputTrips specifies path to a data source of output_trips
-#'
 #' @param crs specifies an coordinate reference system of output_trips
-#'
 #' @param dump.output.to path to an folder with dashboard
 #'
 #' @return changed file
@@ -115,7 +117,73 @@ generateXYHexagonYaml<- function(pathToOutputTrips,crs,dump.output.to = matsimDu
   } else {
     write_yaml(yaml_list, paste0(dump.output.to, dashboard_file))
   }
+}
 
+#' Creates/adds transit dashboard panel if output_transitSchedule.xml.gz exists
+#'
+#' @param folder folder containing output_transitSchedule.xml.gz
+#' @param crs specifies an coordinate reference system of output_network
+#' @param dump.output.to path to an folder with dashboard
+#'
+#' @return changed file
+#'
+#' @export
+generateTransitYaml<- function(folder, crs, dump.output.to = matsimDumpOutputDirectory) {
+  # check whether output_transitSchedule.xml.gz exists
+  files <- list.files(folder, full.names = TRUE)
+  exists <- grep("output_transitSchedule\\.xml\\.gz$", files)
+  if (length(exists) == 0) return()
+
+  # build YAML
+  transit_yaml_file = 'dashboard-2-transit.yaml'
+  yaml_list <- list(
+    header = list(tab = "Transit"),
+    layout = list("transit" = list(
+      title =  "Transit network",
+      type = "transit",
+      height = 10,
+      props = list(file = "*output_transitSchedule.xml.gz",
+                   network = "*output_network.xml.gz")
+    )
+    )
+  )
+
+  ofile = paste0(dump.output.to, '/', transit_yaml_file)
+  print(paste('Writing:', ofile))
+  write_yaml(yaml_list, ofile)
+}
+
+#' Creates/adds carriers dashboard panel if output_carriers.xml.gz exists
+#'
+#' @param folder folder containing output_carriers.xml.gz
+#' @param crs specifies an coordinate reference system of output_network
+#' @param dump.output.to path to an folder with dashboard
+#'
+#' @return changed file
+#'
+#' @export
+generateCarrierYaml <- function(folder, crs, dump.output.to = matsimDumpOutputDirectory) {
+  # check whether output_carriers.xml.gz exists
+  files <- list.files(folder, full.names = TRUE)
+  exists <- grep("output_carriers\\.xml\\.gz$", files, value=TRUE)
+  if (length(exists) == 0) return()
+
+  # build YAML
+  yaml_file = 'dashboard-3-carriers.yaml'
+  yaml_list <- list(
+    header = list(tab = "Carriers"),
+    layout = list("carriers" = list(
+      title =  "Carriers",
+      type = "carriers",
+      height = 10,
+      props = list(carriers = "*output_carriers.xml.gz",
+                   network = "*output_network.xml.gz")
+    ))
+  )
+
+  ofile = paste0(dump.output.to, '/', yaml_file)
+  print(paste('Writing:', ofile))
+  write_yaml(yaml_list, ofile)
 }
 
 
