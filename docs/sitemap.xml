@@ -1,99 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://vsp.berlin/matsim-r/404.html</loc>
   </url>
   <url>
-    <loc>/LICENSE.html</loc>
+    <loc>https://vsp.berlin/matsim-r/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://vsp.berlin/matsim-r/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://vsp.berlin/matsim-r/index.html</loc>
   </url>
   <url>
-    <loc>/reference/compareBasePolicyOutput.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/compareBasePolicyOutput.html</loc>
   </url>
   <url>
-    <loc>/reference/compareBasePolicyShapeOutput.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/compareBasePolicyShapeOutput.html</loc>
   </url>
   <url>
-    <loc>/reference/compareTripTypesBarChart.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/compareTripTypesBarChart.html</loc>
   </url>
   <url>
-    <loc>/reference/deriveODMatrix.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/deriveODMatrix.html</loc>
   </url>
   <url>
-    <loc>/reference/filterByRegion.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/filterByRegion.html</loc>
   </url>
   <url>
-    <loc>/reference/generateXYHexagonYaml.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/generateXYHexagonYaml.html</loc>
   </url>
   <url>
-    <loc>/reference/generate_html_docs.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/generate_html_docs.html</loc>
   </url>
   <url>
-    <loc>/reference/getCrsFromConfig.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/getCrsFromConfig.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/loadNetwork.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/loadNetwork.html</loc>
   </url>
   <url>
-    <loc>/reference/plotAverageTravelWait.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotAverageTravelWait.html</loc>
   </url>
   <url>
-    <loc>/reference/plotDistanceTraveledByType.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotDistanceTraveledByType.html</loc>
   </url>
   <url>
-    <loc>/reference/plotEndActCountByArrTime.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotEndActCountByArrTime.html</loc>
   </url>
   <url>
-    <loc>/reference/plotMapWithTrips.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotMapWithTrips.html</loc>
   </url>
   <url>
-    <loc>/reference/plotMapWithTripsType.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotMapWithTripsType.html</loc>
   </url>
   <url>
-    <loc>/reference/plotModalShiftBar.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotModalShiftBar.html</loc>
   </url>
   <url>
-    <loc>/reference/plotModalShiftSankey.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotModalShiftSankey.html</loc>
   </url>
   <url>
-    <loc>/reference/plotModalSplitBarChart.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotModalSplitBarChart.html</loc>
   </url>
   <url>
-    <loc>/reference/plotModalSplitPieChart.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotModalSplitPieChart.html</loc>
   </url>
   <url>
-    <loc>/reference/plotStartActCountByDepTime.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotStartActCountByDepTime.html</loc>
   </url>
   <url>
-    <loc>/reference/plotTripCountByDepTime.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotTripCountByDepTime.html</loc>
   </url>
   <url>
-    <loc>/reference/plotTripDistanceByMode.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotTripDistanceByMode.html</loc>
   </url>
   <url>
-    <loc>/reference/plotTripTypesPieChart.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotTripTypesPieChart.html</loc>
   </url>
   <url>
-    <loc>/reference/plotTripsByDistance.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotTripsByDistance.html</loc>
   </url>
   <url>
-    <loc>/reference/prepareSimwrapperDashboardFromFolder.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/prepareSimwrapperDashboardFromFolder.html</loc>
   </url>
   <url>
-    <loc>/reference/prepareSimwrapperDashboardFromTable.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/prepareSimwrapperDashboardFromTable.html</loc>
   </url>
   <url>
-    <loc>/reference/readTripsTable.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/readTripsTable.html</loc>
   </url>
   <url>
-    <loc>/reference/transformToSf.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/transformToSf.html</loc>
   </url>
 </urlset>
