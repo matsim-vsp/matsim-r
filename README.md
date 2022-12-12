@@ -6,7 +6,11 @@ This package mimics the functionality of the [Python matsim-tools](https://pypi.
 
 Currently network files are supported, and many summarization plots based on the MATSim standard output_trips file.
 
-This work is ongoing and submissions are welcome!
+One very useful command builds a [SimWrapper](https://vsp.berlin/simwrapper) dashboard from the standard MATSim `output_trips.xml.gz` file:
+
+- `R -e "prepareSimwrapperDashboardFromFolder()"`
+
+This work is preliminary and ongoing -- submissions are welcome!
 
 ## Install
 
