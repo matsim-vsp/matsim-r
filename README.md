@@ -12,6 +12,8 @@ One very useful command builds a [SimWrapper](https://vsp.berlin/simwrapper) das
 
 This work is preliminary and ongoing -- submissions are welcome!
 
+---
+
 ## Install
 
 You can install the package right now:
@@ -30,6 +32,8 @@ To install the package from a specific branch use:
 Instead of using devtools you can also install directly from the source archive:
 
 - `install.packages("matsim-r.tar.gz", type="source", repos=NULL)`
+
+---
 
 ## Documentation build instructions
 

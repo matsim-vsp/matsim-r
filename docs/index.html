@@ -81,7 +81,12 @@
 <p>MATSim <a href="https://matsim.org" class="external-link uri">https://matsim.org</a> is an agent-based microsimulation package for large-scape transport simulations.</p>
 <p>This package mimics the functionality of the <a href="https://pypi.org/project/matsim-tools" class="external-link">Python matsim-tools</a> package, and will eventually support standard MATSim networks, plans and events.</p>
 <p>Currently network files are supported, and many summarization plots based on the MATSim standard output_trips file.</p>
-<p>This work is ongoing and submissions are welcome!</p>
+<p>One very useful command builds a <a href="https://vsp.berlin/simwrapper" class="external-link">SimWrapper</a> dashboard from the standard MATSim <code>output_trips.xml.gz</code> file:</p>
+<ul>
+<li><code>R -e "prepareSimwrapperDashboardFromFolder()"</code></li>
+</ul>
+<p>This work is preliminary and ongoing – submissions are welcome!</p>
+<hr>
 <div class="section level2">
 <h2 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
 </h2>
@@ -98,21 +103,28 @@
 </ul>
 </li>
 </ul>
-<p>To install the package from specific branch use: <code>devtools::install_github("matsim-vsp/matsim-r",ref="{name of the branch}")</code></p>
+<p>To install the package from a specific branch use: <code>devtools::install_github("matsim-vsp/matsim-r",ref="{name of the branch}")</code></p>
 <div class="section level3">
 <h3 id="installing-from-gz-archive">Installing from .gz archive<a class="anchor" aria-label="anchor" href="#installing-from-gz-archive"></a>
 </h3>
-<p>You can also install directly from the source archive instead of using devtools:</p>
+<p>Instead of using devtools you can also install directly from the source archive:</p>
 <ul>
 <li><code>install.packages("matsim-r.tar.gz", type="source", repos=NULL)</code></li>
 </ul>
+<hr>
 </div>
 </div>
 <div class="section level2">
 <h2 id="documentation-build-instructions">Documentation build instructions<a class="anchor" aria-label="anchor" href="#documentation-build-instructions"></a>
 </h2>
-<p><code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> builds docs and NAMESPACE</p>
-<p>or run GNU Make to build the docs as above and also create HTML versions in the <code>html</code> folder.</p>
+<p>Run GNU Make to build the docs whenever source files in <code>R/</code> change. It will create the man pages as well as the fancy HTML <code>docs/</code> folder</p>
+<p>Or, build yourself:</p>
+<ul>
+<li>
+<code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> builds docs and NAMESPACE</li>
+<li>
+<code><a href="https://pkgdown.r-lib.org/reference/build_site.html" class="external-link">pkgdown::build_site()</a></code> builds the HTML docs</li>
+</ul>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -142,7 +154,8 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Billy Charlton <br><small class="roles"> Maintainer </small>  </li>
+<li>Billy Charlton <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Oleksandr Soboliev <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
@@ -154,7 +167,7 @@
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Billy Charlton.</p>
+<p>Developed by Billy Charlton, Oleksandr Soboliev.</p>
 </div>
 
 <div class="pkgdown-footer-right">
