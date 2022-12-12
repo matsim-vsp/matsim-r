@@ -21,6 +21,13 @@ You can install the package right now:
 To install the package from specific branch use:
 `devtools::install_github("matsim-vsp/matsim-r",ref="{name of the branch}")`
 
+### Installing from .gz archive
+
+You can also install directly from the source archive instead of using devtools:
+
+- `install.packages("matsim-r.tar.gz", type="source", repos=NULL)`
+
+
 ## Documentation build instructions
 
 `devtools::document()` builds docs and NAMESPACE

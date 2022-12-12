@@ -1,4 +1,4 @@
-matsimDumpOutputDirectory <- "./matsim_r_output"
+matsimDumpOutputDirectory <- "." # "./matsim_r_output"
 dashboard_file <- "/dashboard-summary-trips.yaml"
 
 #' Load MATSIM output_trips table into Memory
