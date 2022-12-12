@@ -1,10 +1,10 @@
 # MATSIM R support package
 
-MATSIM <https://matsim.org> is an agent-based microsimulation package for large-scape transport simulations. 
+MATSim <https://matsim.org> is an agent-based microsimulation package for large-scape transport simulations. 
 
-This package mimics the functionality of the [Python matsim-tools](https://pypi.org/project/matsim-tools) package, and will support standard MATSIM networks, plans and events. 
+This package mimics the functionality of the [Python matsim-tools](https://pypi.org/project/matsim-tools) package, and will eventually support standard MATSim networks, plans and events. 
 
-Currently network files are supported.
+Currently network files are supported, and many summarization plots based on the MATSim standard output_trips file.
 
 This work is ongoing and submissions are welcome!
 
@@ -21,8 +21,11 @@ You can install the package right now:
 To install the package from specific branch use:
 `devtools::install_github("matsim-vsp/matsim-r",ref="{name of the branch}")`
 
-## Build instructions
+## Documentation build instructions
 
 `devtools::document()` builds docs and NAMESPACE
+
+or run GNU Make to build the docs as above and also create HTML versions in the `html` folder.
+
 
 
