@@ -142,7 +142,7 @@ generateTransitYaml<- function(folder, crs, dump.output.to = matsimDumpOutputDir
       title =  "Transit network",
       type = "transit",
       height = 10,
-      props = list(file = "*output_transitSchedule.xml.gz",
+      props = list(transitSchedule = "*output_transitSchedule.xml.gz",
                    network = "*output_network.xml.gz")
     )
     )
