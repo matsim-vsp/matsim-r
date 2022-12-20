@@ -1055,21 +1055,19 @@ plotDistanceTraveledByType <- function(tripsTable,shapeTable,crs,dump.output.to 
 #' @export
 plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory) {
   StatStratum <- ggalluvial::StatStratum
-  if (show.onlyChanges == TRUE) {
-    joined <- as_tibble(inner_join(tripsTable1, tripsTable2 %>%
+  joined <- as_tibble(inner_join(tripsTable1, tripsTable2 %>%
       select(trip_id, main_mode), by = "trip_id") %>%
-      rename(base_mode = main_mode.x, policy_mode = main_mode.y))
-    joined <- joined %>%
-      filter(base_mode != policy_mode) %>%
-      group_by(base_mode, policy_mode) %>%
-      count()
-  } else {
-    joined <- as_tibble(inner_join(tripsTable1, tripsTable2 %>%
-      select(trip_id, main_mode), by = "trip_id") %>% rename(base_mode = main_mode.x, policy_mode = main_mode.y))
-    joined <- joined %>%
-      group_by(base_mode, policy_mode) %>%
-      count()
+      dplyr::rename(base_mode = main_mode.x, policy_mode = main_mode.y))
+
+  if (show.onlyChanges == TRUE) {
+     joined <- joined %>%
+      filter(base_mode != policy_mode)
   }
+  
+  joined <- joined %>%
+      group_by(base_mode, policy_mode) %>%
+      count()
+  
   # If the unite.commercials flag is set to TRUE, then join all commercials under 1 name commercial
   if (length(unite.columns) != 0) {
     joined$base_mode[grep(paste0(unite.columns, collapse = "|"), joined$base_mode)] <- united.name
