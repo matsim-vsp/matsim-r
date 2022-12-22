@@ -408,7 +408,7 @@ plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), unit
 #' @return Bar Chart plot of count of trips among distance travelled
 #'
 #' @export
-plotTripsByDistance <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
+plotModalDistanceDistribution <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
                                 only.files = FALSE) {
 
 
@@ -440,6 +440,8 @@ plotTripsByDistance <- function(tripsTable, unite.columns = character(0), united
                             tripsTable_100km,
                             tripsTable_100pluskm)
 
+
+  tripsTable_result$dist_cat = factor(tripsTable_result$dist_cat,levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km","> 100km"))
 
   tableWithCounts = tripsTable_result %>% count(main_mode,dist_cat)
   tableToWrite = tripsTable_result %>% select(dist_cat) %>% unique() %>% arrange(dist_cat)
@@ -524,6 +526,52 @@ plotTripsByDistance <- function(tripsTable, unite.columns = character(0), united
     fig
     return(fig)
   }
+
+}
+
+#' Bar Chart with distance travelled on x-axis and difference of number of trips on y-axis
+#'
+#' Takes 2 Tables trips_output (from readTripsTable()),
+#' to plot bar chart with with values that represent
+#' difference of number of trips between tripsTable2 and tripsTable1 ~ distance travelled
+#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#'
+#'
+#' @param tripsTable1 tible of trips_output (from readTripsTable()), number of trips of this table will be extracted from number of trips of tripsTable1
+#' @param tripsTable2 tible of trips_output (from readTripsTable()), from number of trips of this table number of trips of tripsTable1 will be extracted
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
+#' @return Bar Chart plot of count of trips among distance travelled
+#'
+#' @export
+compareModalDistanceDistribution <- function(tripsTable1,tripsTable2, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
+                                          only.files = FALSE) {
+  if (length(unite.columns) != 0) {
+    tripsTable1$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable1$main_mode)] <- united.name
+    tripsTable2$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable2$main_mode)] <- united.name
+
+    }
+
+  distribution1 <- appendDistanceCategory(tripsTable1)
+  distribution2 <- appendDistanceCategory(tripsTable2)
+
+  tableWithCounts1 = distribution1 %>% count(main_mode,dist_cat)
+  tableWithCounts2 = distribution2 %>% count(main_mode,dist_cat)
+
+  joined <- full_join(tableWithCounts1, tableWithCounts2, by = c("main_mode", "dist_cat"))
+
+  result <- joined %>%
+    replace_na( list(n.x = 0, n.y = 0) ) %>%
+    mutate(diff = n.y - n.x) %>%
+    select(main_mode, dist_cat, diff)
+
+  plt = ggplotly(ggplot(result) +
+    geom_col(aes(x = dist_cat,fill = main_mode, y = diff), position = position_dodge())+
+    ggtitle("Difference in number of trips per travelling distance"))
+
+  return(plt)
 
 }
 
@@ -2093,6 +2141,35 @@ getCrsFromConfig <- function(folder) {
   return(NA)
 }
 
+
+appendDistanceCategory <- function(tripsTable){
+  modes = levels(factor(tripsTable$main_mode))
+
+  #This is a very bad way to do that, but I see no other way to get it done
+  #Also filtering table into a new doesn't creates new objects in memory, so it works fast
+  tripsTable_05km = tripsTable %>% filter(traveled_distance<=1000) %>% mutate(dist_cat = "0-1km")
+  #tripsTable_1km = tripsTable %>% filter(traveled_distance>500 & traveled_distance<=1000  ) %>% mutate(dist_cat = "0.5-1km")
+  tripsTable_2km = tripsTable %>% filter(traveled_distance>1000 & traveled_distance<=2000) %>% mutate(dist_cat = "1-2km")
+  tripsTable_5km = tripsTable %>% filter(traveled_distance>2000 & traveled_distance<=5000) %>% mutate(dist_cat = "2-5km")
+  tripsTable_10km = tripsTable %>% filter(traveled_distance>5000 & traveled_distance<=10*1000) %>% mutate(dist_cat = "5-10km")
+  tripsTable_20km = tripsTable %>% filter(traveled_distance>10*1000 & traveled_distance<=20*1000) %>% mutate(dist_cat = "10-20km")
+  tripsTable_50km = tripsTable %>% filter(traveled_distance>20*1000 & traveled_distance<=50*1000) %>% mutate(dist_cat = "20-50km")
+  tripsTable_100km = tripsTable %>% filter(traveled_distance>50*1000 & traveled_distance<=100*1000) %>% mutate(dist_cat = "50-100km")
+  tripsTable_100pluskm = tripsTable %>% filter(traveled_distance>100*1000) %>% mutate(dist_cat = "> 100km")
+
+  tripsTable_result = rbind(tripsTable_05km,
+                            #tripsTable_1km,
+                            tripsTable_2km,
+                            tripsTable_5km,
+                            tripsTable_10km,
+                            tripsTable_20km,
+                            tripsTable_50km,
+                            tripsTable_100km,
+                            tripsTable_100pluskm)
+
+  tripsTable_result$dist_cat = factor(tripsTable_result$dist_cat,levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km","> 100km"))
+  return(tripsTable_result)
+}
 
 
 
