@@ -1,3 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+\.sentinel.*$
+Makefile
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

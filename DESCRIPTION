@@ -1,9 +1,10 @@
 Package: matsim
 Type: Package
 Title: R library for interfacing with MATSim agent-based microsimulation model
-Version: 0.1.5
-Author: Billy Charlton
-Maintainer: Billy Charlton <charlton@vsp.tu-berlin.de>
+Version: 0.1.8
+Authors@R: c(
+  person("Billy", "Charlton", email = "charlton@vsp.tu-berlin.de", role=c("aut","cre")),
+  person("Oleksandr", "Soboliev", role="aut"))
 Description: MATSim support package for R
     MATSim <https://matsim.org> is an agent-based microsimulation package 
     for large-scale transport simulations. This package mimics the functionality 
