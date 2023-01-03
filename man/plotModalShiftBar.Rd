@@ -9,7 +9,8 @@ plotModalShiftBar(
   tripsTable2,
   unite.columns = character(0),
   united.name = "united",
-  dump.output.to = matsimDumpOutputDirectory
+  dump.output.to = matsimDumpOutputDirectory,
+  output.name = "modalShiftBarChart"
 )
 }
 \arguments{

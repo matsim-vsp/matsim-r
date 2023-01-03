@@ -7,7 +7,7 @@
 prepareSimwrapperDashboardFromTable(
   table,
   dump.output.to = matsimDumpOutputDirectory,
-  append = FALSE
+  append = TRUE
 )
 }
 \arguments{
@@ -16,7 +16,7 @@ prepareSimwrapperDashboardFromTable(
 \item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard and all plots using functions:
 plotModalSplitBarChart(),plotModalSplitPieChart(),plotModalShift().}
 
-\item{append}{specifies if the ouput folder should be erased before creating}
+\item{append}{specifies if the output folder should be erased before creating}
 }
 \value{
 generates folder with content for simwrapper out of trips table

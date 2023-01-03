@@ -34,3 +34,5 @@ config.xml
 network.xml.gz
 analysis_berlin10/
 kelheim/
+test/
+.sentinel*
