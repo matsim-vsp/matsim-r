@@ -21,11 +21,7 @@ Imports: dplyr, purrr, readr, tidyverse, xml2, ggplot2, sf, ggalluvial, ggrepel,
 LazyData: true
 URL: https://github.com/matsim-vsp/matsim-r
 BugReports: https://github.com/matsim-vsp/matsim-r/issues
-<<<<<<< HEAD
-RoxygenNote: 7.2.1
-=======
 RoxygenNote: 7.2.3
->>>>>>> master
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
