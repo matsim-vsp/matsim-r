@@ -439,13 +439,13 @@ compareAverageTravelWait <- function(tripsTable1,tripsTable2, unite.columns = ch
   avg_time = full_join(avg_time1, avg_time2, by = "main_mode") %>%
     replace_na(list(trav_time_avg.x = 0,wait_time_avg.x = 0,trav_time_avg.y = 0,wait_time_avg.y = 0))
 
-  print(avg_time)
+  #print(avg_time)
 
   avg_time  = avg_time %>% mutate(trav_time_avg = trav_time_avg.x - trav_time_avg.y,
                                   wait_time_avg =wait_time_avg.x - wait_time_avg.y )%>%
     select(-wait_time_avg.x,-wait_time_avg.y, -trav_time_avg.x,-trav_time_avg.y)
 
-  print(avg_time)
+  #print(avg_time)
 
   fig = plot_ly(data = avg_time,x = ~main_mode,y = ~trav_time_avg,type = 'bar',name = "AVG Time Travelling")
   fig = fig %>% add_trace(y = ~wait_time_avg,name = "AVG Time Waiting")
@@ -565,7 +565,7 @@ plotModalDistanceDistribution <- function(tripsTable, unite.columns = character(
   tripsTable_result$dist_cat = factor(tripsTable_result$dist_cat,levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km","> 100km"))
 
   tableWithCounts = tripsTable_result %>% count(main_mode,dist_cat)
-  print(tableWithCounts)
+  #print(tableWithCounts)
   tableToWrite = tripsTable_result %>% select(dist_cat) %>% unique() %>% arrange(dist_cat)
   for( mode in modes){
     newColumn = tableWithCounts %>%
@@ -694,7 +694,7 @@ compareModalDistanceDistribution <- function(tripsTable1,tripsTable2, unite.colu
   result$dist_cat = factor(result$dist_cat,levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km","> 100km"))
 
   tableWithCounts = result
-  print(tableWithCounts)
+  #print(tableWithCounts)
   tableToWrite = result %>% select(dist_cat) %>% unique() %>% arrange(dist_cat)
   for( mode in modes){
     newColumn = tableWithCounts %>%
@@ -738,7 +738,7 @@ compareModalDistanceDistribution <- function(tripsTable1,tripsTable2, unite.colu
     write.table(tableToWrite,paste0(dump.output.to,"/modalDistanceDistributionComparison.csv"),row.names = FALSE,sep = ",")
   }
 
-  print(list(modes))
+  #print(list(modes))
   yaml_list <- list(
     header = list(tab = "Summary", title = "Dashboard", description = "Plots from output directory"),
     layout = list("1" = list(
@@ -1370,7 +1370,7 @@ plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FA
 plotModalShiftBar <- function(tripsTable1, tripsTable2, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory,
                               output.name = "modalShiftBarChart") {
   # If the unite.columns is specified, then
-  print(dump.output.to)
+  #print(dump.output.to)
   if (length(unite.columns) != 0) {
     tripsTable1$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable1$main_mode)] <- united.name
     tripsTable2$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable2$main_mode)] <- united.name

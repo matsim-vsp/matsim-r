@@ -123,3 +123,35 @@ clearDashboard<- function(matsimOutputFolder){
     unlink(dump.output.to, recursive = TRUE)
   }
 }
+
+
+
+
+#' Creates comparison dashboard for the 2 given tables or folder with data
+#'
+#'
+#'
+#' @param table1 trips_output tibble from readTripsTable()
+#'
+#' @param table2 trips_output tibble from readTripsTable()
+#'
+#' @param append specifies if the ouput folder should be erased before creating
+#'
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard and all plots using functions:
+#' plotModalSplitBarChart(),plotModalSplitPieChart(),plotModalShift().
+#'
+#' @return generates folder with content for simwrapper out of trips table
+#'
+#' @export
+prepareComparisonSimwrapperDashboardFromTable <- function(table1,table2, dump.output.to = matsimDumpOutputDirectory, append = FALSE) {
+  if (append == FALSE) {
+    if (file.exists(dump.output.to)) {
+      unlink(dump.output.to, recursive = TRUE)
+    }
+  }
+  compareAverageTravelWait(table1,table2)
+  compareModalDistanceDistribution(table,table2)
+  plotModalShiftSankey(table1,table2)
+  #Not sure if it is needed
+  #plotModalShift(table, table,dump.output.to = dump.output.to)
+}

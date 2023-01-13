@@ -5,9 +5,9 @@
 \title{Creates dashboard for the given table or folder with data}
 \usage{
 prepareSimwrapperDashboardFromFolder(
-  folder = "./",
+  folder,
   dump.output.to = matsimDumpOutputDirectory,
-  append = TRUE
+  append = FALSE
 )
 }
 \arguments{
@@ -15,7 +15,7 @@ prepareSimwrapperDashboardFromFolder(
 
 \item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard and all plots}
 
-\item{append}{specifies if the output folder should be erased before creating}
+\item{append}{specifies if the ouput folder should be erased before creating}
 }
 \value{
 tibble of output_trips from folder. Generates content needed for Simwrapper
