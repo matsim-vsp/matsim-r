@@ -1,4 +1,4 @@
-matsimDumpOutputDirectory <- "." # "./matsim_r_output"
+matsimDumpOutputDirectory <- "./matsim_r_output"
 dashboard_file <- "/dashboard-1-trips.yaml"
 
 #' Load MATSIM output_trips table into Memory
@@ -478,10 +478,10 @@ compareAverageTravelWait <- function(tripsTable1,tripsTable2, unite.columns = ch
       width = 1,
       props = list(dataset = "averageTravelWait.csv",
                    x = "main_mode",
-                   y = "[trav_time_avg,wait_time_avg]",
+                   columns = list("trav_time_avg","wait_time_avg"),
                    yAxisTitle = "Time in minutes",
-                   xAxisTitle = "main_mode",
-                   columns = paste0("[",paste0(avg_time$main_mode,collapse = ","),"]"))
+                   xAxisTitle = "main_mode"
+                   )
     ))
   )
 
@@ -494,7 +494,7 @@ compareAverageTravelWait <- function(tripsTable1,tripsTable2, unite.columns = ch
       width = 1,
       props = list(dataset = "averageTravelWait.csv",
                    x = "main_mode",
-                   y = "[trav_time_avg,wait_time_avg]",
+                   columns = list("trav_time_avg","wait_time_avg"),
                    yAxisTitle = "Time in minutes",
                    xAxisTitle = "main_mode")
     )))
@@ -565,6 +565,7 @@ plotModalDistanceDistribution <- function(tripsTable, unite.columns = character(
   tripsTable_result$dist_cat = factor(tripsTable_result$dist_cat,levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km","> 100km"))
 
   tableWithCounts = tripsTable_result %>% count(main_mode,dist_cat)
+  print(tableWithCounts)
   tableToWrite = tripsTable_result %>% select(dist_cat) %>% unique() %>% arrange(dist_cat)
   for( mode in modes){
     newColumn = tableWithCounts %>%
@@ -581,7 +582,7 @@ plotModalDistanceDistribution <- function(tripsTable, unite.columns = character(
     tableToWrite = cbind(tableToWrite,newColumn)
   }
   tableToWrite$dist_cat = factor(tableToWrite$dist_cat,ordered = TRUE,
-                                 levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km"))
+                                 levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km",">100km"))
   tableToWrite = tableToWrite %>% arrange(dist_cat)
 
 
@@ -675,6 +676,7 @@ compareModalDistanceDistribution <- function(tripsTable1,tripsTable2, unite.colu
 
     }
 
+  modes = unique(c(unique(tripsTable1$main_mode),unique(tripsTable2$main_mode)))
   distribution1 <- appendDistanceCategory(tripsTable1)
   distribution2 <- appendDistanceCategory(tripsTable2)
 
@@ -685,14 +687,94 @@ compareModalDistanceDistribution <- function(tripsTable1,tripsTable2, unite.colu
 
   result <- joined %>%
     replace_na( list(n.x = 0, n.y = 0) ) %>%
-    mutate(diff = n.y - n.x) %>%
-    select(main_mode, dist_cat, diff)
+    mutate(n = n.y - n.x) %>%
+    select(main_mode, dist_cat, n)
 
-  plt = ggplotly(ggplot(result) +
-    geom_col(aes(x = dist_cat,fill = main_mode, y = diff), position = position_dodge())+
+
+  result$dist_cat = factor(result$dist_cat,levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km","> 100km"))
+
+  tableWithCounts = result
+  print(tableWithCounts)
+  tableToWrite = result %>% select(dist_cat) %>% unique() %>% arrange(dist_cat)
+  for( mode in modes){
+    newColumn = tableWithCounts %>%
+      filter(main_mode == mode) %>%
+      mutate(mode = n) %>%
+      select(dist_cat,mode)
+    diff = setdiff(tableToWrite$dist_cat,newColumn$dist_cat)
+    for(dist in diff){
+      newColumn = rbind(newColumn,c(dist,0))
+    }
+    newColumn = newColumn %>%arrange(dist_cat) %>% select(-dist_cat) %>% mutate(mode = as.numeric(mode))
+    colnames(newColumn)[1] = mode
+    #print(newColumn)
+    tableToWrite = cbind(tableToWrite,newColumn)
+  }
+  tableToWrite$dist_cat = factor(tableToWrite$dist_cat,ordered = TRUE,
+                                 levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km",">100km"))
+  tableToWrite = tableToWrite %>% arrange(dist_cat)
+
+
+  fig = ggplotly(ggplot(result) +
+    geom_col(aes(x = dist_cat,fill = main_mode, y = n), position = position_dodge())+
     ggtitle("Difference in number of trips per travelling distance"))
 
-  return(plt)
+
+  #files
+  if (file.exists(dump.output.to)) {
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/modalDistanceDistributionComparison.html"))
+    #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
+  } else {
+    dir.create(dump.output.to)
+    htmlwidgets::saveWidget(fig,paste0(dump.output.to, "/modalDistanceDistributionComparison.html"))
+    #ggsave(paste0(dump.output.to, "/averageTravelWait.png"),width = 6,height = 10, fig)
+  }
+
+  # Generating yaml and output_files
+  if (file.exists(dump.output.to)) {
+    write.table(tableToWrite,paste0(dump.output.to,"/modalDistanceDistributionComparison.csv"),row.names = FALSE,sep = ",")
+  } else {
+    dir.create(dump.output.to)
+    write.table(tableToWrite,paste0(dump.output.to,"/modalDistanceDistributionComparison.csv"),row.names = FALSE,sep = ",")
+  }
+
+  print(list(modes))
+  yaml_list <- list(
+    header = list(tab = "Summary", title = "Dashboard", description = "Plots from output directory"),
+    layout = list("1" = list(
+      title =  paste0("Modal Distance Distribution Comparison between ",attr(tripsTable1,"table_name")," and ",attr(tripsTable2,"table_name")),
+      description = "generated by compareModalDistanceDistribution()",
+      type = "bar",
+      width = 1,
+      props = list(dataset = "modalDistanceDistributionComparison.csv",
+                   x = "dist_cat",
+                   columns = as.list(modes),
+                   yAxisTitle = "Number of trips",
+                   xAxisTitle = "dist_cat")
+    ))
+  )
+
+  if (file.exists(paste0(dump.output.to, dashboard_file))) {
+    yaml_from_directory <- read_yaml(paste0(dump.output.to, dashboard_file))
+    yaml_from_directory$layout <- append(yaml_from_directory$layout, list(new_row = list(
+      title =  paste0("Modal Distance Distribution Comparison between ",attr(tripsTable1,"table_name")," and ",attr(tripsTable2,"table_name")),
+      description = "generated by compareModalDistanceDistribution()",
+      type = "bar",
+      width = 1,
+      props = list(dataset = "modalDistanceDistributionComparison.csv",
+                   x = "dist_cat",
+                   columns = as.list(modes),
+                   yAxisTitle = "Number of trips",
+                   xAxisTitle = "dist_cat")
+    )))
+    names(yaml_from_directory$layout) <- 1:length(names(yaml_from_directory$layout))
+
+    write_yaml(yaml_from_directory, paste0(dump.output.to, dashboard_file))
+  } else {
+    write_yaml(yaml_list, paste0(dump.output.to, dashboard_file))
+  }
+
+  return(fig)
 
 }
 
