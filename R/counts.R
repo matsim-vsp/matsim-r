@@ -235,7 +235,7 @@ mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("ca
     pivot_longer(cols = starts_with("vol_"), names_to = "name", names_prefix = "vol_", values_to = "volume") %>%
     separate(col = name, into = c("mode", "src"), sep = "_") %>%
     mutate(type = str_remove(type, pattern = "highway."),
-           type = factor(type, levels = c("motorway", "primary", "secondary", "tertiary", "residential", "unclassified", "motorway_link", "primary_link", "trunk_link"))) %>%
+           type = factor(type, levels = c("motorway", "trunk", "primary", "secondary", "tertiary", "residential", "unclassified", "motorway_link", "primary_link", "trunk_link"))) %>%
     filter(mode %in% networkModes)
 
   print("Done!")
