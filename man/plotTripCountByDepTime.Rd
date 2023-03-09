@@ -2,7 +2,7 @@
 % Please edit documentation in R/tripsOutput.R
 \name{plotTripCountByDepTime}
 \alias{plotTripCountByDepTime}
-\title{Scatter plot with departure time x-axis and number of trips on y-axis}
+\title{Line plot with departure time x-axis and number of trips on y-axis}
 \usage{
 plotTripCountByDepTime(
   tripsTable,
@@ -24,11 +24,11 @@ plotTripCountByDepTime(
 \item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
 }
 \value{
-Bar Chart plot of distance traveled per mode
+Line Chart plot of trips count by departure mode per mode
 }
 \description{
 Takes Table trips_output (from readTripsTable()),
-to plot scatter plot with with values that represent
+to make line plot with with values that represent
 count of trips for a specific departure time by main_mode
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 }

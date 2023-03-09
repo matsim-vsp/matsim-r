@@ -2,7 +2,7 @@
 % Please edit documentation in R/tripsOutput.R
 \name{plotStartActCountByDepTime}
 \alias{plotStartActCountByDepTime}
-\title{Scatter plot with departure time x-axis and number start activities on y-axis}
+\title{Line plot with departure time x-axis and number start activities on y-axis}
 \usage{
 plotStartActCountByDepTime(
   tripsTable,
@@ -15,7 +15,7 @@ plotStartActCountByDepTime(
 \arguments{
 \item{tripsTable}{tible of trips_output (from readTripsTable())}
 
-\item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
+\item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
 
 \item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart}
 
@@ -24,11 +24,11 @@ plotStartActCountByDepTime(
 \item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
 }
 \value{
-Bar Chart plot of distance traveled per mode
+Line plot with departure time x-axis and number start activities on y-axis
 }
 \description{
 Takes Table trips_output (from readTripsTable()),
-to plot scatter plot with with values that represent
+to make line plot with with values that represent
 count of start activities for a specific departure time by main_mode
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 }

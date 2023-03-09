@@ -2,7 +2,7 @@
 % Please edit documentation in R/tripsOutput.R
 \name{plotModalSplitPieChart}
 \alias{plotModalSplitPieChart}
-\title{Plot main_mode as a Pie Chart}
+\title{Plot main_mode distribution as a Pie Chart}
 \usage{
 plotModalSplitPieChart(
   tripsTable,

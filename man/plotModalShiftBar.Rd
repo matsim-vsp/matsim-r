@@ -25,7 +25,7 @@ plotModalShiftBar(
 \item{dump.output.to}{folder that saves and configures yaml for simwrapper. folder where png of plot is stored}
 }
 \value{
-Alluvial diagram that represents changes in transport mode distribution of trip tables
+plots Bar Chart of transport mode changes with additional files for simwrapper
 }
 \description{
 Takes two trips_table (from readTripsTable), and collects

@@ -92,7 +92,7 @@ readTripsTable <- function(pathToMATSimOutputDirectory = ".") {
   }
 }
 
-#' Plot main_mode as a Pie Chart
+#' Plot main_mode distribution as a Pie Chart
 #'
 #' Takes Table trips_output (from readTripsTable()),
 #' to plot pie chart with with values that represent
@@ -197,7 +197,7 @@ plotModalSplitPieChart <- function(tripsTable, unite.columns = character(0), uni
 
 }
 
-#' Plot main_mode as a bar Chart
+#' Plot main_mode distribution as a bar Chart
 #'
 #' Takes Table trips_output (from readTripsTable()),
 #' to plot bar chart with with values that represent
@@ -882,10 +882,10 @@ plotTripDistanceByMode <- function(tripsTable, unite.columns = character(0), uni
 
 
 
-#' Scatter plot with departure time x-axis and number of trips on y-axis
+#' Line plot with departure time x-axis and number of trips on y-axis
 #'
 #' Takes Table trips_output (from readTripsTable()),
-#' to plot scatter plot with with values that represent
+#' to make line plot with with values that represent
 #' count of trips for a specific departure time by main_mode
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 #'
@@ -895,7 +895,7 @@ plotTripDistanceByMode <- function(tripsTable, unite.columns = character(0), uni
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
-#' @return Bar Chart plot of distance traveled per mode
+#' @return Line Chart plot of trips count by departure mode per mode
 #'
 #' @export
 plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
@@ -1004,20 +1004,20 @@ plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), uni
   }
 }
 
-#' Scatter plot with departure time x-axis and number start activities on y-axis
+#' Line plot with departure time x-axis and number start activities on y-axis
 #'
 #' Takes Table trips_output (from readTripsTable()),
-#' to plot scatter plot with with values that represent
+#' to make line plot with with values that represent
 #' count of start activities for a specific departure time by main_mode
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 #'
 #'
 #' @param tripsTable tible of trips_output (from readTripsTable())
-#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
-#' @return Bar Chart plot of distance traveled per mode
+#' @return Line plot with departure time x-axis and number start activities on y-axis
 #'
 #' @export
 plotStartActCountByDepTime <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
@@ -1026,7 +1026,7 @@ plotStartActCountByDepTime <- function(tripsTable, unite.columns = character(0),
 
   # If some columns should be united
   if (length(unite.columns) != 0) {
-    tripsTable$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable$main_mode)] <- united.name
+    tripsTable$start_activity_type[grep(paste0(unite.columns, collapse = "|"), tripsTable$start_activity_type)] <- united.name
   }
 
 
@@ -1121,21 +1121,21 @@ plotStartActCountByDepTime <- function(tripsTable, unite.columns = character(0),
 
 }
 
-#' Scatter plot with arrival time x-axis and number end activities on y-axis
+#' Line plot with arrival time x-axis and number end activities on y-axis
 #'
 #' Takes Table trips_output (from readTripsTable()),
-#' to plot scatter plot with with values that represent
+#' to make line plot with with values that represent
 #' count of end activities for a specific arrival time
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 #'
 #'
 #' @param tripsTable tible of trips_output (from readTripsTable())
-#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
-#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in plot
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #'
-#' @return Bar Chart plot of distance traveled per mode
+#' @return Line plot with arrival time x-axis and number end activities on y-axis
 #'
 #' @export
 plotEndActCountByArrTime <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
@@ -1144,7 +1144,7 @@ plotEndActCountByArrTime <- function(tripsTable, unite.columns = character(0), u
 
   # If some columns should be united
   if (length(unite.columns) != 0) {
-    tripsTable$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable$main_mode)] <- united.name
+    tripsTable$end_activity_type[grep(paste0(unite.columns, collapse = "|"), tripsTable$end_activity_type)] <- united.name
   }
 
 
@@ -1253,16 +1253,16 @@ plotEndActCountByArrTime <- function(tripsTable, unite.columns = character(0), u
 #' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #'
-#' @return Bar Chart plot of average time spent on travel/wait
+#' @return Bar Chart plot of distance traveled by type
 #'
 #' @export
-plotDistanceTraveledByType <- function(tripsTable,shapeTable,crs,dump.output.to = matsimDumpOutputDirectory) {
+plotTripDistancedByType <- function(tripsTable,shapeTable,crs,dump.output.to = matsimDumpOutputDirectory) {
 
   #Getting all the trip types
-  filtered_inside = filterByRegion(berlin,shape,31468)
-  filtered_outside = filterByRegion(berlin,shape,31468,start.inshape = FALSE,end.inshape = FALSE)
-  filtered_origin = filterByRegion(berlin,shape,31468,start.inshape = TRUE,end.inshape = FALSE)
-  filtered_destinating = filterByRegion(berlin,shape,31468,start.inshape = FALSE,end.inshape = TRUE)
+  filtered_inside = filterByRegion(tripsTable,shapeTable,crs)
+  filtered_outside = filterByRegion(tripsTable,shapeTable,crs,start.inshape = FALSE,end.inshape = FALSE)
+  filtered_origin = filterByRegion(tripsTable,shapeTable,crs,start.inshape = TRUE,end.inshape = FALSE)
+  filtered_destinating = filterByRegion(tripsTable,shapeTable,crs,start.inshape = FALSE,end.inshape = TRUE)
   #Adding collumn representing type
   filtered_inside = filtered_inside %>% mutate(type = "inside")
   filtered_outside = filtered_outside %>% mutate(type = "outside")
@@ -1364,7 +1364,7 @@ plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FA
 #' @param united.name if columns were united, you can specify name for the resulting column in plot
 #' @param dump.output.to folder that saves and configures yaml for simwrapper. folder where png of plot is stored
 #'
-#' @return Alluvial diagram that represents changes in transport mode distribution of trip tables
+#' @return plots Bar Chart of transport mode changes with additional files for simwrapper
 #'
 #' @export
 plotModalShiftBar <- function(tripsTable1, tripsTable2, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory,

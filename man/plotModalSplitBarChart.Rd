@@ -2,7 +2,7 @@
 % Please edit documentation in R/tripsOutput.R
 \name{plotModalSplitBarChart}
 \alias{plotModalSplitBarChart}
-\title{Plot main_mode as a bar Chart}
+\title{Plot main_mode distribution as a bar Chart}
 \usage{
 plotModalSplitBarChart(
   tripsTable,
