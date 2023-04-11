@@ -1073,6 +1073,8 @@ plotActivityEndTimes <- function(tripsTable, unite.columns = character(0), unite
   # Generating yaml and output_files
   if (file.exists(dump.output.to)) {
     dir.create(dump.output.to)
+  }
+
   write.table(tableToWrite,paste0(dump.output.to,"/activityEndTimes.csv"),row.names = FALSE,sep = ",")
 
   yaml_list <- list(
@@ -1177,7 +1179,7 @@ plotArrivalTimesPerTripPurpose <- function(tripsTable, unite.columns = character
   fig = plot_ly(tripsTable,x = ~arr_time,y = ~n,type = "scatter",mode = "line",linetype = ~end_activity_type)
   fig = fig %>% layout(yaxis = list(title = "Count of trips ending per trip purpose / Count of activities starting"),
     xaxis = list(title = "Time"),
-    barmode = "group"
+    barmode = "group")
 
 
  # #files
@@ -1297,7 +1299,7 @@ plotDepartureTimesPerTripPurpose <- function(tripsTable, unite.columns = charact
   fig = plot_ly(tripsTable,x = ~arr_time,y = ~n,type = "scatter",mode = "line",linetype = ~end_activity_type)
   fig = fig %>% layout(yaxis = list(title = "Number of trips starting per trip purpose"),
     xaxis = list(title = "Time"),
-    barmode = "group"
+    barmode = "group")
 
 
  # #files
@@ -2489,6 +2491,3 @@ appendDistanceCategory <- function(tripsTable){
   tripsTable_result$dist_cat = factor(tripsTable_result$dist_cat,levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km","> 100km"))
   return(tripsTable_result)
 }
-
-
-

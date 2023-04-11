@@ -4,13 +4,16 @@
     <loc>https://vsp.berlin/matsim-r/404.html</loc>
   </url>
   <url>
-    <loc>https://vsp.berlin/matsim-r/LICENSE.html</loc>
-  </url>
-  <url>
     <loc>https://vsp.berlin/matsim-r/authors.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/index.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/LICENSE.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/compareAverageTravelWait.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/compareBasePolicyOutput.html</loc>
@@ -19,7 +22,13 @@
     <loc>https://vsp.berlin/matsim-r/reference/compareBasePolicyShapeOutput.html</loc>
   </url>
   <url>
+    <loc>https://vsp.berlin/matsim-r/reference/compareModalDistanceDistribution.html</loc>
+  </url>
+  <url>
     <loc>https://vsp.berlin/matsim-r/reference/compareTripTypesBarChart.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/createCountScatterPlot.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/deriveODMatrix.html</loc>
@@ -43,7 +52,19 @@
     <loc>https://vsp.berlin/matsim-r/reference/loadNetwork.html</loc>
   </url>
   <url>
+    <loc>https://vsp.berlin/matsim-r/reference/mergeCountsAndLinks.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/plotActivityEndTimes.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/plotArrivalTimesPerTripPurpose.html</loc>
+  </url>
+  <url>
     <loc>https://vsp.berlin/matsim-r/reference/plotAverageTravelWait.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/plotDepartureTimesPerTripPurpose.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/plotDistanceTraveledByType.html</loc>
@@ -56,6 +77,9 @@
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/plotMapWithTripsType.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/plotModalDistanceDistribution.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/plotModalShiftBar.html</loc>
@@ -79,10 +103,16 @@
     <loc>https://vsp.berlin/matsim-r/reference/plotTripDistanceByMode.html</loc>
   </url>
   <url>
-    <loc>https://vsp.berlin/matsim-r/reference/plotTripTypesPieChart.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotTripDistancedByType.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/plotTripsByDistance.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/plotTripTypesPieChart.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/prepareComparisonSimwrapperDashboardFromTable.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/prepareSimwrapperDashboardFromFolder.html</loc>
@@ -91,7 +121,25 @@
     <loc>https://vsp.berlin/matsim-r/reference/prepareSimwrapperDashboardFromTable.html</loc>
   </url>
   <url>
+    <loc>https://vsp.berlin/matsim-r/reference/processDtvEstimationQuality.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/processLinkStatsDtvDistribution.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/readCounts.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/readLinkStats.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/readPersonsTable.html</loc>
+  </url>
+  <url>
     <loc>https://vsp.berlin/matsim-r/reference/readTripsTable.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/symlog_trans.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/transformToSf.html</loc>
