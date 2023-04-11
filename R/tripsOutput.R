@@ -1004,7 +1004,8 @@ plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), uni
   }
 }
 
-#' Line plot with departure time x-axis and number start activities on y-axis
+#' Line plot that shows the number of activities ending at a given time, per activity type.
+#' The activity end time is derived from the departure time in the given trips tibble.
 #'
 #' Takes Table trips_output (from readTripsTable()),
 #' to make line plot with with values that represent the
@@ -1058,7 +1059,9 @@ plotActivityEndTimes <- function(tripsTable, unite.columns = character(0), unite
   }
 
   fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~start_activity_type)
-  fig = fig %>% layout(yaxis = list(title = "Count of start activities per departure Time"),barmode = "group")
+  fig = fig %>% layout(yaxis = list(title = "Number of activities ending [n]"),
+  xaxis = list(title = "Time [h]"),
+  barmode = "group")
 
 
   #files
@@ -1071,7 +1074,7 @@ plotActivityEndTimes <- function(tripsTable, unite.columns = character(0), unite
 #  }
 
   # Generating yaml and output_files
-  if (file.exists(dump.output.to)) {
+  if (! file.exists(dump.output.to)) {
     dir.create(dump.output.to)
   }
 
@@ -1088,7 +1091,7 @@ plotActivityEndTimes <- function(tripsTable, unite.columns = character(0), unite
                    x = "dep_time",
                    y = "[n]",
                    yAxisTitle = "Number of activities [n]",
-                   xAxisTitle = "Time",
+                   xAxisTitle = "Time [h]",
                    stacked= TRUE)
     ))
   )
@@ -1104,7 +1107,7 @@ plotActivityEndTimes <- function(tripsTable, unite.columns = character(0), unite
                    x = "dep_time",
                    y = "[n]",
                       yAxisTitle = "Number of activities [n]",
-                                    xAxisTitle = "Time",
+                                    xAxisTitle = "Time [h]",
                    stacked = TRUE)
     )))
     names(yaml_from_directory$layout) <- 1:length(names(yaml_from_directory$layout))
@@ -1177,8 +1180,8 @@ plotArrivalTimesPerTripPurpose <- function(tripsTable, unite.columns = character
   }
 
   fig = plot_ly(tripsTable,x = ~arr_time,y = ~n,type = "scatter",mode = "line",linetype = ~end_activity_type)
-  fig = fig %>% layout(yaxis = list(title = "Count of trips ending per trip purpose / Count of activities starting"),
-    xaxis = list(title = "Time"),
+  fig = fig %>% layout(yaxis = list(title = "Number of trips ending per trip purpose / Count of activities starting"),
+    xaxis = list(title = "Time [h]"),
     barmode = "group")
 
 
@@ -1207,8 +1210,8 @@ plotArrivalTimesPerTripPurpose <- function(tripsTable, unite.columns = character
       props = list(dataset = "countActStartsByTime.csv",
                    x = "arr_time",
                    y = "[n]",
-                   yAxisTitle = "Count of activities starting / trips ending with purpose",
-                   xAxisTitle = "time",
+                   yAxisTitle = "Number of activities starting / trips ending with purpose",
+                   xAxisTitle = "Time [h]",
                    stacked = TRUE)
     ))
   )
@@ -1223,8 +1226,8 @@ plotArrivalTimesPerTripPurpose <- function(tripsTable, unite.columns = character
       props = list(dataset = "countActStartsByTime.csv",
                    x = "arr_time",
                    y = "[n]",
-                   yAxisTitle = "Count of activities starting / trips ending with purpose",
-                   xAxisTitle = "time",
+                   yAxisTitle = "Number of activities starting / trips ending with purpose",
+                   xAxisTitle = "Time [h]",
                    stacked = TRUE)
     )))
     names(yaml_from_directory$layout) <- 1:length(names(yaml_from_directory$layout))
@@ -1273,7 +1276,7 @@ plotDepartureTimesPerTripPurpose <- function(tripsTable, unite.columns = charact
   tripsTable = tripsTable %>%
     mutate(dep_time = hour(dep_time)) %>%
     mutate(end_activity_type = sapply(strsplit(end_activity_type,"_"),"[[",1)) %>%
-    count(arr_time,end_activity_type)
+    count(dep_time,end_activity_type)
 
   attr(tripsTable,"table_name") = table_name          #reset table_name
   #text_for_y = round(tripsTable$avg_dist,digits = 2)
@@ -1286,7 +1289,7 @@ plotDepartureTimesPerTripPurpose <- function(tripsTable, unite.columns = charact
       filter(end_activity_type == act) %>%
       mutate(act = n) %>%
       select(dep_time,act)
-    diff = setdiff(tableToWrite$arr_time,newColumn$dep_time)
+    diff = setdiff(tableToWrite$dep_time,newColumn$dep_time)
     for(dtime in diff){
       newColumn = rbind(newColumn,c(dtime,0))
     }
@@ -1296,9 +1299,9 @@ plotDepartureTimesPerTripPurpose <- function(tripsTable, unite.columns = charact
     tableToWrite = cbind(tableToWrite,newColumn)
   }
 
-  fig = plot_ly(tripsTable,x = ~arr_time,y = ~n,type = "scatter",mode = "line",linetype = ~end_activity_type)
+  fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~end_activity_type)
   fig = fig %>% layout(yaxis = list(title = "Number of trips starting per trip purpose"),
-    xaxis = list(title = "Time"),
+    xaxis = list(title = "Time [h]"),
     barmode = "group")
 
 
@@ -1328,7 +1331,7 @@ plotDepartureTimesPerTripPurpose <- function(tripsTable, unite.columns = charact
                    x = "dep_time",
                    y = "[n]",
                    yAxisTitle = "Number of trips starting [n]",
-                   xAxisTitle = "time",
+                   xAxisTitle = "Time  [h]",
                    stacked = TRUE)
     ))
   )
@@ -1344,7 +1347,7 @@ plotDepartureTimesPerTripPurpose <- function(tripsTable, unite.columns = charact
                    x = "dep_time",
                    y = "[n]",
                    yAxisTitle = "Number of trips starting [n]",
-                   xAxisTitle = "time",
+                   xAxisTitle = "Time [h]",
                    stacked = TRUE)
     )))
     names(yaml_from_directory$layout) <- 1:length(names(yaml_from_directory$layout))

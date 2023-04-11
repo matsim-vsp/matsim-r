@@ -2,7 +2,8 @@
 % Please edit documentation in R/tripsOutput.R
 \name{plotActivityEndTimes}
 \alias{plotActivityEndTimes}
-\title{Line plot with departure time x-axis and number start activities on y-axis}
+\title{Line plot that shows the number of activities ending at a given time, per activity type.
+The activity end time is derived from the departure time in the given trips tibble.}
 \usage{
 plotActivityEndTimes(
   tripsTable,
