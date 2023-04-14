@@ -12,82 +12,48 @@ dashboard_file <- "/dashboard-1-trips.yaml"
 #'
 #'
 #'
-#' @param pathToMATSimOutputDirectory character string, path to the local MATSim output directory, to the persons csv directly, or a http link to the file.
+#' @param input_path is a character string, path to the local MATSim output directory, to the persons csv directly, or a http link to the file.
 #'
 #' @return tibble of output_persons
 #'
 #' @export
-readPersonsTable <- function(pathToMATSimOutputDirectory = ".") {
-  # Get the file names, output_persons should be there
+readPersonsTable <- function(input_path = ".") {
   options(digits = 18)
-  # Read from URL
-  if (grepl("http", pathToMATSimOutputDirectory) == TRUE) {
-    persons_output_table <- read_delim(pathToMATSimOutputDirectory,
-                                       delim = ";",
-                                       col_types = cols(
-                                         executed_score = col_character(),
-                                         first_act_x = col_character(),
-                                         first_act_y = col_character(),
-                                         first_act_type = col_character(),
-                                       )
-    )
 
-    persons_output_table <- persons_output_table %>% mutate(
-      executed_score = as.double(executed_score),
-      first_act_x = as.double(first_act_x),
-      first_act_y = as.double(first_act_y),
-    )
-    attr(persons_output_table,"table_name") <- pathToMATSimOutputDirectory
-    return(persons_output_table)
-  }
-  if (grepl("output_persons.csv.gz$", pathToMATSimOutputDirectory) == TRUE) {
-    persons_output_table <- read_delim(pathToMATSimOutputDirectory,
-                                      col_types = cols(
-                                        executed_score = col_character(),
-                                        first_act_x = col_character(),
-                                        first_act_y = col_character(),
-                                        first_act_type = col_character(),
-                                      ),
-                                      delim = ";"
-    )
-    # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
-    # doesn't reads coordinates correctly
-    persons_output_table <- persons_output_table %>% mutate(
-      executed_score = as.double(executed_score),
-      first_act_x = as.double(first_act_x),
-      first_act_y = as.double(first_act_y),
-    )
-    attr(persons_output_table,"table_name") <- pathToMATSimOutputDirectory
-    return(persons_output_table)
+  persons_file <- ""
+
+  if(dir.exists(input_path)){
+    files <- list.files(input_path, full.names = TRUE)
+    person_file_indicies <- grep("output_persons.csv.gz$", files)
+
+    if(length(person_file_indicies) == 1){
+      persons_file <- files[grep("output_persons.csv.gz$", files)]
+    } else {
+      stop('There is supposed to be a single "output_persons.csv.gz" found in directory')
+    }
+  } else {
+    persons_file <- input_path
   }
 
-  files <- list.files(pathToMATSimOutputDirectory, full.names = TRUE)
-  # Read from global/local directory
-  # output_persons is contained as output_persons.csv.gz
-  if (length(grep("output_persons.csv.gz$", files)) != 0) {
-    persons_output_table <- read_delim(files[grep("output_persons.csv.gz$", files)],
-                                      col_types = cols(
-                                        executed_score = col_character(),
-                                        first_act_x = col_character(),
-                                        first_act_y = col_character(),
-                                        first_act_type = col_character(),
-                                      ),
-                                      delim = ";"
-    )
-    # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
-    # doesn't reads coordinates correctly
-    persons_output_table <- persons_output_table %>% mutate(
+  persons_output_table <- read_delim(persons_file,
+                                     delim = ";",
+                                     locale = locale(decimal_mark = "."),
+                                     col_types = cols(
+                                       executed_score = col_character(),
+                                       first_act_x = col_character(),
+                                       first_act_y = col_character(),
+                                       first_act_type = col_character(),
+                                     )
+  )
+
+  persons_output_table <- persons_output_table %>%
+    mutate(
       executed_score = as.double(executed_score),
       first_act_x = as.double(first_act_x),
       first_act_y = as.double(first_act_y),
     )
-    attr(persons_output_table,"table_name") <- pathToMATSimOutputDirectory
-    return(persons_output_table)
-    attr(persons_output_table,"table_name") <- files[grep("output_persons.csv.gz$", files)]
-    return(persons_output_table)
-  } else { # if Directory doesn't contain output_persons, then nothing to read
-    return(NULL)
-  }
+  attr(persons_output_table,"table_name") <- input_path
+  return(persons_output_table)
 }
 
 #' @param personTibble_base persons tibble of the base case, can be loaded with readPersonsTable.
