@@ -13,7 +13,7 @@ dashboard_file <- "/dashboard-1-trips.yaml"
 #' @return tibble of output_persons
 #'
 #' @export
-read_persons_table <- function(input_path = ".") {
+readPersonsTable <- function(input_path = ".") {
   options(digits = 18)
 
   persons_file <- ""

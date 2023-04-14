@@ -11,7 +11,7 @@ dashboard_file <- "/dashboard-1-trips.yaml"
 #' @return tibble of trips_output
 #'
 #' @export
-read_trips_table <- function(input_path = ".") {
+readTripsTable <- function(input_path = ".") {
   options(digits = 18)
   trips_file <- ""
 
@@ -28,7 +28,7 @@ read_trips_table <- function(input_path = ".") {
   } else {
     trips_file <- input_path
   }
-  
+
   trips_output_table <- read_delim(trips_file,
                                    delim = ";",
                                    locale = locale(decimal_mark = "."),
