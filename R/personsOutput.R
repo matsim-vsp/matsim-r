@@ -49,6 +49,8 @@ readPersonsTable <- function(input_path = ".") {
       first_act_y = as.double(first_act_y),
     )
   attr(persons_output_table,"table_name") <- input_path
+
+  persons_output_table %>% mutate(test = "test")
   return(persons_output_table)
 }
 
