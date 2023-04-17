@@ -4,10 +4,10 @@
 \alias{readPersonsTable}
 \title{Load MATSim output_persons table into memory}
 \usage{
-readPersonsTable(pathToMATSimOutputDirectory = ".")
+readPersonsTable(input_path = ".")
 }
 \arguments{
-\item{pathToMATSimOutputDirectory}{character string, path to the local MATSim output directory, to the persons csv directly, or a http link to the file.}
+\item{input_path}{is a character string, path to the local MATSim output directory, to the persons csv directly, or a http link to the file.}
 }
 \value{
 tibble of output_persons

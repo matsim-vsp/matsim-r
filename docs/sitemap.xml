@@ -4,13 +4,13 @@
     <loc>https://vsp.berlin/matsim-r/404.html</loc>
   </url>
   <url>
+    <loc>https://vsp.berlin/matsim-r/LICENSE.html</loc>
+  </url>
+  <url>
     <loc>https://vsp.berlin/matsim-r/authors.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/index.html</loc>
-  </url>
-  <url>
-    <loc>https://vsp.berlin/matsim-r/LICENSE.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/compareAverageTravelWait.html</loc>
@@ -106,10 +106,10 @@
     <loc>https://vsp.berlin/matsim-r/reference/plotTripDistancedByType.html</loc>
   </url>
   <url>
-    <loc>https://vsp.berlin/matsim-r/reference/plotTripsByDistance.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotTripTypesPieChart.html</loc>
   </url>
   <url>
-    <loc>https://vsp.berlin/matsim-r/reference/plotTripTypesPieChart.html</loc>
+    <loc>https://vsp.berlin/matsim-r/reference/plotTripsByDistance.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/prepareComparisonSimwrapperDashboardFromTable.html</loc>

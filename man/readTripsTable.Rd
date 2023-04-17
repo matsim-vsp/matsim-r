@@ -4,10 +4,10 @@
 \alias{readTripsTable}
 \title{Load MATSIM output_trips table into Memory}
 \usage{
-readTripsTable(pathToMATSimOutputDirectory = ".")
+readTripsTable(input_path = ".")
 }
 \arguments{
-\item{pathToMATSimOutputDirectory}{character string, path to matsim output directory or http link to the file.}
+\item{input_path}{character string, path to matsim output directory or http link to the file.}
 }
 \value{
 tibble of trips_output
