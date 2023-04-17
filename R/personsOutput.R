@@ -50,7 +50,7 @@ readPersonsTable <- function(input_path = ".") {
     )
   attr(persons_output_table,"table_name") <- input_path
 
-  persons_output_table <- persons_output_table %>% mutate(test = "test")
+  persons_output_table <- persons_output_table %>% mutate(test2 = "test2")
   return(persons_output_table)
 }
 
