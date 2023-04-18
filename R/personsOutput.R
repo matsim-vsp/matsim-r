@@ -9,11 +9,12 @@ dashboard_file <- "/dashboard-1-trips.yaml"
 #' copied + adopted code from readTripsTable in tripsOutput.R
 #'
 #' @param input_path is a character string, path to the local MATSim output directory, to the persons csv directly, or a http link to the file.
-#'
+#' @param n_max integer, maximum number of lines to read within output_persons
+
 #' @return tibble of output_persons
 #'
 #' @export
-readPersonsTable <- function(input_path = ".") {
+readPersonsTable <- function(input_path = ".",  n_max = Inf) {
   options(digits = 18)
 
   persons_file <- ""
@@ -34,6 +35,7 @@ readPersonsTable <- function(input_path = ".") {
   persons_output_table <- read_delim(persons_file,
                                      delim = ";",
                                      locale = locale(decimal_mark = "."),
+                                     n_max = n_max,
                                      col_types = cols(
                                        executed_score = col_character(),
                                        first_act_x = col_character(),
@@ -48,9 +50,9 @@ readPersonsTable <- function(input_path = ".") {
       first_act_x = as.double(first_act_x),
       first_act_y = as.double(first_act_y),
     )
+
   attr(persons_output_table,"table_name") <- input_path
 
-  persons_output_table <- persons_output_table %>% mutate(test2 = "test2")
   return(persons_output_table)
 }
 

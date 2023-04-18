@@ -7,11 +7,11 @@ dashboard_file <- "/dashboard-1-trips.yaml"
 #' creating a tibble with columns as in csv file
 #'
 #' @param input_path character string, path to matsim output directory or http link to the file.
-#'
+#' @param n_max integer, maximum number of lines to read within output_trips
 #' @return tibble of trips_output
 #'
 #' @export
-readTripsTable <- function(input_path = ".") {
+readTripsTable <- function(input_path = ".", n_max = Inf) {
   options(digits = 18)
   trips_file <- ""
 
@@ -32,6 +32,7 @@ readTripsTable <- function(input_path = ".") {
   trips_output_table <- read_delim(trips_file,
                                    delim = ";",
                                    locale = locale(decimal_mark = "."),
+                                   n_max = n_max,
                                    col_types = cols(
                                      start_x = col_character(),
                                      start_y = col_character(),

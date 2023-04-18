@@ -4,10 +4,12 @@
 \alias{readPersonsTable}
 \title{Load MATSim output_persons table into memory}
 \usage{
-readPersonsTable(input_path = ".")
+readPersonsTable(input_path = ".", n_max = Inf)
 }
 \arguments{
 \item{input_path}{is a character string, path to the local MATSim output directory, to the persons csv directly, or a http link to the file.}
+
+\item{n_max}{integer, maximum number of lines to read within output_persons}
 }
 \value{
 tibble of output_persons
