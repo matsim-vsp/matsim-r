@@ -6,90 +6,54 @@ dashboard_file <- "/dashboard-1-trips.yaml"
 #' Loads a MATSim CSV output_trips from file or archive,
 #' creating a tibble with columns as in csv file
 #'
-#'
-#'
-#'
-#'
-#' @param pathToMATSimOutputDirectory character string, path to matsim output directory or http link to the file.
-#'
+#' @param input_path character string, path to matsim output directory or http link to the file.
+#' @param n_max integer, maximum number of lines to read within output_trips
 #' @return tibble of trips_output
 #'
 #' @export
-readTripsTable <- function(pathToMATSimOutputDirectory = ".") {
-  # Get the file names, output_trips should be there
+readTripsTable <- function(input_path = ".", n_max = Inf) {
   options(digits = 18)
-  # Read from URL
-  if (grepl("http", pathToMATSimOutputDirectory) == TRUE) {
-    trips_output_table <- read_delim(pathToMATSimOutputDirectory,
-      delim = ";",
-      col_types = cols(
-        start_x = col_character(),
-        start_y = col_character(), end_x = col_character(),
-        end_y = col_character(),
-        end_link = col_character(),
-        start_link = col_character()
-      )
-    )
+  trips_file <- ""
 
-    trips_output_table <- trips_output_table %>% mutate(
-      start_x = as.double(start_x),
-      start_y = as.double(start_y),
-      end_x = as.double(end_x),
-      end_y = as.double(end_y)
-    )
-    attr(trips_output_table,"table_name") <- pathToMATSimOutputDirectory
-    return(trips_output_table)
-  }
-  if (grepl("output_trips.csv.gz$", pathToMATSimOutputDirectory) == TRUE) {
-    trips_output_table <- read_csv2(pathToMATSimOutputDirectory,
-      col_types = cols(
-        start_x = col_character(),
-        start_y = col_character(),
-        end_x = col_character(),
-        end_y = col_character(),
-        end_link = col_character(),
-        start_link = col_character()
-      )
-    )
-    # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
-    # doesn't reads coordinates correctly
-    trips_output_table <- trips_output_table %>% mutate(
-      start_x = as.double(start_x),
-      start_y = as.double(start_y),
-      end_x = as.double(end_x),
-      end_y = as.double(end_y)
-    )
-    attr(trips_output_table,"table_name") <- pathToMATSimOutputDirectory
-    return(trips_output_table)
+  # if input_path is a directory, find the correct file path within it
+  if(dir.exists(input_path)){
+    files <- list.files(input_path, full.names = TRUE)
+    trip_file_indicies <- grep("output_trips.csv.gz$", files)
+
+    if(length(trip_file_indicies) == 1){
+      trips_file <- files[trip_file_indicies]
+    } else {
+      stop('There is supposed to be a single "output_trips.csv.gz" found in directory')
+    }
+  } else {
+    trips_file <- input_path
   }
 
-  files <- list.files(pathToMATSimOutputDirectory, full.names = TRUE)
-  # Read from global/local directory
-  # output_trips is contained as output_trips.csv.gz
-  if (length(grep("output_trips.csv.gz$", files)) != 0) {
-    trips_output_table <- read_csv2(files[grep("output_trips.csv.gz$", files)],
-      col_types = cols(
-        start_x = col_character(),
-        start_y = col_character(),
-        end_x = col_character(),
-        end_y = col_character(),
-        end_link = col_character(),
-        start_link = col_character()
-      )
-    )
-    # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
-    # doesn't reads coordinates correctly
-    trips_output_table <- trips_output_table %>% mutate(
+  trips_output_table <- read_delim(trips_file,
+                                   delim = ";",
+                                   locale = locale(decimal_mark = "."),
+                                   n_max = n_max,
+                                   col_types = cols(
+                                     start_x = col_character(),
+                                     start_y = col_character(),
+                                     end_x = col_character(),
+                                     end_y = col_character(),
+                                     end_link = col_character(),
+                                     start_link = col_character()
+                                   )
+  )
+  # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
+  # doesn't reads coordinates correctly
+  trips_output_table <- trips_output_table %>%
+    mutate(
       start_x = as.double(start_x),
       start_y = as.double(start_y),
       end_x = as.double(end_x),
       end_y = as.double(end_y)
-    )
-    attr(trips_output_table,"table_name") <- files[grep("output_trips.csv.gz$", files)]
-    return(trips_output_table)
-  } else { # if Directory doesn't contain trips_output, then nothing to read
-    return(NULL)
-  }
+  )
+  attr(trips_output_table,"table_name") <- trips_file
+  return(trips_output_table)
+
 }
 
 #' Plot main_mode distribution as a Pie Chart
