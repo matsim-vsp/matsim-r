@@ -1772,16 +1772,12 @@ plotMapWithFilteredTrips <- function(table, shapeTable, crs, start.inshape = TRU
   return(plt)
 }
 
-#' Plots result of filtered trips on the map (from shape)
-#'
-#' Takes trips_table and
-#' transforms objects to match mutual CRS(network.xml from MATSimOutputDirectory)
-#' result of filtering is plotted on map of shapeTable where green points are startpoints of trip and red points are endpoints of trip
+#' Plots start and end coordinates of the given trips table on an osm map
 #'
 #' @param table tibble of trips_output (from readTripsTable())
 #'
 #'
-#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates, can be found in network file from output directory of MATSim simulation
 #'
 #' @param optimized bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot
 #'
@@ -1795,11 +1791,7 @@ plotMapWithTrips <- function(table, crs, optimized = FALSE) {
   table_sf_start <- table_sf %>% select(-end_wkt)
   st_geometry(table_sf) <- "end_wkt"
   table_sf_end <- table_sf %>% select(-start_wkt)
-  # shape = st_read(shapePath)
-  if (st_crs(shapeTable) == NA) {
-    ct_crs(shapeTable) <- crs
-  }
-  shapeTable <- st_transform(shapeTable, crs = "+proj=longlat +datum=WGS84 +no_defs")
+
   table_sf_start <- st_transform(table_sf_start, "+proj=longlat +datum=WGS84 +no_defs")
   table_sf_end <- st_transform(table_sf_end, "+proj=longlat +datum=WGS84 +no_defs")
 
@@ -1808,8 +1800,6 @@ plotMapWithTrips <- function(table, crs, optimized = FALSE) {
     shapes <- c("Start" = 5, "End" = 3)
     # ggplot2 isn't interactive!
     plt <- ggplot() +
-      geom_sf(data = shapeTable) +
-      # geom_sf(data = )
       geom_sf(data = table_sf_start, aes(color = "Start"), size = 1, shape = 5) +
       geom_sf(data = table_sf_end, aes(color = "End"), size = 1, shape = 3) +
       labs(color = "Type") +
@@ -1859,7 +1849,6 @@ plotMapWithTrips <- function(table, crs, optimized = FALSE) {
       "Esri.WorldImagery",
       group = "Esri.WorldImagery"
     ) %>%
-    addPolygons(data = shapeTable, opacity = 0.1, color = "green") %>%
     addCircleMarkers(table_sf_start,
                      lng = st_coordinates(table_sf_start$start_wkt)[, 1],
                      lat = st_coordinates(table_sf_start$start_wkt)[, 2], radius = 3, color = "blue",
@@ -1908,8 +1897,6 @@ plotMapWithTrips <- function(table, crs, optimized = FALSE) {
 
   return(plt)
 }
-
-
 
 #' Plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
 #'

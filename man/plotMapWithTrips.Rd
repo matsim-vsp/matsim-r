@@ -2,14 +2,14 @@
 % Please edit documentation in R/tripsOutput.R
 \name{plotMapWithTrips}
 \alias{plotMapWithTrips}
-\title{Plots result of filtered trips on the map (from shape)}
+\title{Plots start and end coordinates of the given trips table on an osm map}
 \usage{
 plotMapWithTrips(table, crs, optimized = FALSE)
 }
 \arguments{
 \item{table}{tibble of trips_output (from readTripsTable())}
 
-\item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
+\item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates, can be found in network file from output directory of MATSim simulation}
 
 \item{optimized}{bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot}
 }
@@ -17,7 +17,5 @@ plotMapWithTrips(table, crs, optimized = FALSE)
 plot with trips
 }
 \description{
-Takes trips_table and
-transforms objects to match mutual CRS(network.xml from MATSimOutputDirectory)
-result of filtering is plotted on map of shapeTable where green points are startpoints of trip and red points are endpoints of trip
+Plots start and end coordinates of the given trips table on an osm map
 }
