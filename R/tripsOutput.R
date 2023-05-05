@@ -1644,7 +1644,7 @@ filterByRegion <- function(tripsTable, shapeTable, crs, start.inshape = TRUE, en
 #' @return plot with trips filtered depending on flags *.inshape on map from shapeTable
 #'
 #' @export
-plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.inshape = TRUE, optimized = FALSE) {
+plotMapWithFilteredTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.inshape = TRUE, optimized = FALSE) {
   # table = table[1:5000,] #To make plotting faster
   # table_sf = transformToSf(table,crs = crs)
   filtered <- filterByRegion(table, shapeTable, crs = crs, start.inshape, end.inshape)
@@ -1750,6 +1750,132 @@ plotMapWithTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.i
         "End activity:",
         filtered_sf_end$end_activity_type, "<br>"
       ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addLegend(
+      colors = c("blue", "red"),
+      labels = c("Start of trip", "End of trip"),
+      position = "bottomleft",
+      title = "Type of the point",
+      opacity = 0.9
+    ) %>%
+    addMiniMap() %>%
+    addLayersControl(
+      baseGroups = c(
+        "OpenStreetMap", "Stamen.Toner",
+        "Stamen.Terrain", "Esri.WorldStreetMap",
+        "Wikimedia", "CartoDB.Positron", "Esri.WorldImagery"
+      ),
+      # position it on the topleft
+      position = "topleft"
+    )
+
+  return(plt)
+}
+
+#' Plots start and end coordinates of the given trips table on an osm map
+#'
+#' @param table tibble of trips_output (from readTripsTable())
+#'
+#'
+#' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates, can be found in network file from output directory of MATSim simulation
+#'
+#' @param optimized bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot
+#'
+#'
+#' @return plot with trips
+#'
+#' @export
+plotMapWithTrips <- function(table, crs, optimized = FALSE) {
+  table_sf <- transformToSf(table, crs = crs, geometry.type = st_point())
+  st_geometry(table_sf) <- "start_wkt"
+  table_sf_start <- table_sf %>% select(-end_wkt)
+  st_geometry(table_sf) <- "end_wkt"
+  table_sf_end <- table_sf %>% select(-start_wkt)
+
+  table_sf_start <- st_transform(table_sf_start, "+proj=longlat +datum=WGS84 +no_defs")
+  table_sf_end <- st_transform(table_sf_end, "+proj=longlat +datum=WGS84 +no_defs")
+
+  if (optimized) {
+    colors <- c("Start" = "blue", "End" = "red")
+    shapes <- c("Start" = 5, "End" = 3)
+    # ggplot2 isn't interactive!
+    plt <- ggplot() +
+      geom_sf(data = table_sf_start, aes(color = "Start"), size = 1, shape = 5) +
+      geom_sf(data = table_sf_end, aes(color = "End"), size = 1, shape = 3) +
+      labs(color = "Type") +
+      scale_colour_manual(values = colors)
+    plt
+    return(plt)
+  }
+
+
+
+
+
+  # If we need to change design
+  # css_fix <- "div.info.legend.leaflet-control br {clear: both;}"
+  # Convert CSS to HTML
+  # html_fix <- htmltools::tags$style(type = "text/css", css_fix)
+
+
+  plt <- leaflet() %>%
+    addTiles() %>%
+    addProviderTiles(
+      "OpenStreetMap",
+      # give the layer a name
+      group = "OpenStreetMap"
+    ) %>%
+    addProviderTiles(
+      "Stamen.Toner",
+      group = "Stamen.Toner"
+    ) %>%
+    addProviderTiles(
+      "Stamen.Terrain",
+      group = "Stamen.Terrain"
+    ) %>%
+    addProviderTiles(
+      "Esri.WorldStreetMap",
+      group = "Esri.WorldStreetMap"
+    ) %>%
+    addProviderTiles(
+      "Wikimedia",
+      group = "Wikimedia"
+    ) %>%
+    addProviderTiles(
+      "CartoDB.Positron",
+      group = "CartoDB.Positron"
+    ) %>%
+    addProviderTiles(
+      "Esri.WorldImagery",
+      group = "Esri.WorldImagery"
+    ) %>%
+    addCircleMarkers(table_sf_start,
+                     lng = st_coordinates(table_sf_start$start_wkt)[, 1],
+                     lat = st_coordinates(table_sf_start$start_wkt)[, 2], radius = 3, color = "blue",
+                     label = paste(
+                       "Person_id:",
+                       table_sf_start$person, "<br>",
+                       "Trip_id:",
+                       table_sf_start$trip_id, "<br>",
+                       "main_mode:", table_sf_start$main_mode, "<br>",
+                       "type:", "start", "<br>",
+                       "Start activity:",
+                       table_sf_start$start_activity_type, "<br>"
+                     ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(table_sf_end,
+                     lng = st_coordinates(table_sf_end$end_wkt)[, 1],
+                     lat = st_coordinates(table_sf_end$end_wkt)[, 2], radius = 0.15, color = "red",
+                     label = paste(
+                       "Person_id:",
+                       table_sf_end$person, "<br>",
+                       "Trip_id:",
+                       table_sf_end$trip_id, "<br>",
+                       "main_mode:", table_sf_end$main_mode, "<br>",
+                       "type:", "end", "<br>",
+                       "End activity:",
+                       table_sf_end$end_activity_type, "<br>"
+                     ) %>% lapply(htmltools::HTML)
     ) %>%
     addLegend(
       colors = c("blue", "red"),

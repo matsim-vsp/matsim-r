@@ -2,40 +2,20 @@
 % Please edit documentation in R/tripsOutput.R
 \name{plotMapWithTrips}
 \alias{plotMapWithTrips}
-\title{Plots result of filtered trips on the map (from shape)}
+\title{Plots start and end coordinates of the given trips table on an osm map}
 \usage{
-plotMapWithTrips(
-  table,
-  shapeTable,
-  crs,
-  start.inshape = TRUE,
-  end.inshape = TRUE,
-  optimized = FALSE
-)
+plotMapWithTrips(table, crs, optimized = FALSE)
 }
 \arguments{
 \item{table}{tibble of trips_output (from readTripsTable())}
 
-\item{shapeTable}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
-
-\item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
-
-\item{start.inshape}{bool, defines trips to conclude (see Description)}
-
-\item{end.inshape}{bool, defines trips to conclude (see Description)}
+\item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates, can be found in network file from output directory of MATSim simulation}
 
 \item{optimized}{bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot}
 }
 \value{
-plot with trips filtered depending on flags *.inshape on map from shapeTable
+plot with trips
 }
 \description{
-Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file))
-transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
-and filters the trips from table depending on *.inshape flags:
-if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
-if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
-if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
-if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
-result of filtering is plotted on map of shapeTable where green points are startpoints of trip and red points are endpoints of trip
+Plots start and end coordinates of the given trips table on an osm map
 }
