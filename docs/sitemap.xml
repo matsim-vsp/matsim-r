@@ -49,6 +49,9 @@
     <loc>https://vsp.berlin/matsim-r/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://vsp.berlin/matsim-r/reference/join_base_and_policy_persons.html</loc>
+  </url>
+  <url>
     <loc>https://vsp.berlin/matsim-r/reference/loadNetwork.html</loc>
   </url>
   <url>
@@ -143,5 +146,8 @@
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/transformToSf.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/transform_persons_sf.html</loc>
   </url>
 </urlset>

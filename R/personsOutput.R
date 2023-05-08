@@ -89,3 +89,90 @@ boxplotScoreDifferences <- function(personTibble_base, personTibble_policy){
     )
   result
 }
+
+# TODO: overlap between these function above and function below
+
+#' Joins base and policy person tables
+#'
+#' Uses inner_join to combine base and policy persons tables.
+#' Calculates difference in score between base and policy cases.
+#'
+#' @param base_persons persons tibble of the base case, can be loaded with readPersonsTable.
+#' @param policy_persons persons tibble of the policy case, can be loaded with readPersonsTable.
+#' @param crs coordinate reference system for first_act_x and first_act_y coordinates; enter in form of EPSG code. Default is EPSG:25832
+
+#' @return tibble of joined persons
+#'
+#' @export
+join_base_and_policy_persons <- function(base_persons, policy_persons, crs = "EPSG:25832"){
+
+  joined <- base_persons %>%
+    inner_join(policy_persons %>% dplyr::select(person,executed_score), by = "person", suffix = c("_base", "_policy")) %>%
+    mutate(score_diff = executed_score_policy - executed_score_base) %>%
+    relocate(contains("score"), .after = person)
+
+  return(joined)
+}
+
+#' Transforms persons_table tibble (from readPersonsTable) from tibble to sf (table with attribute features and geometry feature)
+#'
+#' Takes first activity location of person turns it into simple feature POINT geometry
+#'
+#' @param persons table containing persons (from readPersonsTable)
+#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#' @param filter_shp (optional) if provided, will filter persons_table to only include first_activity_locations within given shape file
+#' @param first_act_type_filter (optional) if provided, will filter persons_table to only include agents whose day starts with a certain activity type (e.g. home)
+#'
+#' @return sf object (data.frame with geometries depending to geometry.type)
+#'
+#' @export
+transform_persons_sf <- function(persons, crs = "EPSG:25832", filter_shp = NULL, first_act_type_filter = NULL) {
+
+  if(!is.null(first_act_type_filter)){
+    persons <- persons %>% filter(first_act_type == first_act_type_filter)
+  }
+
+  persons_sf <- persons %>%
+    st_as_sf(coords = c("first_act_x", "first_act_y"), crs = crs)
+
+  if(!is.null(filter_shp)){
+    persons_sf <- persons_sf %>% st_intersection(shp %>% st_transform(crs))
+  }
+  return(persons_sf)
+}
+
+
+#' Overlays hexagonal grid over study area, and creates summary statistics for each pixel
+#'
+#' CRS of shape file must match CRS of persons sf object
+#'
+#' @param persons simple feature dataframe containing persons, including score_base, score_policy, and score_diff, income, carAvail, sim_ptAbo
+#' @param shp shape file onto which grid is overlaid
+#' @param n integer of length 1 or 2, number of grid cells in x and y direction (columns, rows)
+#'
+#' @return sf object of hexagonal grid
+#'
+#' @export
+persons_attributes_on_hex_grid <- function(persons, shp, n = 20){
+  hex_grid <- st_make_grid(shp, square = F, n = n) %>%
+    st_as_sf() %>%
+    mutate(id = row_number())
+
+  joined_hex <- hex_grid %>%
+    st_join(persons) %>%
+    group_by(id) %>%
+    summarise(cnt = n(),
+              income = mean(income, na.rm = T),
+              carAvail = sum(carAvail=="always") / n(),
+              sim_ptAbo = sum(sim_ptAbo=="full") / n(),
+              executed_score_base = mean(executed_score_base, na.rm = TRUE),
+              executed_score_policy = mean(executed_score_policy, na.rm = TRUE),
+              score_diff = mean(score_diff, na.rm = TRUE)) %>%
+    mutate(area = st_area(.) %>% units::set_units(km^2)) %>%
+    mutate(pop_density = cnt / area) %>%
+    filter(!is.na(executed_score_base))
+
+  return(joined_hex)
+
+}
+

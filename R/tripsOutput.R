@@ -1508,9 +1508,11 @@ plotModalShiftBar <- function(tripsTable1, tripsTable2, unite.columns = characte
 #' @export
 transformToSf <- function(table, crs, geometry.type = st_multipoint()) {
   if (class(geometry.type)[2] == "POINT") {
+
     table1 <- table %>%
       # mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep =""))
       mutate(start_wkt = paste("POINT(", start_x, " ", start_y, ")", sep = ""))
+
     table2 <- table %>%
       mutate(end_wkt = paste("POINT(", end_x, " ", end_y, ")", sep = ""))
     attr(table, "geometry.type") <- "POINT"
