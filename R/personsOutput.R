@@ -49,7 +49,8 @@ readPersonsTable <- function(input_path = ".",  n_max = Inf) {
       executed_score = as.double(executed_score),
       first_act_x = as.double(first_act_x),
       first_act_y = as.double(first_act_y),
-    )
+    ) %>%
+    separate(first_act_type, sep = "_", into = c("first_act_type", "typical_duration"))
 
   attr(persons_output_table,"table_name") <- input_path
 
