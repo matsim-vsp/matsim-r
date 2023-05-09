@@ -136,7 +136,7 @@ transform_persons_sf <- function(persons, crs = "EPSG:25832", filter_shp = NULL,
     st_as_sf(coords = c("first_act_x", "first_act_y"), crs = crs)
 
   if(!is.null(filter_shp)){
-    persons_sf <- persons_sf %>% st_intersection(shp %>% st_transform(crs))
+    persons_sf <- persons_sf %>% st_intersection(filter_shp %>% st_transform(crs))
   }
   return(persons_sf)
 }
