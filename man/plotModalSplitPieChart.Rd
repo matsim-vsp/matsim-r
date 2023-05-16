@@ -13,7 +13,7 @@ plotModalSplitPieChart(
 )
 }
 \arguments{
-\item{tripsTable}{tible of trips_output (from readTripsTable())}
+\item{tripsTable}{tibble of trips_output (from \link{readTripsTable})}
 
 \item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
 
@@ -27,7 +27,7 @@ plotModalSplitPieChart(
 Pie Chart plot of transport mode distribution, values given in percents
 }
 \description{
-Takes Table trips_output (from readTripsTable()),
+Takes Table trips_output (from \link{readTripsTable}),
 to plot pie chart with with values that represent
 percentage of using transport modes from trips
 }
