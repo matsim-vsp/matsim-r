@@ -67,11 +67,11 @@ readTripsTable <- function(input_path = ".", n_max = Inf) {
 
 
 
-#' Plot main_mode distribution as a Pie Chart
+#' Deprecated function(s) in the matsimr package
 #'
 #'
 #' These functions are provided for compatibility with older version of
-#' the yourPackageName package.  They may eventually be completely
+#' the matsimr package.  They may eventually be completely
 #' removed.
 #'
 #'
@@ -84,8 +84,8 @@ readTripsTable <- function(input_path = ".", n_max = Inf) {
 #' @aliases plotModalSplitPieChart plotModalSplitBarChart
 #' @section Details:
 #' \tabular{rl}{
-#'   \code{plot_mainmode_piechart} \tab now a synonym for \code{\link{plotModalSplitPieChart}}\cr
-#'   \code{plot_mainmode_barchart} \tab now a synonym for \code{\link{plotModalSplitBarChart}}\cr
+#'   \code{plotModalSplitPieChart} \tab now a synonym for \code{\link{plot_mainmode_piechart}}\cr
+#'   \code{plotModalSplitBarChart} \tab now a synonym for \code{\link{plot_mainmode_barchart}}\cr
 #' }
 #'
 plotModalSplitPieChart <- function(tripsTable,
