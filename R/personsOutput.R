@@ -108,7 +108,6 @@ join_base_and_policy_persons <- function(base_persons, policy_persons, crs = "EP
 
   joined <- base_persons %>%
     inner_join(policy_persons %>% dplyr::select(person,executed_score), by = "person", suffix = c("_base", "_policy")) %>%
-    mutate(score_diff = executed_score_policy - executed_score_base) %>%
     relocate(contains("score"), .after = person)
 
   return(joined)
@@ -129,14 +128,15 @@ join_base_and_policy_persons <- function(base_persons, policy_persons, crs = "EP
 transform_persons_sf <- function(persons, crs = "EPSG:25832", filter_shp = NULL, first_act_type_filter = NULL) {
 
   if(!is.null(first_act_type_filter)){
-    persons <- persons %>% filter(first_act_type == first_act_type_filter)
+    persons <- persons %>%
+      filter(first_act_type == first_act_type_filter)
   }
 
   persons_sf <- persons %>%
     st_as_sf(coords = c("first_act_x", "first_act_y"), crs = crs)
 
   if(!is.null(filter_shp)){
-    persons_sf <- persons_sf %>% st_intersection(filter_shp %>% st_transform(crs))
+    persons_sf <- persons_sf %>% st_intersection(filter_shp %>% st_transform(crs) %>% summarise())
   }
   return(persons_sf)
 }
@@ -165,9 +165,9 @@ persons_attributes_on_hex_grid <- function(persons, shp, n = 20){
               income = mean(income, na.rm = T),
               carAvail = sum(carAvail=="always") / n(),
               sim_ptAbo = sum(sim_ptAbo=="full") / n(),
+              age = mean(age, na.rm = TRUE),
               executed_score_base = mean(executed_score_base, na.rm = TRUE),
-              executed_score_policy = mean(executed_score_policy, na.rm = TRUE),
-              score_diff = mean(score_diff, na.rm = TRUE)) %>%
+              executed_score_policy = mean(executed_score_policy, na.rm = TRUE)) %>%
     mutate(area = st_area(.) %>% units::set_units(km^2)) %>%
     mutate(pop_density = cnt / area) %>%
     filter(!is.na(executed_score_base))
