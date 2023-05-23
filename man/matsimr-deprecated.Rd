@@ -15,29 +15,10 @@ plotModalSplitPieChart(
   only.files = FALSE
 )
 }
-\arguments{
-\item{tripsTable}{tibble of trips_output (from \link{readTripsTable})}
-
-\item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
-
-\item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart}
-
-\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored}
-
-\item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
-}
-\value{
-Pie Chart plot of transport mode distribution, values given in percents
-}
 \description{
-Takes Table trips_output (from \link{readTripsTable}),
-to plot pie chart with with values that represent
-percentage of using transport modes from trips
-}
-\details{
-Function automatically detects transport_modes from table
-and plots pie chart.
-Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+These functions are provided for compatibility with older version of
+the yourPackageName package.  They may eventually be completely
+removed.
 }
 \section{Details}{
 

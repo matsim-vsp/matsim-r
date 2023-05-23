@@ -64,25 +64,20 @@ readTripsTable <- function(input_path = ".", n_max = Inf) {
 
 #####Deprecated####
 
+
+
+
 #' Plot main_mode distribution as a Pie Chart
 #'
-#' Takes Table trips_output (from \link{readTripsTable}),
-#' to plot pie chart with with values that represent
-#' percentage of using transport modes from trips
 #'
-#' Function automatically detects transport_modes from table
-#' and plots pie chart.
-#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#' These functions are provided for compatibility with older version of
+#' the yourPackageName package.  They may eventually be completely
+#' removed.
+#'
+#'
 #'
 #' @rdname matsimr-deprecated
 #' @name matsimr-deprecated
-#' @param tripsTable tibble of trips_output (from \link{readTripsTable})
-#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
-#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
-#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
-#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
-#'
-#' @return Pie Chart plot of transport mode distribution, values given in percents
 #'
 #' @docType package
 #' @export  plotModalSplitPieChart plotModalSplitBarChart
