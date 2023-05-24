@@ -8,19 +8,19 @@ dashboard_file <- "/dashboard-1-trips.yaml"
 #' creating a tibble with columns as in csv file
 #' copied + adopted code from readTripsTable in tripsOutput.R
 #'
-#' @param input_path is a character string, path to the local MATSim output directory, to the persons csv directly, or a http link to the file.
+#' @param pathToMATSimOutputDirectory is a character string, path to the local MATSim output directory, to the persons csv directly, or a http link to the file.
 #' @param n_max integer, maximum number of lines to read within output_persons
 
 #' @return tibble of output_persons
 #'
 #' @export
-readPersonsTable <- function(input_path = ".",  n_max = Inf) {
+readPersonsTable <- function(pathToMATSimOutputDirectory = ".",  n_max = Inf) {
   options(digits = 18)
 
   persons_file <- ""
 
-  if(dir.exists(input_path)){
-    files <- list.files(input_path, full.names = TRUE)
+  if(dir.exists(pathToMATSimOutputDirectory)){
+    files <- list.files(pathToMATSimOutputDirectory, full.names = TRUE)
     person_file_indicies <- grep("output_persons.csv.gz$", files)
 
     if(length(person_file_indicies) == 1){
@@ -29,7 +29,7 @@ readPersonsTable <- function(input_path = ".",  n_max = Inf) {
       stop('There is supposed to be a single "output_persons.csv.gz" found in directory')
     }
   } else {
-    persons_file <- input_path
+    persons_file <- pathToMATSimOutputDirectory
   }
 
   persons_output_table <- read_delim(persons_file,

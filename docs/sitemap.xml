@@ -58,6 +58,9 @@
     <loc>https://vsp.berlin/matsim-r/reference/mergeCountsAndLinks.html</loc>
   </url>
   <url>
+    <loc>https://vsp.berlin/matsim-r/reference/persons_attributes_on_hex_grid.html</loc>
+  </url>
+  <url>
     <loc>https://vsp.berlin/matsim-r/reference/plotActivityEndTimes.html</loc>
   </url>
   <url>
@@ -74,6 +77,9 @@
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/plotEndActCountByArrTime.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/plotMapWithFilteredTrips.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/plotMapWithTrips.html</loc>

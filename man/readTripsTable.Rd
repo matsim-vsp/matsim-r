@@ -4,10 +4,10 @@
 \alias{readTripsTable}
 \title{Load MATSIM output_trips table into Memory}
 \usage{
-readTripsTable(input_path = ".", n_max = Inf)
+readTripsTable(pathToMATSimOutputDirectory = ".", n_max = Inf)
 }
 \arguments{
-\item{input_path}{character string, path to matsim output directory or http link to the file.}
+\item{pathToMATSimOutputDirectory}{character string, path to matsim output directory or http link to the file.}
 
 \item{n_max}{integer, maximum number of lines to read within output_trips}
 }
