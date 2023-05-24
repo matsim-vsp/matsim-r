@@ -52,7 +52,7 @@ readPersonsTable <- function(pathToMATSimOutputDirectory = ".",  n_max = Inf) {
     ) %>%
     separate(first_act_type, sep = "_", into = c("first_act_type", "typical_duration"))
 
-  attr(persons_output_table,"table_name") <- input_path
+  attr(persons_output_table,"table_name") <- persons_file
 
   return(persons_output_table)
 }

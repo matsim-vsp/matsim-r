@@ -15,7 +15,7 @@ readTripsTable <- function(pathToMATSimOutputDirectory = ".", n_max = Inf) {
   options(digits = 18)
   trips_file <- ""
 
-  # if input_path is a directory, find the correct file path within it
+  # if pathToMATSimOutputDirectory is a directory, find the correct file path within it
   if(dir.exists(pathToMATSimOutputDirectory)){
     files <- list.files(pathToMATSimOutputDirectory, full.names = TRUE)
     trip_file_indicies <- grep("output_trips.csv.gz$", files)
