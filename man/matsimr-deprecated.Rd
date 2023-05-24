@@ -7,6 +7,7 @@
 \alias{plotModalSplitBarChart}
 \alias{readTripsTable}
 \alias{plotAverageTravelWait}
+\alias{compareAverageTravelWait}
 \title{Deprecated function(s) in the matsimr package}
 \usage{
 plotModalSplitPieChart(
@@ -29,6 +30,15 @@ readTripsTable(input_path = ".", n_max = Inf)
 
 plotAverageTravelWait(
   tripsTable,
+  unite.columns = character(0),
+  united.name = "united",
+  dump.output.to = matsimDumpOutputDirectory,
+  only.files = FALSE
+)
+
+compareAverageTravelWait(
+  tripsTable1,
+  tripsTable2,
   unite.columns = character(0),
   united.name = "united",
   dump.output.to = matsimDumpOutputDirectory,
