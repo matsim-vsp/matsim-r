@@ -8,6 +8,7 @@
 \alias{readTripsTable}
 \alias{plotAverageTravelWait}
 \alias{compareAverageTravelWait}
+\alias{appendDistanceCategory}
 \title{Deprecated function(s) in the matsimr package}
 \usage{
 plotModalSplitPieChart(
@@ -44,6 +45,8 @@ compareAverageTravelWait(
   dump.output.to = matsimDumpOutputDirectory,
   only.files = FALSE
 )
+
+appendDistanceCategory(tripsTable)
 }
 \description{
 These functions are provided for compatibility with older version of

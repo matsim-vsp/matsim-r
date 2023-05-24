@@ -1790,6 +1790,51 @@ compareBasePolicyShapeOutput <- function(baseFolder,policyFolder,shapeFilePath,c
   }
   invisible(list(base = base_trips,policy = policy_trips))
 }
+
+
+#' Deprecated function(s) in the matsimr package
+#'
+#'
+#' @rdname matsimr-deprecated
+#'
+#' @docType package
+#' @export  compareAverageTravelWait
+#' @aliases compareAverageTravelWait
+#'
+appendDistanceCategory <- function(tripsTable){
+
+  distances_array = sort(distances_array)
+  modes = levels(factor(tripsTable$main_mode))
+
+  #This is a very bad way to do that, but I see no other way to get it done
+  #Also filtering table into a new doesn't creates new objects in memory, so it works fast
+  #Upd: it creates copy of dataframe on each mutate :/
+
+
+  tripsTable_05km = tripsTable %>% filter(traveled_distance<=1000) %>% mutate(dist_cat = "0-1km")
+  tripsTable_2km = tripsTable %>% filter(traveled_distance>1000 & traveled_distance<=2000) %>% mutate(dist_cat = "1-2km")
+  tripsTable_5km = tripsTable %>% filter(traveled_distance>2000 & traveled_distance<=5000) %>% mutate(dist_cat = "2-5km")
+  tripsTable_10km = tripsTable %>% filter(traveled_distance>5000 & traveled_distance<=10*1000) %>% mutate(dist_cat = "5-10km")
+  tripsTable_20km = tripsTable %>% filter(traveled_distance>10*1000 & traveled_distance<=20*1000) %>% mutate(dist_cat = "10-20km")
+  tripsTable_50km = tripsTable %>% filter(traveled_distance>20*1000 & traveled_distance<=50*1000) %>% mutate(dist_cat = "20-50km")
+  tripsTable_100km = tripsTable %>% filter(traveled_distance>50*1000 & traveled_distance<=100*1000) %>% mutate(dist_cat = "50-100km")
+  tripsTable_100pluskm = tripsTable %>% filter(traveled_distance>100*1000) %>% mutate(dist_cat = "> 100km")
+
+  tripsTable_result = rbind(tripsTable_05km,
+                            #tripsTable_1km,
+                            tripsTable_2km,
+                            tripsTable_5km,
+                            tripsTable_10km,
+                            tripsTable_20km,
+                            tripsTable_50km,
+                            tripsTable_100km,
+                            tripsTable_100pluskm)
+
+  tripsTable_result$dist_cat = factor(tripsTable_result$dist_cat,levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km","> 100km"))
+  return(tripsTable_result)
+}
+
+
 #####Reading#####
 
 
@@ -2100,14 +2145,18 @@ process_get_travelwaittime_by_mainmode<-function(trips_table,
 }
 
 
+#' @export
+process_append_distcat <- function(tripsTable,distances_array = c(1000,2000,5000,10000,20000,50000,100000)){
 
-appendDistanceCategory <- function(tripsTable){
+  distances_array = sort(distances_array)
   modes = levels(factor(tripsTable$main_mode))
 
   #This is a very bad way to do that, but I see no other way to get it done
   #Also filtering table into a new doesn't creates new objects in memory, so it works fast
+  #Upd: it creates copy of dataframe on each mutate :/
+
+
   tripsTable_05km = tripsTable %>% filter(traveled_distance<=1000) %>% mutate(dist_cat = "0-1km")
-  #tripsTable_1km = tripsTable %>% filter(traveled_distance>500 & traveled_distance<=1000  ) %>% mutate(dist_cat = "0.5-1km")
   tripsTable_2km = tripsTable %>% filter(traveled_distance>1000 & traveled_distance<=2000) %>% mutate(dist_cat = "1-2km")
   tripsTable_5km = tripsTable %>% filter(traveled_distance>2000 & traveled_distance<=5000) %>% mutate(dist_cat = "2-5km")
   tripsTable_10km = tripsTable %>% filter(traveled_distance>5000 & traveled_distance<=10*1000) %>% mutate(dist_cat = "5-10km")
