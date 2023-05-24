@@ -5,6 +5,8 @@
 \alias{matsimr-deprecated}
 \alias{plotModalSplitPieChart}
 \alias{plotModalSplitBarChart}
+\alias{readTripsTable}
+\alias{plotAverageTravelWait}
 \title{Deprecated function(s) in the matsimr package}
 \usage{
 plotModalSplitPieChart(
@@ -22,6 +24,16 @@ plotModalSplitBarChart(
   dump.output.to = matsimDumpOutputDirectory,
   only.files = FALSE
 )
+
+readTripsTable(input_path = ".", n_max = Inf)
+
+plotAverageTravelWait(
+  tripsTable,
+  unite.columns = character(0),
+  united.name = "united",
+  dump.output.to = matsimDumpOutputDirectory,
+  only.files = FALSE
+)
 }
 \description{
 These functions are provided for compatibility with older version of
@@ -33,6 +45,7 @@ removed.
 \tabular{rl}{
   \code{plotModalSplitPieChart} \tab now a synonym for \code{\link{plot_mainmode_piechart}}\cr
   \code{plotModalSplitBarChart} \tab now a synonym for \code{\link{plot_mainmode_barchart}}\cr
+  \code{readTripsTable} \tab now a synonym for \code{\link{read_output_trips}}\cr
 }
 }
 

@@ -4,63 +4,7 @@ matsimDumpOutputDirectory <- "./matsim_r_output"
 dashboard_file <- "/dashboard-1-trips.yaml"
 
 
-#####Reading#####
 
-
-#' Load MATSIM output_trips table into Memory
-#'
-#' Loads a MATSim CSV output_trips from file or archive,
-#' creating a tibble with columns as in csv file
-#'
-#' @param input_path character string, path to matsim output directory or http link to the file.
-#' @param n_max integer, maximum number of lines to read within output_trips
-#' @return tibble of trips_output
-#'
-#' @export
-readTripsTable <- function(input_path = ".", n_max = Inf) {
-  options(digits = 18)
-  trips_file <- ""
-
-  # if input_path is a directory, find the correct file path within it
-  if(dir.exists(input_path)){
-    files <- list.files(input_path, full.names = TRUE)
-    trip_file_indicies <- grep("output_trips.csv.gz$", files)
-
-    if(length(trip_file_indicies) == 1){
-      trips_file <- files[trip_file_indicies]
-    } else {
-      stop('There is supposed to be a single "output_trips.csv.gz" found in directory')
-    }
-  } else {
-    trips_file <- input_path
-  }
-
-  trips_output_table <- read_delim(trips_file,
-                                   delim = ";",
-                                   locale = locale(decimal_mark = "."),
-                                   n_max = n_max,
-                                   col_types = cols(
-                                     start_x = col_character(),
-                                     start_y = col_character(),
-                                     end_x = col_character(),
-                                     end_y = col_character(),
-                                     end_link = col_character(),
-                                     start_link = col_character()
-                                   )
-  )
-  # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
-  # doesn't reads coordinates correctly
-  trips_output_table <- trips_output_table %>%
-    mutate(
-      start_x = as.double(start_x),
-      start_y = as.double(start_y),
-      end_x = as.double(end_x),
-      end_y = as.double(end_y)
-  )
-  attr(trips_output_table,"table_name") <- trips_file
-  return(trips_output_table)
-
-}
 
 #####Deprecated####
 
@@ -86,6 +30,7 @@ readTripsTable <- function(input_path = ".", n_max = Inf) {
 #' \tabular{rl}{
 #'   \code{plotModalSplitPieChart} \tab now a synonym for \code{\link{plot_mainmode_piechart}}\cr
 #'   \code{plotModalSplitBarChart} \tab now a synonym for \code{\link{plot_mainmode_barchart}}\cr
+#'   \code{readTripsTable} \tab now a synonym for \code{\link{read_output_trips}}\cr
 #' }
 #'
 plotModalSplitPieChart <- function(tripsTable,
@@ -269,6 +214,119 @@ plotModalSplitBarChart <- function(tripsTable,
   }
 }
 
+
+#' Deprecated function(s) in the matsimr package
+#'
+#'
+#' @rdname matsimr-deprecated
+#'
+#' @docType package
+#' @export  readTripsTable
+#' @aliases readTripsTable
+#'
+readTripsTable <-function(input_path = ".", n_max = Inf) {
+  .Deprecated("read_output_trips")
+  return(read_output_trips(input_path,n_max))
+}
+
+#' Deprecated function(s) in the matsimr package
+#'
+#'
+#' @rdname matsimr-deprecated
+#'
+#' @docType package
+#' @export  plotAverageTravelWait
+#' @aliases plotAverageTravelWait
+#'
+plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
+                                  only.files = FALSE) {
+
+  # If some columns should be united
+  if (length(unite.columns) != 0) {
+    tripsTable$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable$main_mode)] <- united.name
+  }
+
+  avg_time = tripsTable %>% group_by(main_mode)%>%
+    summarize(trav_time_avg = hms::hms(seconds_to_period(mean(trav_time))),
+              wait_time_avg = hms::hms(seconds_to_period(mean(wait_time)))) %>%
+    mutate(trav_time_avg = minute(trav_time_avg),wait_time_avg = minute(wait_time_avg))
+
+
+  fig = plot_ly(data = avg_time,x = ~main_mode,y = ~trav_time_avg,type = 'bar',name = "AVG Time Travelling")
+  fig = fig %>% add_trace(y = ~wait_time_avg,name = "AVG Time Waiting")
+  fig = fig %>% layout(yaxis = list(title = "Time spent (in minutes)"),barmode = "group")
+
+
+  #plotting
+  if(!only.files){
+
+    fig
+    return(fig)
+  }
+
+}
+
+
+#####Reading#####
+
+
+#' Load MATSIM output_trips table into Memory
+#'
+#' Loads a MATSim CSV output_trips from file or archive,
+#' creating a tibble with columns as in csv file
+#'
+#' @param input_path character string, path to matsim output directory or http link to the file.
+#' @param n_max integer, maximum number of lines to read within output_trips
+#' @return tibble of trips_output
+#'
+#' @export
+read_output_trips <- function(input_path = ".", n_max = Inf) {
+  options(digits = 18)
+  trips_file <- ""
+
+  # if input_path is a directory, find the correct file path within it
+  if(dir.exists(input_path)){
+    files <- list.files(input_path, full.names = TRUE)
+    trip_file_indicies <- grep("output_trips.csv.gz$", files)
+
+    if(length(trip_file_indicies) == 1){
+      trips_file <- files[trip_file_indicies]
+    } else {
+      stop('There is supposed to be a single "output_trips.csv.gz" found in directory')
+    }
+  } else {
+    trips_file <- input_path
+  }
+
+  trips_output_table <- read_delim(trips_file,
+                                   delim = ";",
+                                   locale = locale(decimal_mark = "."),
+                                   n_max = n_max,
+                                   col_types = cols(
+                                     start_x = col_character(),
+                                     start_y = col_character(),
+                                     end_x = col_character(),
+                                     end_y = col_character(),
+                                     end_link = col_character(),
+                                     start_link = col_character()
+                                   )
+  )
+  # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
+  # doesn't reads coordinates correctly
+  trips_output_table <- trips_output_table %>%
+    mutate(
+      start_x = as.double(start_x),
+      start_y = as.double(start_y),
+      end_x = as.double(end_x),
+      end_y = as.double(end_y)
+    )
+  attr(trips_output_table,"table_name") <- trips_file
+  return(trips_output_table)
+
+}
+
+
+
 #####Plotting#####
 
 #' Plot main_mode distribution as a Pie Chart
@@ -281,7 +339,7 @@ plotModalSplitBarChart <- function(tripsTable,
 #' and plots pie chart.
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 #'
-#' @param tripsTable tibble of trips_output (from \link{readTripsTable})
+#' @param trips_table tibble of trips_output (from \link{readTripsTable})
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
@@ -325,7 +383,7 @@ plot_mainmode_piechart <- function(trips_table,
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 #'
 #'
-#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param trips_table tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
@@ -366,7 +424,7 @@ plot_mainmode_barchart <- function(trips_table,
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 #'
 #'
-#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param trips_table tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
@@ -375,31 +433,29 @@ plot_mainmode_barchart <- function(trips_table,
 #' @return Bar Chart plot of average time spent on travel/wait
 #'
 #' @export
-plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
-                                  only.files = FALSE) {
+plot_travelwaittime_mean_barchart <- function(trips_table,
+                                              unite.columns = character(0),
+                                              united.name = "united",
+                                              time_format = "minute") {
 
   # If some columns should be united
-  if (length(unite.columns) != 0) {
-    tripsTable$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable$main_mode)] <- united.name
-  }
+  trips_table <- process_rename_mainmodes(trips_table = trips_table,
+                                          unite.columns = unite.columns,
+                                          united.name = united.name)
 
-  avg_time = tripsTable %>% group_by(main_mode)%>%
-    summarize(trav_time_avg = hms::hms(seconds_to_period(mean(trav_time))),
-                                       wait_time_avg = hms::hms(seconds_to_period(mean(wait_time)))) %>%
-    mutate(trav_time_avg = minute(trav_time_avg),wait_time_avg = minute(wait_time_avg))
-
-
-  fig = plot_ly(data = avg_time,x = ~main_mode,y = ~trav_time_avg,type = 'bar',name = "AVG Time Travelling")
-  fig = fig %>% add_trace(y = ~wait_time_avg,name = "AVG Time Waiting")
-  fig = fig %>% layout(yaxis = list(title = "Time spent (in minutes)"),barmode = "group")
-
+  #processing of result table
+  avg_time = process_get_travelwaittime_by_mainmode(trips_table,time_format = time_format)
 
   #plotting
-  if(!only.files){
+  fig = plot_ly(data = avg_time,x = ~main_mode,y = ~trav_time_avg,type = 'bar',name = "AVG Time Travelling",
+                text = round(avg_time$trav_time_avg,2))
+  fig = fig %>% add_trace(y = ~wait_time_avg,name = "AVG Time Waiting",
+                          text = round(avg_time$wait_time_avg,2))
+  fig = fig %>% layout(yaxis = list(title = paste0("Time spent (in ",time_format,"s)"),barmode = "group"))
 
-    fig
-    return(fig)
-  }
+
+  fig
+  return(fig)
 
 }
 
@@ -1174,140 +1230,7 @@ plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FA
   return(plotly::ggplotly(plt))
 }
 
-#' Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)
-#'
-#' Takes trips_table (from readTripsTable) and transforms trips_table to sf object using start_x, end_x, start_y, end_y as a geometry features
-#' deletes from resulting data.frame start_x, end_x, start_y, end_y.
-#' And adds wkt column, if geometry.type = st_mulitpoint(), or geometry.type = st_linestring()
-#' Or adds start_wkt and end_wkt, if geometry.type = st_point()
-#' Added column/columns projected to given CRS (coordinate reference system),
-#' that can be taken from network file of MATSimOutputDirectory
-#'
-#' Function also sets attribute geometry.type to resulting table to character value of "POINT","MULTIPOINT","LINESTRING"
-#' to get which type of table was generated, if it is needed
-#'
-#' @param table tibble of trips_output (from readTripsTable())
-#'
-#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
-#'
-#' @param geometry.type function of sf transformation, geometry.type can be (by default is st_multipoint())
-#' !!!st_point()-resulting table contains 2 geometries start_wkt and end_wkt, representing start and end POINTs, and have type POINT!!!  or
-#' !!!st_multipoint()-resulting table contains 1 geometry wkt, representing start and end POINTS as MULTIPOINT!!! or
-#' !!!st_linestring() - resulting table contains 1 geometry wkt, representing line between start and end points as LINESTRING!!!
-#'
-#' @return sf object (data.frame with geometries depending to geometry.type)
-#'
-#' @export
-transformToSf <- function(table, crs, geometry.type = st_multipoint()) {
-  if (class(geometry.type)[2] == "POINT") {
-    table1 <- table %>%
-      # mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep =""))
-      mutate(start_wkt = paste("POINT(", start_x, " ", start_y, ")", sep = ""))
-    table2 <- table %>%
-      mutate(end_wkt = paste("POINT(", end_x, " ", end_y, ")", sep = ""))
-    attr(table, "geometry.type") <- "POINT"
 
-
-    table1_wkt <- st_as_sf(table1, wkt = "start_wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
-    table2_wkt <- st_as_sf(table2, wkt = "end_wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
-
-
-    result_table <- table1_wkt %>% mutate(end_wkt = table2_wkt$end_wkt)
-    st_geometry(result_table) <- "start_wkt"
-    st_crs(result_table) <- crs
-    st_geometry(result_table) <- "end_wkt"
-    st_crs(result_table) <- crs
-    st_geometry(result_table) <- "start_wkt"
-    return(result_table)
-  } else if (class(geometry.type)[2] == "MULTIPOINT") {
-    table <- table %>%
-      mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep = ""))
-    attr(table, "geometry.type") <- "MULTIPOINT"
-
-
-    result_table <- st_as_sf(table, wkt = "wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
-
-    st_crs(result_table) <- crs
-    return(result_table)
-  } else if (class(geometry.type)[2] == "LINESTRING") {
-    table <- table %>%
-      mutate(wkt = paste("LINESTRING(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep = ""))
-    attr(table, "geometry.type") <- "LINESTRING"
-
-
-    result_table <- st_as_sf(table, wkt = "wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
-
-    st_crs(result_table) <- crs
-    return(result_table)
-  } else {
-    return(NA)
-  }
-}
-
-#' Filtering of trips_table(from readTripsTable) depending on how they located in given shape
-#'
-#' Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
-#' Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
-#' transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
-#' and filters the trips from table depending on *.inshape flags:
-#' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
-#' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
-#' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
-#' if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
-#'
-#' @param tripsTable tibble of trips_output (from readTripsTable())
-#'
-#' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
-#'
-#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
-#'
-#' @param start.inshape bool, defines trips to conclude (see Description)
-#'
-#' @param end.inshape bool, defines trips to conclude (see Description)
-#'
-#' @return tibble, with filtered trips depending on shapeTable and special flags (see Description)
-#'
-#' @export
-filterByRegion <- function(tripsTable, shapeTable, crs, start.inshape = TRUE, end.inshape = TRUE) {
-
-  # shapeTable <- st_read(shapeFile)
-  if (st_crs(shapeTable) == NA) {
-    st_crs(shapeTable) <- crs
-  }
-
-  sf_table <- transformToSf(tripsTable, crs = crs, geometry.type = st_point())
-  shapeTable <- st_transform(shapeTable, crs = crs)
-  # shapeTable isn't table - shape
-
-  union_shape <- st_union(shapeTable) # transforms the crs back to the previous in the file
-  union_shape <- st_transform(union_shape, crs = st_crs(shapeTable))
-
-
-  st_geometry(sf_table) <- "start_wkt" # Set start_wkt as an active geometry
-  cont1 <- st_contains(union_shape, sf_table)[[1]] # Indexes of rows where start point is in shapefile
-
-  st_geometry(sf_table) <- "end_wkt" # Set end_wkt as and active geometry
-  cont2 <- st_contains(union_shape, sf_table)[[1]] # Indexes of rows where end point is in shapefile
-
-  # get trips that ended outside of shape
-  cont_end_outside <- setdiff(1:nrow(sf_table), cont2)
-
-  # get trips that started outside of shape
-  cont_start_outside <- setdiff(1:nrow(sf_table), cont1)
-
-  if (start.inshape == TRUE && end.inshape == TRUE) {
-    cont_union <- intersect(cont1, cont2)
-  } else if (start.inshape == TRUE && end.inshape == FALSE) {
-    cont_union <- intersect(cont1, cont_end_outside)
-  } else if (start.inshape == FALSE && end.inshape == TRUE) {
-    cont_union <- intersect(cont2, cont_start_outside)
-  } else {
-    cont_union <- intersect(cont_start_outside, cont_end_outside) # Give back trips that are neither starting and ending outside the area
-  }
-
-
-  return(tripsTable[cont_union, ])
-}
 
 #' Plots result of filtered trips on the map (from shape)
 #'
@@ -1936,6 +1859,259 @@ plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {
   return(plt)
 }
 
+
+
+#' Chooses a function to compare output_trips from the folders.
+#' baseFolder contains all base outputs, policyFolder contains all policy outputs.
+#'
+#'
+#'
+#' @param baseFolder specifies data source folder with multiple base output_trips
+#'
+#' @param policyFolder specifies data source folder with multiple policy output_trips
+#'
+#' @param dump.output.to that saves result of all comparisons between each base and each policy.
+#' For now it creates plotModalShiftBar() for the output_trips
+#'
+#' @return list of tibbles, list of all base and policy output_trips as tibble
+#'
+#' @export
+compareBasePolicyOutput <- function(baseFolder,policyFolder,dump.output.to = matsimDumpOutputDirectory) {
+
+  base_trips = list(NULL)
+  policy_trips = list(NULL)
+  for(file in list.files(baseFolder,full.names = TRUE))
+  {
+    temp = readTripsTable(file)
+    if(!is.null(temp)){
+      attr(temp,"table_name") = strsplit(file,'/')[[1]][-1]
+      if(is.null(base_trips[[1]])){
+        base_trips[[1]] = temp
+      }else{
+        base_trips = append(base_trips,list(temp))
+      }
+    }
+  }
+
+  for(file in list.files(policyFolder,full.names = TRUE))
+  {
+    temp = readTripsTable(file)
+    if(!is.null(temp)){
+      attr(temp,"table_name") = strsplit(file,'/')[[1]][-1]
+      if(is.null(policy_trips[[1]])){
+        policy_trips[[1]] = temp
+      }else{
+        policy_trips = append(policy_trips,list(temp))
+      }
+    }
+  }
+  i = 0;
+
+  print(dump.output.to)
+  if (!file.exists(dump.output.to)) {
+    dir.create(dump.output.to)
+  }
+  for(base in base_trips){
+
+    for(policy in policy_trips){
+      print(paste0(i," comparison"))
+      name = paste0(i,"_",attr(base,"table_name"),"--",attr(policy,"table_name"))
+      plotModalShiftBar(base,
+                        policy,
+                        dump.output.to = dump.output.to,
+                        output.name = name)
+
+      i=i+1
+    }
+  }
+  invisible(list(base = base_trips,policy = policy_trips))
+}
+#' Chooses a function to compare output_trips from the folders.
+#' baseFolder contains all base outputs, policyFolder contains all policy outputs.
+#'
+#'
+#'
+#' @param baseFolder specifies data source folder with multiple base output_trips
+#'
+#' @param policyFolder specifies data source folder with multiple policy output_trips
+#'
+#' @param shapeFilePath specifies shapeFile used for comparison
+#' @param crs numeric of EPSG code or proj4string, can be found in network/config file from output directory of MATSim simulation
+#' @param dump.output.to that saves result of all comparisons between each base and each policy.
+#' For now it creates plotModalShiftBar() for the output_trips
+#'
+#' @return list of tibbles, list of all base and policy output_trips as tibble
+#'
+#' @export
+compareBasePolicyShapeOutput <- function(baseFolder,policyFolder,shapeFilePath,crs,dump.output.to = matsimDumpOutputDirectory) {
+
+  base_trips = list(NULL)
+  policy_trips = list(NULL)
+  shape = st_read(shapeFilePath)
+  for(file in list.files(baseFolder,full.names = TRUE))
+  {
+    temp = readTripsTable(file)
+    if(!is.null(temp)){
+      attr(temp,"table_name") = strsplit(file,'/')[[1]][-1]
+      if(is.null(base_trips[[1]])){
+        base_trips[[1]] = temp
+      }else{
+        base_trips = append(base_trips,list(temp))
+      }
+    }
+  }
+
+  for(file in list.files(policyFolder,full.names = TRUE))
+  {
+    temp = readTripsTable(file)
+    if(!is.null(temp)){
+      attr(temp,"table_name") = strsplit(file,'/')[[1]][-1]
+      if(is.null(policy_trips[[1]])){
+        policy_trips[[1]] = temp
+      }else{
+        policy_trips = append(policy_trips,list(temp))
+      }
+    }
+  }
+  i = 0;
+
+  if (!file.exists(dump.output.to)) {
+    dir.create(dump.output.to)
+  }
+  for(base in base_trips){
+
+    for(policy in policy_trips){
+      print(paste0(i," comparison"))
+      plotModalShiftBar(base,
+                        policy,
+                        crs,
+                        dump.output.to = paste0(dump.output.to,"/",i,"_",attr(base,"table_name"),"--",attr(policy,"table_name")) )
+      compareTripTypesBarChart(base,policy,shape,crs,dump.output.to = paste0(dump.output.to,"/",i,"_",attr(base,"table_name"),"--",attr(policy,"table_name")))
+      i=i+1
+
+    }
+  }
+  invisible(list(base = base_trips,policy = policy_trips))
+}
+
+
+
+
+
+#####Processing#####
+
+process_rename_mainmodes<-function(trips_table,
+                                   unite.columns = character(0), united.name = "united"){
+
+  if (length(unite.columns) != 0) {
+    trips_table$main_mode[grep(paste0(unite.columns, collapse = "|")
+                               , trips_table$main_mode)] <- united.name
+  }
+  return(trips_table)
+}
+
+process_get_mainmode_distribution<-function(trips_table,percentage = FALSE){
+
+  trips_table_count <- trips_table %>%
+    count(main_mode)
+  if(percentage){
+    trips_table_count<- trips_table_count %>% mutate(n = n / sum(n) * 100)
+  }
+
+  return(trips_table_count)
+}
+
+process_get_travelwaittime_by_mainmode<-function(trips_table,
+                                             time_format = "minute"){#also could be hours/seconds
+
+  #get 2 columns with mean travel time and mean wait time grouped by main_mode in seconds
+   avg_time = trips_table %>% group_by(main_mode)%>%
+    summarize(trav_time_avg = hms::hms(seconds_to_period(mean(trav_time))),
+              wait_time_avg = hms::hms(seconds_to_period(mean(wait_time)))) %>%
+    mutate(trav_time_avg = as.numeric(trav_time_avg),wait_time_avg = as.numeric(wait_time_avg))
+
+   if(time_format == "minute"){
+     #convert seconds to minutes
+     avg_time = avg_time %>% mutate(trav_time_avg = trav_time_avg/60, wait_time_avg = wait_time_avg/60)
+     return(avg_time)
+   }else if(time_format == "hour"){
+     avg_time = avg_time %>% mutate(trav_time_avg = trav_time_avg/3600, wait_time_avg = wait_time_avg/3600)
+     return(avg_time)
+   }
+
+   return(avg_time)
+}
+
+
+
+appendDistanceCategory <- function(tripsTable){
+  modes = levels(factor(tripsTable$main_mode))
+
+  #This is a very bad way to do that, but I see no other way to get it done
+  #Also filtering table into a new doesn't creates new objects in memory, so it works fast
+  tripsTable_05km = tripsTable %>% filter(traveled_distance<=1000) %>% mutate(dist_cat = "0-1km")
+  #tripsTable_1km = tripsTable %>% filter(traveled_distance>500 & traveled_distance<=1000  ) %>% mutate(dist_cat = "0.5-1km")
+  tripsTable_2km = tripsTable %>% filter(traveled_distance>1000 & traveled_distance<=2000) %>% mutate(dist_cat = "1-2km")
+  tripsTable_5km = tripsTable %>% filter(traveled_distance>2000 & traveled_distance<=5000) %>% mutate(dist_cat = "2-5km")
+  tripsTable_10km = tripsTable %>% filter(traveled_distance>5000 & traveled_distance<=10*1000) %>% mutate(dist_cat = "5-10km")
+  tripsTable_20km = tripsTable %>% filter(traveled_distance>10*1000 & traveled_distance<=20*1000) %>% mutate(dist_cat = "10-20km")
+  tripsTable_50km = tripsTable %>% filter(traveled_distance>20*1000 & traveled_distance<=50*1000) %>% mutate(dist_cat = "20-50km")
+  tripsTable_100km = tripsTable %>% filter(traveled_distance>50*1000 & traveled_distance<=100*1000) %>% mutate(dist_cat = "50-100km")
+  tripsTable_100pluskm = tripsTable %>% filter(traveled_distance>100*1000) %>% mutate(dist_cat = "> 100km")
+
+  tripsTable_result = rbind(tripsTable_05km,
+                            #tripsTable_1km,
+                            tripsTable_2km,
+                            tripsTable_5km,
+                            tripsTable_10km,
+                            tripsTable_20km,
+                            tripsTable_50km,
+                            tripsTable_100km,
+                            tripsTable_100pluskm)
+
+  tripsTable_result$dist_cat = factor(tripsTable_result$dist_cat,levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km","> 100km"))
+  return(tripsTable_result)
+}
+
+#' Reads an coordinate referenec system of MATSim output directory
+#' from output_config.xml
+#'
+#' @param folder specifies path to find config
+#'
+#'
+#' @return code of coordinate reference system
+#'
+#' @export
+getCrsFromConfig <- function(folder) {
+
+  if (grepl("output_config.xml$", folder) == TRUE)
+  {
+    config <- read_xml(folder)
+
+    param_nodes = xml_find_all(config,"//param")
+
+    coord_node = param_nodes[xml_attr(param_nodes,"name") == "coordinateSystem"]
+
+    coord_system = xml_attr(coord_node,"value")
+    return(coord_system)
+  }
+
+  files <- list.files(folder, full.names = TRUE)
+  # Read from global/local directory
+  # output_config.xml is contained as output_trips.csv.gz
+  if (length(grep("output_config.xml$", files)) != 0) {
+    config <- read_xml(files[grep("output_config.xml$", files)])
+
+    param_nodes = xml_find_all(config,"//param")
+
+    coord_node = param_nodes[xml_attr(param_nodes,"name") == "coordinateSystem"]
+
+    coord_system = xml_attr(coord_node,"value")
+    return(coord_system)
+  }
+  return(NA)
+}
+
 #' Creates an instance of ODMatrix(origin/destination) in conventional form or for the simwrapper
 #'
 #'
@@ -2073,230 +2249,140 @@ deriveODMatrix<- function(tripsTable,shapePath,crs,dump.output.to = matsimDumpOu
   return(result_tibble)
 }
 
-#' Chooses a function to compare output_trips from the folders.
-#' baseFolder contains all base outputs, policyFolder contains all policy outputs.
+#' Filtering of trips_table(from readTripsTable) depending on how they located in given shape
 #'
+#' Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
+#' Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
+#' transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
+#' and filters the trips from table depending on *.inshape flags:
+#' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
+#' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
+#' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
+#' if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
 #'
+#' @param tripsTable tibble of trips_output (from readTripsTable())
 #'
-#' @param baseFolder specifies data source folder with multiple base output_trips
+#' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
 #'
-#' @param policyFolder specifies data source folder with multiple policy output_trips
+#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
 #'
-#' @param dump.output.to that saves result of all comparisons between each base and each policy.
-#' For now it creates plotModalShiftBar() for the output_trips
+#' @param start.inshape bool, defines trips to conclude (see Description)
 #'
-#' @return list of tibbles, list of all base and policy output_trips as tibble
+#' @param end.inshape bool, defines trips to conclude (see Description)
 #'
-#' @export
-compareBasePolicyOutput <- function(baseFolder,policyFolder,dump.output.to = matsimDumpOutputDirectory) {
-
-  base_trips = list(NULL)
-  policy_trips = list(NULL)
-  for(file in list.files(baseFolder,full.names = TRUE))
-  {
-    temp = readTripsTable(file)
-    if(!is.null(temp)){
-      attr(temp,"table_name") = strsplit(file,'/')[[1]][-1]
-      if(is.null(base_trips[[1]])){
-        base_trips[[1]] = temp
-      }else{
-        base_trips = append(base_trips,list(temp))
-      }
-    }
-  }
-
-  for(file in list.files(policyFolder,full.names = TRUE))
-  {
-    temp = readTripsTable(file)
-    if(!is.null(temp)){
-      attr(temp,"table_name") = strsplit(file,'/')[[1]][-1]
-      if(is.null(policy_trips[[1]])){
-        policy_trips[[1]] = temp
-      }else{
-        policy_trips = append(policy_trips,list(temp))
-      }
-    }
-  }
-  i = 0;
-
-  print(dump.output.to)
-  if (!file.exists(dump.output.to)) {
-    dir.create(dump.output.to)
-  }
-  for(base in base_trips){
-
-    for(policy in policy_trips){
-      print(paste0(i," comparison"))
-      name = paste0(i,"_",attr(base,"table_name"),"--",attr(policy,"table_name"))
-      plotModalShiftBar(base,
-                        policy,
-                        dump.output.to = dump.output.to,
-                        output.name = name)
-
-      i=i+1
-    }
-  }
-  invisible(list(base = base_trips,policy = policy_trips))
-}
-#' Chooses a function to compare output_trips from the folders.
-#' baseFolder contains all base outputs, policyFolder contains all policy outputs.
-#'
-#'
-#'
-#' @param baseFolder specifies data source folder with multiple base output_trips
-#'
-#' @param policyFolder specifies data source folder with multiple policy output_trips
-#'
-#' @param shapeFilePath specifies shapeFile used for comparison
-#' @param crs numeric of EPSG code or proj4string, can be found in network/config file from output directory of MATSim simulation
-#' @param dump.output.to that saves result of all comparisons between each base and each policy.
-#' For now it creates plotModalShiftBar() for the output_trips
-#'
-#' @return list of tibbles, list of all base and policy output_trips as tibble
+#' @return tibble, with filtered trips depending on shapeTable and special flags (see Description)
 #'
 #' @export
-compareBasePolicyShapeOutput <- function(baseFolder,policyFolder,shapeFilePath,crs,dump.output.to = matsimDumpOutputDirectory) {
+filterByRegion <- function(tripsTable, shapeTable, crs, start.inshape = TRUE, end.inshape = TRUE) {
 
-  base_trips = list(NULL)
-  policy_trips = list(NULL)
-  shape = st_read(shapeFilePath)
-  for(file in list.files(baseFolder,full.names = TRUE))
-  {
-    temp = readTripsTable(file)
-    if(!is.null(temp)){
-      attr(temp,"table_name") = strsplit(file,'/')[[1]][-1]
-      if(is.null(base_trips[[1]])){
-        base_trips[[1]] = temp
-      }else{
-        base_trips = append(base_trips,list(temp))
-      }
-    }
+  # shapeTable <- st_read(shapeFile)
+  if (st_crs(shapeTable) == NA) {
+    st_crs(shapeTable) <- crs
   }
 
-  for(file in list.files(policyFolder,full.names = TRUE))
-  {
-    temp = readTripsTable(file)
-    if(!is.null(temp)){
-      attr(temp,"table_name") = strsplit(file,'/')[[1]][-1]
-      if(is.null(policy_trips[[1]])){
-        policy_trips[[1]] = temp
-      }else{
-        policy_trips = append(policy_trips,list(temp))
-      }
-    }
-  }
-  i = 0;
+  sf_table <- transformToSf(tripsTable, crs = crs, geometry.type = st_point())
+  shapeTable <- st_transform(shapeTable, crs = crs)
+  # shapeTable isn't table - shape
 
-  if (!file.exists(dump.output.to)) {
-    dir.create(dump.output.to)
-  }
-  for(base in base_trips){
+  union_shape <- st_union(shapeTable) # transforms the crs back to the previous in the file
+  union_shape <- st_transform(union_shape, crs = st_crs(shapeTable))
 
-    for(policy in policy_trips){
-      print(paste0(i," comparison"))
-      plotModalShiftBar(base,
-                        policy,
-                        crs,
-                        dump.output.to = paste0(dump.output.to,"/",i,"_",attr(base,"table_name"),"--",attr(policy,"table_name")) )
-      compareTripTypesBarChart(base,policy,shape,crs,dump.output.to = paste0(dump.output.to,"/",i,"_",attr(base,"table_name"),"--",attr(policy,"table_name")))
-      i=i+1
 
-    }
+  st_geometry(sf_table) <- "start_wkt" # Set start_wkt as an active geometry
+  cont1 <- st_contains(union_shape, sf_table)[[1]] # Indexes of rows where start point is in shapefile
+
+  st_geometry(sf_table) <- "end_wkt" # Set end_wkt as and active geometry
+  cont2 <- st_contains(union_shape, sf_table)[[1]] # Indexes of rows where end point is in shapefile
+
+  # get trips that ended outside of shape
+  cont_end_outside <- setdiff(1:nrow(sf_table), cont2)
+
+  # get trips that started outside of shape
+  cont_start_outside <- setdiff(1:nrow(sf_table), cont1)
+
+  if (start.inshape == TRUE && end.inshape == TRUE) {
+    cont_union <- intersect(cont1, cont2)
+  } else if (start.inshape == TRUE && end.inshape == FALSE) {
+    cont_union <- intersect(cont1, cont_end_outside)
+  } else if (start.inshape == FALSE && end.inshape == TRUE) {
+    cont_union <- intersect(cont2, cont_start_outside)
+  } else {
+    cont_union <- intersect(cont_start_outside, cont_end_outside) # Give back trips that are neither starting and ending outside the area
   }
-  invisible(list(base = base_trips,policy = policy_trips))
+
+
+  return(tripsTable[cont_union, ])
 }
 
-
-
-#' Reads an coordinate referenec system of MATSim output directory
-#' from output_config.xml
+#' Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)
 #'
-#' @param folder specifies path to find config
+#' Takes trips_table (from readTripsTable) and transforms trips_table to sf object using start_x, end_x, start_y, end_y as a geometry features
+#' deletes from resulting data.frame start_x, end_x, start_y, end_y.
+#' And adds wkt column, if geometry.type = st_mulitpoint(), or geometry.type = st_linestring()
+#' Or adds start_wkt and end_wkt, if geometry.type = st_point()
+#' Added column/columns projected to given CRS (coordinate reference system),
+#' that can be taken from network file of MATSimOutputDirectory
 #'
+#' Function also sets attribute geometry.type to resulting table to character value of "POINT","MULTIPOINT","LINESTRING"
+#' to get which type of table was generated, if it is needed
 #'
-#' @return code of coordinate reference system
+#' @param table tibble of trips_output (from readTripsTable())
+#'
+#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#'
+#' @param geometry.type function of sf transformation, geometry.type can be (by default is st_multipoint())
+#' !!!st_point()-resulting table contains 2 geometries start_wkt and end_wkt, representing start and end POINTs, and have type POINT!!!  or
+#' !!!st_multipoint()-resulting table contains 1 geometry wkt, representing start and end POINTS as MULTIPOINT!!! or
+#' !!!st_linestring() - resulting table contains 1 geometry wkt, representing line between start and end points as LINESTRING!!!
+#'
+#' @return sf object (data.frame with geometries depending to geometry.type)
 #'
 #' @export
-getCrsFromConfig <- function(folder) {
+transformToSf <- function(table, crs, geometry.type = st_multipoint()) {
+  if (class(geometry.type)[2] == "POINT") {
+    table1 <- table %>%
+      # mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep =""))
+      mutate(start_wkt = paste("POINT(", start_x, " ", start_y, ")", sep = ""))
+    table2 <- table %>%
+      mutate(end_wkt = paste("POINT(", end_x, " ", end_y, ")", sep = ""))
+    attr(table, "geometry.type") <- "POINT"
 
-  if (grepl("output_config.xml$", folder) == TRUE)
-  {
-    config <- read_xml(folder)
 
-    param_nodes = xml_find_all(config,"//param")
+    table1_wkt <- st_as_sf(table1, wkt = "start_wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
+    table2_wkt <- st_as_sf(table2, wkt = "end_wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
 
-    coord_node = param_nodes[xml_attr(param_nodes,"name") == "coordinateSystem"]
 
-    coord_system = xml_attr(coord_node,"value")
-    return(coord_system)
+    result_table <- table1_wkt %>% mutate(end_wkt = table2_wkt$end_wkt)
+    st_geometry(result_table) <- "start_wkt"
+    st_crs(result_table) <- crs
+    st_geometry(result_table) <- "end_wkt"
+    st_crs(result_table) <- crs
+    st_geometry(result_table) <- "start_wkt"
+    return(result_table)
+  } else if (class(geometry.type)[2] == "MULTIPOINT") {
+    table <- table %>%
+      mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep = ""))
+    attr(table, "geometry.type") <- "MULTIPOINT"
+
+
+    result_table <- st_as_sf(table, wkt = "wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
+
+    st_crs(result_table) <- crs
+    return(result_table)
+  } else if (class(geometry.type)[2] == "LINESTRING") {
+    table <- table %>%
+      mutate(wkt = paste("LINESTRING(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep = ""))
+    attr(table, "geometry.type") <- "LINESTRING"
+
+
+    result_table <- st_as_sf(table, wkt = "wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
+
+    st_crs(result_table) <- crs
+    return(result_table)
+  } else {
+    return(NA)
   }
-
-  files <- list.files(folder, full.names = TRUE)
-  # Read from global/local directory
-  # output_config.xml is contained as output_trips.csv.gz
-  if (length(grep("output_config.xml$", files)) != 0) {
-    config <- read_xml(files[grep("output_config.xml$", files)])
-
-    param_nodes = xml_find_all(config,"//param")
-
-    coord_node = param_nodes[xml_attr(param_nodes,"name") == "coordinateSystem"]
-
-    coord_system = xml_attr(coord_node,"value")
-    return(coord_system)
-  }
-  return(NA)
-}
-
-#####Processing#####
-
-process_rename_mainmodes<-function(trips_table,
-                                   unite.columns = character(0), united.name = "united"){
-
-  if (length(unite.columns) != 0) {
-    trips_table$main_mode[grep(paste0(unite.columns, collapse = "|")
-                               , trips_table$main_mode)] <- united.name
-  }
-  return(trips_table)
-}
-
-process_get_mainmode_distribution<-function(trips_table,percentage = FALSE){
-
-  trips_table_count <- trips_table %>%
-    count(main_mode)
-  if(percentage){
-    trips_table_count<- trips_table_count %>% mutate(n = n / sum(n) * 100)
-  }
-
-  return(trips_table_count)
 }
 
 
-
-appendDistanceCategory <- function(tripsTable){
-  modes = levels(factor(tripsTable$main_mode))
-
-  #This is a very bad way to do that, but I see no other way to get it done
-  #Also filtering table into a new doesn't creates new objects in memory, so it works fast
-  tripsTable_05km = tripsTable %>% filter(traveled_distance<=1000) %>% mutate(dist_cat = "0-1km")
-  #tripsTable_1km = tripsTable %>% filter(traveled_distance>500 & traveled_distance<=1000  ) %>% mutate(dist_cat = "0.5-1km")
-  tripsTable_2km = tripsTable %>% filter(traveled_distance>1000 & traveled_distance<=2000) %>% mutate(dist_cat = "1-2km")
-  tripsTable_5km = tripsTable %>% filter(traveled_distance>2000 & traveled_distance<=5000) %>% mutate(dist_cat = "2-5km")
-  tripsTable_10km = tripsTable %>% filter(traveled_distance>5000 & traveled_distance<=10*1000) %>% mutate(dist_cat = "5-10km")
-  tripsTable_20km = tripsTable %>% filter(traveled_distance>10*1000 & traveled_distance<=20*1000) %>% mutate(dist_cat = "10-20km")
-  tripsTable_50km = tripsTable %>% filter(traveled_distance>20*1000 & traveled_distance<=50*1000) %>% mutate(dist_cat = "20-50km")
-  tripsTable_100km = tripsTable %>% filter(traveled_distance>50*1000 & traveled_distance<=100*1000) %>% mutate(dist_cat = "50-100km")
-  tripsTable_100pluskm = tripsTable %>% filter(traveled_distance>100*1000) %>% mutate(dist_cat = "> 100km")
-
-  tripsTable_result = rbind(tripsTable_05km,
-                            #tripsTable_1km,
-                            tripsTable_2km,
-                            tripsTable_5km,
-                            tripsTable_10km,
-                            tripsTable_20km,
-                            tripsTable_50km,
-                            tripsTable_100km,
-                            tripsTable_100pluskm)
-
-  tripsTable_result$dist_cat = factor(tripsTable_result$dist_cat,levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km","> 100km"))
-  return(tripsTable_result)
-}
+#####Helping functions####
