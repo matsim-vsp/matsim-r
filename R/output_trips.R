@@ -80,8 +80,8 @@ readTripsTable <- function(input_path = ".", n_max = Inf) {
 #' @name matsimr-deprecated
 #'
 #' @docType package
-#' @export  plotModalSplitPieChart plotModalSplitBarChart
-#' @aliases plotModalSplitPieChart plotModalSplitBarChart
+#' @export  plotModalSplitPieChart
+#' @aliases plotModalSplitPieChart
 #' @section Details:
 #' \tabular{rl}{
 #'   \code{plotModalSplitPieChart} \tab now a synonym for \code{\link{plot_mainmode_piechart}}\cr
@@ -178,23 +178,11 @@ plotModalSplitPieChart <- function(tripsTable,
 #' Deprecated function(s) in the matsimr package
 #'
 #'
-#' These functions are provided for compatibility with older version of
-#' the matsimr package.  They may eventually be completely
-#' removed.
-#'
-#' Test of usage
-#'
 #' @rdname matsimr-deprecated
-#' @name matsimr-deprecated
 #'
 #' @docType package
 #' @export  plotModalSplitBarChart
 #' @aliases plotModalSplitBarChart
-#' @section Details:
-#' \tabular{rl}{
-#'   \code{plotModalSplitPieChart} \tab now a synonym for \code{\link{plot_mainmode_piechart}}\cr
-#'   \code{plotModalSplitBarChart} \tab now a synonym for \code{\link{plot_mainmode_barchart}}\cr
-#' }
 #'
 plotModalSplitBarChart <- function(tripsTable,
                                    unite.columns = character(0),

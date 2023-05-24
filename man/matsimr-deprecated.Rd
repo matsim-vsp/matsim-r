@@ -27,21 +27,8 @@ plotModalSplitBarChart(
 These functions are provided for compatibility with older version of
 the matsimr package.  They may eventually be completely
 removed.
-
-These functions are provided for compatibility with older version of
-the matsimr package.  They may eventually be completely
-removed.
-}
-\details{
-Test of usage
 }
 \section{Details}{
-
-\tabular{rl}{
-  \code{plotModalSplitPieChart} \tab now a synonym for \code{\link{plot_mainmode_piechart}}\cr
-  \code{plotModalSplitBarChart} \tab now a synonym for \code{\link{plot_mainmode_barchart}}\cr
-}
-
 
 \tabular{rl}{
   \code{plotModalSplitPieChart} \tab now a synonym for \code{\link{plot_mainmode_piechart}}\cr
