@@ -2155,6 +2155,9 @@ process_append_distcat <- function(tripsTable,distances_array = c(1000,2000,5000
   #Also filtering table into a new doesn't creates new objects in memory, so it works fast
   #Upd: it creates copy of dataframe on each mutate :/
 
+  for(i in length(distances_array)){
+
+  }
 
   tripsTable_05km = tripsTable %>% filter(traveled_distance<=1000) %>% mutate(dist_cat = "0-1km")
   tripsTable_2km = tripsTable %>% filter(traveled_distance>1000 & traveled_distance<=2000) %>% mutate(dist_cat = "1-2km")
