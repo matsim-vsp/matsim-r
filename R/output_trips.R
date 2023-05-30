@@ -503,7 +503,9 @@ compareModalDistanceDistribution <- function(tripsTable1,tripsTable2, unite.colu
 #' @return Bar Chart plot of distance traveled per mode
 #'
 #' @export
-plotTripDistanceByMode <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
+plotTripDistanceByMode <- function(tripsTable,
+                                   unite.columns = character(0), united.name = "united",
+                                   dump.output.to = matsimDumpOutputDirectory,
                                    only.files = FALSE) {
 
 
@@ -1910,8 +1912,6 @@ read_output_trips <- function(input_path = ".", n_max = Inf) {
 #' @param trips_table tibble of trips_output (from \link{readTripsTable})
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
-#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
-#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #'
 #' @return Pie Chart plot of transport mode distribution, values given in percents
 #'
@@ -1925,6 +1925,7 @@ plot_mainmode_piechart <- function(trips_table,
                                          unite.columns = unite.columns,
                                          united.name = united.name)
 
+  # processing
   # tripsTableCount gives percentage representation out
   trips_table_count<-process_get_mainmode_distribution(trips_table,
                                                        percentage= percentage)
@@ -1954,8 +1955,6 @@ plot_mainmode_piechart <- function(trips_table,
 #' @param trips_table tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
-#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
-#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #'
 #' @return Bar Chart plot of transport mode distribution, values given in percents
 #'
@@ -1970,7 +1969,7 @@ plot_mainmode_barchart <- function(trips_table,
   trips_table <- process_rename_mainmodes(trips_table = trips_table,
                                           unite.columns = unite.columns,
                                           united.name = united.name)
-  # Get percentage
+  # processing
   trips_table_count <- process_get_mainmode_distribution(trips_table,
                                                          percentage = percentage)
 
@@ -1995,8 +1994,6 @@ plot_mainmode_barchart <- function(trips_table,
 #' @param trips_table tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
-#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
-#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #'
 #' @return Bar Chart plot of average time spent on travel/wait
 #'
@@ -2042,8 +2039,6 @@ plot_travelwaittime_mean_barchart <- function(trips_table,
 #' @param tripsTable2 tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
-#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
-#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #'
 #' @return Bar Chart plot of average time spent on travel/wait
 #'
@@ -2111,7 +2106,7 @@ plot_compare_travelwaittime_by_mainmode <- function(trips_table1,trips_table2,
 #' @return Bar Chart plot of count of trips among distance travelled
 #'
 #' @export
-plot_distance_by_mainmode_barchart <- function(trips_table,
+plot_distcat_by_mainmode_barchart <- function(trips_table,
                                                unite.columns = character(0),
                                                united.name = "united",
                                                dist_column = "dist_cat",
@@ -2123,16 +2118,117 @@ plot_distance_by_mainmode_barchart <- function(trips_table,
                            unite.columns = unite.columns,
                            united.name = united.name)
 
-  trips_table <- process_append_distancecategory(trips_table =trips_table,
+  #processing
+  trips_table <- process_append_distcat(trips_table =trips_table,
                                   distances_array = distances_array)
 
 
+  #plotting
   plt = ggplot(trips_table) +
     geom_bar(aes(x = dist_cat,fill = main_mode),position = position_dodge())+
     ggtitle("Number of trips per travelling distance")
   fig = plotly::ggplotly(plt)
 
   fig
+  return(fig)
+
+}
+
+#' Bar Chart with distance travelled on x-axis and number of trips on y-axis
+#'
+#' Takes Table trips_output (from readTripsTable()),
+#' to plot bar chart with with values that represent
+#' average distance traveled ~ main mode used
+#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#'
+#'
+#' @param trips_table tible of trips_output (from readTripsTable())
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart#'
+#' @return Bar Chart plot of distance traveled per mode
+#'
+#' @export
+plot_distance_by_mainmode_barchart <- function(trips_table,
+                                   unite.columns = character(0), united.name = "united") {
+
+
+  # If some columns should be united
+  trips_table <- process_rename_mainmodes(trips_table = trips_table,
+                                          unite.columns = unite.columns,
+                                          united.name = united.name)
+
+  #processing
+  trips_table <- process_get_travdistance_distribution(trips_table = trips_table)
+
+  #plotting
+  text_for_y <- round(trips_table$avg_dist,digits = 2)
+  fig <- plot_ly(data = trips_table,x = ~main_mode,y = ~avg_dist,
+                type = 'bar',
+                text = text_for_y,
+                textposition = "auto",
+                name = "AVG Distance traveled by a person over a day")
+  fig <- fig %>% layout(yaxis = list(title = "Distance (in meters)"),barmode = "group")
+
+  fig
+  return(fig)
+}
+
+#' Bar Chart with distance travelled on x-axis and difference of number of trips on y-axis
+#'
+#' Takes 2 Tables trips_output (from readTripsTable()),
+#' to plot bar chart with with values that represent
+#' difference of number of trips between tripsTable2 and tripsTable1 ~ distance travelled
+#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#'
+#'
+#' @param tripsTable1 tible of trips_output (from readTripsTable()), number of trips of this table will be extracted from number of trips of tripsTable1
+#' @param tripsTable2 tible of trips_output (from readTripsTable()), from number of trips of this table number of trips of tripsTable1 will be extracted
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
+#' @return Bar Chart plot of count of trips among distance travelled
+#'
+#' @export
+plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
+                                                       unite.columns = character(0), united.name = "united",
+                                                       dist_column = "dist_cat",
+                                                       distances_array = c(1000,2000,5000,10000,20000,50000,100000)) {
+
+  trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
+                                          unite.columns = unite.columns,
+                                          united.name = united.name)
+
+  trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
+                                           unite.columns = unite.columns,
+                                           united.name = united.name)
+
+  modes = unique(c(unique(trips_table1$main_mode),unique(trips_table2$main_mode)))
+
+  distribution1 <- process_append_distcat(trips_table1,distances_array = distances_array)
+  distribution2 <- process_append_distcat(trips_table2,distances_array = distances_array)
+
+
+  #Get category count difference???
+  table_with_сounts1 = distribution1 %>% count(main_mode,dist_cat)
+  table_with_сounts2 = distribution2 %>% count(main_mode,dist_cat)
+
+  joined <- full_join(table_with_сounts1, table_with_сounts2, by = c("main_mode", "dist_cat"))
+
+  result <- joined %>%
+    replace_na( list(n.x = 0, n.y = 0) ) %>%
+    mutate(n = n.y - n.x) %>%
+    select(main_mode, dist_cat, n)
+
+
+  result$dist_cat = factor(result$dist_cat,levels = distances_array)
+
+
+  fig = ggplotly(ggplot(result) +
+                   geom_col(aes(x = dist_cat,fill = main_mode, y = n), position = position_dodge())+
+                   ggtitle("Difference in number of trips per travelling distance"))
+
+
   return(fig)
 
 }
@@ -2161,6 +2257,15 @@ process_get_mainmode_distribution<-function(trips_table,percentage = FALSE){
   return(trips_table_count)
 }
 
+process_get_travdistance_distribution<-function(trips_table){
+
+  trips_table = trips_table %>%
+    group_by(main_mode) %>%
+    summarize(avg_dist = mean(traveled_distance))
+
+  return(trips_table)
+}
+
 process_get_travelwaittime_by_mainmode<-function(trips_table,
                                              time_format = "minute"){#also could be hours/seconds
 
@@ -2184,7 +2289,7 @@ process_get_travelwaittime_by_mainmode<-function(trips_table,
 
 
 
-process_append_distancecategory <- function(trips_table,distances_array = c(1000,2000,5000,10000,20000,50000,100000)){
+process_append_distcat <- function(trips_table,distances_array = c(1000,2000,5000,10000,20000,50000,100000)){
 
   distances_array = sort(c(distances_array,c(0,Inf)))
   modes = levels(factor(trips_table$main_mode))

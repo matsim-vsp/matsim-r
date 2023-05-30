@@ -20,10 +20,6 @@ plot_compare_travelwaittime_by_mainmode(
 \item{tripsTable1}{tible of trips_output (from readTripsTable())}
 
 \item{tripsTable2}{tible of trips_output (from readTripsTable())}
-
-\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored}
-
-\item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
 }
 \value{
 Bar Chart plot of average time spent on travel/wait

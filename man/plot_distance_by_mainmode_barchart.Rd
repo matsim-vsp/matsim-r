@@ -7,9 +7,7 @@
 plot_distance_by_mainmode_barchart(
   trips_table,
   unite.columns = character(0),
-  united.name = "united",
-  dist_column = "dist_cat",
-  distances_array = c(1000, 2000, 5000, 10000, 20000, 50000, 1e+05)
+  united.name = "united"
 )
 }
 \arguments{
@@ -17,14 +15,14 @@ plot_distance_by_mainmode_barchart(
 
 \item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
 
-\item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart}
+\item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart#'}
 }
 \value{
-Bar Chart plot of count of trips among distance travelled
+Bar Chart plot of distance traveled per mode
 }
 \description{
 Takes Table trips_output (from readTripsTable()),
 to plot bar chart with with values that represent
-number of trips ~ distance travelled
+average distance traveled ~ main mode used
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 }
