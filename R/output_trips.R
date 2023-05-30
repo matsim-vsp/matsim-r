@@ -2097,7 +2097,45 @@ plot_compare_travelwaittime_by_mainmode <- function(trips_table1,trips_table2,
 
 }
 
+#' Bar Chart with distance travelled on x-axis and number of trips on y-axis
+#'
+#' Takes Table trips_output (from readTripsTable()),
+#' to plot bar chart with with values that represent
+#' number of trips ~ distance travelled
+#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#'
+#'
+#' @param trips_table tible of trips_output (from readTripsTable())
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @return Bar Chart plot of count of trips among distance travelled
+#'
+#' @export
+plot_distance_by_mainmode_barchart <- function(trips_table,
+                                               unite.columns = character(0),
+                                               united.name = "united",
+                                               dist_column = "dist_cat",
+                                               distances_array = c(1000,2000,5000,10000,20000,50000,100000))  {
 
+
+  # If some columns should be united
+  trips_table <- process_rename_mainmodes(trips_table = trips_table,
+                           unite.columns = unite.columns,
+                           united.name = united.name)
+
+  trips_table <- process_append_distancecategory(trips_table =trips_table,
+                                  distances_array = distances_array)
+
+
+  plt = ggplot(trips_table) +
+    geom_bar(aes(x = dist_cat,fill = main_mode),position = position_dodge())+
+    ggtitle("Number of trips per travelling distance")
+  fig = plotly::ggplotly(plt)
+
+  fig
+  return(fig)
+
+}
 
 
 #####Processing#####
@@ -2145,41 +2183,28 @@ process_get_travelwaittime_by_mainmode<-function(trips_table,
 }
 
 
-#' @export
-process_append_distcat <- function(tripsTable,distances_array = c(1000,2000,5000,10000,20000,50000,100000)){
 
-  distances_array = sort(distances_array)
-  modes = levels(factor(tripsTable$main_mode))
+process_append_distancecategory <- function(trips_table,distances_array = c(1000,2000,5000,10000,20000,50000,100000)){
 
-  #This is a very bad way to do that, but I see no other way to get it done
+  distances_array = sort(c(distances_array,c(0,Inf)))
+  modes = levels(factor(trips_table$main_mode))
+
   #Also filtering table into a new doesn't creates new objects in memory, so it works fast
   #Upd: it creates copy of dataframe on each mutate :/
 
-  for(i in length(distances_array)){
+  result_table <- c(NULL)
 
+  str_factors<-c(NULL)
+  for(i in 1:(length(distances_array)-1)){
+    part_table <- trips_table %>%
+      filter(traveled_distance>=distances_array[i] & traveled_distance<distances_array[i+1]) %>%
+      mutate(dist_cat = paste0(distances_array[i],"-",distances_array[i+1]))
+    str_factors<- c(str_factors,paste0(distances_array[i],"-",distances_array[i+1]))
+    result_table <- rbind(result_table,part_table)
   }
 
-  tripsTable_05km = tripsTable %>% filter(traveled_distance<=1000) %>% mutate(dist_cat = "0-1km")
-  tripsTable_2km = tripsTable %>% filter(traveled_distance>1000 & traveled_distance<=2000) %>% mutate(dist_cat = "1-2km")
-  tripsTable_5km = tripsTable %>% filter(traveled_distance>2000 & traveled_distance<=5000) %>% mutate(dist_cat = "2-5km")
-  tripsTable_10km = tripsTable %>% filter(traveled_distance>5000 & traveled_distance<=10*1000) %>% mutate(dist_cat = "5-10km")
-  tripsTable_20km = tripsTable %>% filter(traveled_distance>10*1000 & traveled_distance<=20*1000) %>% mutate(dist_cat = "10-20km")
-  tripsTable_50km = tripsTable %>% filter(traveled_distance>20*1000 & traveled_distance<=50*1000) %>% mutate(dist_cat = "20-50km")
-  tripsTable_100km = tripsTable %>% filter(traveled_distance>50*1000 & traveled_distance<=100*1000) %>% mutate(dist_cat = "50-100km")
-  tripsTable_100pluskm = tripsTable %>% filter(traveled_distance>100*1000) %>% mutate(dist_cat = "> 100km")
-
-  tripsTable_result = rbind(tripsTable_05km,
-                            #tripsTable_1km,
-                            tripsTable_2km,
-                            tripsTable_5km,
-                            tripsTable_10km,
-                            tripsTable_20km,
-                            tripsTable_50km,
-                            tripsTable_100km,
-                            tripsTable_100pluskm)
-
-  tripsTable_result$dist_cat = factor(tripsTable_result$dist_cat,levels = c("0-1km","1-2km","2-5km","5-10km","10-20km","20-50km","50-100km","> 100km"))
-  return(tripsTable_result)
+  result_table$dist_cat = factor(result_table$dist_cat,levels = str_factors)
+  return(result_table)
 }
 
 #' Reads an coordinate referenec system of MATSim output directory
