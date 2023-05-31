@@ -215,12 +215,11 @@ plotModalSplitBarChart <- function(tripsTable,
 }
 
 
-#' Load MATSIM output_trips table into Memory
+#' **Deprecated. (see matsimr-deprecated)** Load MATSIM output_trips table into Memory
 #'
 #' Loads a MATSim CSV output_trips from file or archive,
 #' creating a tibble with columns as in csv file
 #'
-#'@rdname matsimr-deprecated
 #' @name readTripsTable
 #'
 #' @param input_path character string, path to matsim output directory or http link to the file.
@@ -2168,6 +2167,11 @@ plot_distance_by_mainmode_barchart <- function(trips_table,
   #processing
   trips_table <- process_get_travdistance_distribution(trips_table = trips_table)
 
+
+  #if(only.process){
+  #  return(trips_table)
+  #}
+
   #plotting
   text_for_y <- round(trips_table$avg_dist,digits = 2)
   fig <- plot_ly(data = trips_table,x = ~main_mode,y = ~avg_dist,
@@ -2256,7 +2260,7 @@ plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
 #' @return Line Chart plot of trips count by departure mode per mode
 #'
 #' @export
-plot_trips_count_by_deptime_and_mainmode <- function(trips_table,
+plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
                                         unite.columns = character(0),
                                         united.name = "united") {
 
