@@ -215,15 +215,18 @@ plotModalSplitBarChart <- function(tripsTable,
 }
 
 
-#' Deprecated function(s) in the matsimr package
+#' Load MATSIM output_trips table into Memory
 #'
+#' Loads a MATSim CSV output_trips from file or archive,
+#' creating a tibble with columns as in csv file
 #'
-#' @rdname matsimr-deprecated
+#'@rdname matsimr-deprecated
 #'
-#' @docType package
-#' @export  readTripsTable
-#' @aliases readTripsTable
+#' @param input_path character string, path to matsim output directory or http link to the file.
+#' @param n_max integer, maximum number of lines to read within output_trips
+#' @return tibble of trips_output
 #'
+#' @export
 readTripsTable <-function(input_path = ".", n_max = Inf) {
   .Deprecated("read_output_trips")
   return(read_output_trips(input_path,n_max))

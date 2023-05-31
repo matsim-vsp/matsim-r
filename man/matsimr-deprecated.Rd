@@ -67,14 +67,23 @@ appendDistanceCategory(tripsTable)
 \item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored}
 
 \item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
+
+\item{input_path}{character string, path to matsim output directory or http link to the file.}
+
+\item{n_max}{integer, maximum number of lines to read within output_trips}
 }
 \value{
+tibble of trips_output
+
 Bar Chart plot of count of trips among distance travelled
 }
 \description{
 These functions are provided for compatibility with older version of
 the matsimr package.  They may eventually be completely
 removed.
+
+Loads a MATSim CSV output_trips from file or archive,
+creating a tibble with columns as in csv file
 
 Takes Table trips_output (from readTripsTable()),
 to plot bar chart with with values that represent
