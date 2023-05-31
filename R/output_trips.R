@@ -331,6 +331,8 @@ compareAverageTravelWait <- function(tripsTable1,tripsTable2, unite.columns = ch
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 #'
 #'
+#' @rdname matsimr-deprecated
+#'
 #' @param tripsTable tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
@@ -2233,6 +2235,90 @@ plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
 
 }
 
+
+#' Line plot with departure time x-axis and number of trips on y-axis
+#'
+#' Takes Table trips_output (from readTripsTable()),
+#' to make line plot with with values that represent
+#' count of trips for a specific departure time by main_mode
+#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#'
+#'
+#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @return Line Chart plot of trips count by departure mode per mode
+#'
+#' @export
+plot_trips_count_by_deptime_and_mainmode <- function(trips_table,
+                                        unite.columns = character(0),
+                                        united.name = "united") {
+
+
+  # If some columns should be united
+  trips_table <- process_rename_mainmodes(trips_table = trips_table,
+                                          unite.columns = unite.columns,
+                                          united.name = united.name)
+
+
+  #processing
+  tripsTable = tripsTable %>%
+    mutate(dep_time = hour(dep_time)) %>%
+    count(dep_time,main_mode)
+
+  #plotting
+  fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
+  fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group")
+
+  fig
+  return(fig)
+}
+
+#' Plot bar chart diagram of transport mode changes
+#'
+#' Takes two trips_table (from readTripsTable), and collects
+#' changes between transport mode distribution of these tables
+#' to make bar chart diagram with dodging positioning from this data
+#'
+#' Function calculates number of each transport mode used in
+#' first and second table, and draws plot that represent how
+#' distribution of transport mode has changed (f. e. what part of concrete trasport mode changed to another)
+#' Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united.name is "united")
+#' Using parameter show.onlyChanges
+#'
+#' @param tripsTable1 tible of trips_output (from readTripsTable())
+#' @param tripsTable2 tible of trips_output (from readTripsTable())
+#' @param unite.columns vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name if columns were united, you can specify name for the resulting column in plot
+#'
+#' @return plots Bar Chart of transport mode changes with additional files for simwrapper
+#'
+#' @export
+plot_compare_mainmode_barchart <- function(trips_table1, trips_table2,
+                                           unite.columns = character(0),
+                                           united.name = "united") {
+  # If the unite.columns is specified, then
+  #print(dump.output.to)
+  trips_table1 <- process_rename_mainmodes(trips_table = trips_table,
+                                          unite.columns = unite.columns,
+                                          united.name = united.name)
+
+  trips_table2 <- process_rename_mainmodes(trips_table = trips_table,
+                                          unite.columns = unite.columns,
+                                          united.name = united.name)
+
+  trips_table1  = trips_table1 %>% mutate(type = "base")
+  trips_table2  = trips_table2 %>% mutate(type = "policy")
+
+  total_trips = rbind(trips_table1,trips_table2)
+
+  plt = ggplot(total_trips, aes(x =main_mode,fill = factor(type)))+
+    geom_bar(position = position_dodge())+
+    coord_flip()
+  plotly::ggplotly(plt)
+
+  return(plotly::ggplotly(plt))
+}
 
 #####Processing#####
 
