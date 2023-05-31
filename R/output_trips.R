@@ -965,6 +965,7 @@ plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FA
     group_by(base_mode, policy_mode) %>%
     count()
 
+  return(joined)
   # If the unite.commercials flag is set to TRUE, then join all commercials under 1 name commercial
   if (length(unite.columns) != 0) {
     joined$base_mode[grep(paste0(unite.columns, collapse = "|"), joined$base_mode)] <- united.name
@@ -1812,7 +1813,6 @@ compareBasePolicyShapeOutput <- function(baseFolder,policyFolder,shapeFilePath,c
 #'
 appendDistanceCategory <- function(tripsTable){
 
-  distances_array = sort(distances_array)
   modes = levels(factor(tripsTable$main_mode))
 
   #This is a very bad way to do that, but I see no other way to get it done
@@ -2329,6 +2329,99 @@ plot_compare_mainmode_barchart <- function(trips_table1, trips_table2,
 
   return(plotly::ggplotly(plt))
 }
+
+#' Plot alluvial/sankey diagram of transport mode changes
+#'
+#' Takes two trips_table (from readTripsTable), and collects
+#' changes between transport mode distribution of these tables
+#' to make alluvial diagram from this data
+#'
+#' Function calculates number of each transport mode used in
+#' first and second table, and draws plot that represent how
+#' distribution of transport mode has changed (f. e. what part of concrete trasport mode changed to another)
+#' Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united.name is "united")
+#' Using parameter show.onlyChanges
+#'
+#' @param tripsTable1 tible of trips_output (from readTripsTable())
+#' @param tripsTable2 tible of trips_output (from readTripsTable())
+#' @param show.onlyChanges boolean, if it is set to TRUE => sankey diagram only contains changes on axes
+#' @param unite.columns vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name if columns were united, you can specify name for the resulting column in plot
+#'
+#' @return Alluvial diagram that represents changes in transport mode distribution of trip tables
+#'
+#' @export
+plot_compare_mainmode_sankey <- function(trips_table1, trips_table2,
+                                         show.onlyChanges = FALSE,
+                                         unite.columns = character(0),
+                                         united.name = "united") {
+
+  #rename
+  trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
+                                           unite.columns = unite.columns,
+                                           united.name = united.name)
+
+  trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
+                                           unite.columns = unite.columns,
+                                           united.name = united.name)
+  #processing
+  joined <- as_tibble(inner_join(trips_table1, trips_table2 %>%
+                                   select(trip_id, main_mode), by = "trip_id") %>%
+                        dplyr::rename(base_mode = main_mode.x, policy_mode = main_mode.y))
+
+  #if onlychanges, then we should exclude base_mode=policy_mode
+  if (show.onlyChanges == TRUE) {
+    joined <- joined %>%
+      filter(base_mode != policy_mode)
+  }
+
+  joined <- joined %>%
+    group_by(base_mode, policy_mode) %>%
+    count()
+
+  modes = unique(c(joined$base_mode,joined$policy_mode))
+
+  joined$base_mode <- as.numeric(factor(joined$base_mode,levels = modes))
+  joined$policy_mode <- as.numeric(factor(joined$policy_mode,levels = modes))
+
+
+  #plotting
+  mypal <- colorRampPalette( c( "blue", "red" ) )( 7 )
+
+
+  fig <- plot_ly(
+    type = "sankey",
+    orientation = "h",
+
+    node = list(
+      label = c(modes,modes),
+      color = c(mypal,mypal),
+      pad = 15,
+      thickness = 20,
+      line = list(
+        color = "black",
+        width = 0.5
+      )
+    ),
+
+    link = list(
+      source = joined$base_mode-1,
+      target = joined$policy_mode+6,
+      value =  joined$n
+    )
+  )
+  fig <- fig %>% layout(
+    title = "Basic Sankey Diagram",
+    font = list(
+      size = 10
+    )
+  )
+
+  fig
+  return(fig)
+}
+
+
 
 #####Processing#####
 
