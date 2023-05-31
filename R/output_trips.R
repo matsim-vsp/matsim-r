@@ -221,6 +221,7 @@ plotModalSplitBarChart <- function(tripsTable,
 #' creating a tibble with columns as in csv file
 #'
 #'@rdname matsimr-deprecated
+#' @name readTripsTable
 #'
 #' @param input_path character string, path to matsim output directory or http link to the file.
 #' @param n_max integer, maximum number of lines to read within output_trips
@@ -335,6 +336,8 @@ compareAverageTravelWait <- function(tripsTable1,tripsTable2, unite.columns = ch
 #'
 #'
 #' @rdname matsimr-deprecated
+#'
+#' @name plotModalDistanceDistribution
 #'
 #' @param tripsTable tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
