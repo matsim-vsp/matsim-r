@@ -5,9 +5,9 @@
 \alias{matsimr-deprecated}
 \alias{plotModalSplitPieChart}
 \alias{plotModalSplitBarChart}
-\alias{readTripsTable}
 \alias{plotAverageTravelWait}
 \alias{compareAverageTravelWait}
+\alias{plotModalDistanceDistribution}
 \alias{appendDistanceCategory}
 \title{Deprecated function(s) in the matsimr package}
 \usage{
@@ -27,8 +27,6 @@ plotModalSplitBarChart(
   only.files = FALSE
 )
 
-readTripsTable(input_path = ".", n_max = Inf)
-
 plotAverageTravelWait(
   tripsTable,
   unite.columns = character(0),
@@ -46,12 +44,39 @@ compareAverageTravelWait(
   only.files = FALSE
 )
 
+plotModalDistanceDistribution(
+  tripsTable,
+  unite.columns = character(0),
+  united.name = "united",
+  dump.output.to = matsimDumpOutputDirectory,
+  only.files = FALSE
+)
+
 appendDistanceCategory(tripsTable)
+}
+\arguments{
+\item{tripsTable}{tible of trips_output (from readTripsTable())}
+
+\item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
+
+\item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart}
+
+\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored}
+
+\item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
+}
+\value{
+Bar Chart plot of count of trips among distance travelled
 }
 \description{
 These functions are provided for compatibility with older version of
 the matsimr package.  They may eventually be completely
 removed.
+
+Takes Table trips_output (from readTripsTable()),
+to plot bar chart with with values that represent
+number of trips ~ distance travelled
+Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 }
 \section{Details}{
 

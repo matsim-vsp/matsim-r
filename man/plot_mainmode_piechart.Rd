@@ -17,10 +17,6 @@ plot_mainmode_piechart(
 \item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
 
 \item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart}
-
-\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored}
-
-\item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
 }
 \value{
 Pie Chart plot of transport mode distribution, values given in percents
