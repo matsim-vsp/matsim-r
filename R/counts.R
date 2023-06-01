@@ -8,14 +8,14 @@
 #'
 #'@title Load a MATSim Counts file into memory
 #'
-#'@description Loads a MATSim Counts XML-File as tibble into memory
-#'
+#'@description Loads a MATSim Counts XML-File as tibble into memory#'
 #'
 #'@param file File to load. Must be an .xml file
 #'
-#'@return tibble containing with MATSim Link id as "loc_id" as key
+#'@return tibble with MATSim link id ("loc_id") as key
 #'
 #'@export
+#'
 readCounts <- function(file){
 
   message = paste("Read counts file from", file)
@@ -51,11 +51,14 @@ readCounts <- function(file){
   result
 }
 
-#' Load linkstats as tibble into memory
+# XXXX - why tsv file when it's supposed to be comma separated? is this a standard MATSim output?
+# XXXX - what are time bins? qsim mode?
+
+#' Load a MATSim linkstats file into memory
 #'
-#' Reads Linkstats as .tsv created from LinkStats.class
-#' as dataframe into memory.
-#' Counts can be provided in any time bins.
+#' Loads a linkstats tsv file created from the LinkStats class
+#' as a dataframe into memory.
+#' Counts can be provided in any time bin.
 #' Counts can be provided for any qsim mode. The argument networkModes is used to
 #' select and filter the columns.
 #'
@@ -77,7 +80,7 @@ readLinkStats <- function(runId, file, sampleSize = 0.25){
     return(NA)
   }
 
-  message <- paste("Read in link stats from run", runId, ". Loading data from", file )
+  message <- paste("Read link stats from run", runId, ". Loading data from", file )
   print(message)
 
   linkstats <- readr::read_csv(file = file)
@@ -107,30 +110,36 @@ readLinkStats <- function(runId, file, sampleSize = 0.25){
 }
 
 
-#' Load Counts, a limited number of Linkstats and Network links as joined tibble into memory
+#XXXX why is linkstats a list? in the other function we create a tibble, no?
+#XXXX can this be done without linkstats or is that a different function?
+#XXXX in error message it says network needs to be a list, in description a vector?
+
+
+#' Join counts and linkstats to the network, creating a tibble into memory
+#' //Load Counts, a limited number of Linkstats and Network links as joined tibble into memory
 #'
-#'Function to join counts, network links and several matsim link stats. Data can be aggregated
-#'and filtered by time or network mode.
+#'Function to join counts, linkstats and network links. Data can be aggregated
+#'and filtered by time or mode.
 #'
 #'
 #'@param counts Tibble with counts data
 #'
 #'@param network Tibble with network nodes and links
 #'
-#'@param linkStats List with link stats tibbles
+#'@param linkStats List with linkstats tibbles
 #'
-#'@param networkModes a vector with network modes, which are needed for analysis
+#'@param networkModes a vector with network modes that will be analyzed, default is "car".
 #'
-#'@param aggr_to Determinates if data should be aggregated to hour values or DTV, can either be "day" or "hour"
+#'@param aggr_to Determines if data should be aggregated into hourly bins or as daily traffic volume, can either be "day" or "hour"
 #'
-#'@param earliest Lower limit to filter link stats by time, default is 0
+#'@param earliest Lower limit to filter link stats by time, default is 0.
 #'
-#'@param latest Upper limit to filter link stats by time, default is 86400 (midnight)
+#'@param latest Upper limit to filter link stats by time, default is 86400 (midnight).
 #'
-#'@return Long-format tibble with MATSim link id as key ("loc_id"), traffic volume from MATSim runs and link type
-#'
+#'@return Long-format tibble with MATSim link id as key ("loc_id"), traffic volumes from MATSim runs and link type
 #'
 #'@export
+
 mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("car"), aggr_to = c("day", "hour"), earliest = 0, latest = 86400){
 
   if(!is.list(linkStats)){
@@ -242,7 +251,7 @@ mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("ca
   join.long
 }
 
-#' Categorize DTV and calculate DTV distribution
+#' Group daily traffic volume (DTV)
 #'
 #' Takes a tibble from mergeCountsAndLinks. DTV is categorized into bins. Finally
 #' data is aggregated to calculate DTV distribution in each link type category,

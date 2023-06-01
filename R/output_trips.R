@@ -44,7 +44,7 @@ plotModalSplitPieChart <- function(tripsTable,
     tripsTable$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable$main_mode)] <- united.name
   }
 
-  # tripsTableCount gives percentage representation out
+  # calculates the mode share and saves it as a tibble
   tripsTableCount <- tripsTable %>%
     count(main_mode) %>%
     mutate(n = n / sum(n) * 100)
@@ -70,6 +70,7 @@ plotModalSplitPieChart <- function(tripsTable,
     ggtitle("Distribution of transport type") +
     theme_void()
   plt
+
   if (file.exists(dump.output.to)) {
     ggsave(paste0(dump.output.to, "/modalSplitPieChart.png"),width = 6,height = 10, plt)
   } else {
