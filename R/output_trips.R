@@ -2129,7 +2129,23 @@ read_output_trips <- function(input_path = ".", n_max = Inf) {
 
 }
 
+#' Load MATSIM config file into Memory
+#'
+#' Loads a MATSim xml config from file or archive,
+#' creating a list with parameters as in xml file
+#'
+#' @param input_path character string, path to matsim output directory or http link to the file.
+#' @param n_max integer, maximum number of lines to read within output_trips
+#' @return tibble of trips_output
+#'
+#' @export
+read_config <- function(input_path = ".", n_max = Inf) {
 
+
+
+  return(trips_output_table)
+
+}
 
 #####Plotting#####
 
@@ -2864,13 +2880,14 @@ getCrsFromConfig <- function(folder) {
 #' @return tibble of origin/destination matrix
 #'
 #' @export
-deriveODMatrix<- function(tripsTable,
+process_get_od_matrix<- function(tripsTable,
                           shapePath,
                           crs,
                           dump.output.to = matsimDumpOutputDirectory,
                           simwrapper = FALSE,
                           colnames = "numeric",
                           outer = FALSE){
+
   defaultW <- getOption("warn")
   options(warn = -1)
 
