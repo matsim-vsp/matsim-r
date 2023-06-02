@@ -52,7 +52,7 @@ readCounts <- function(file){
 }
 
 # XXXX - why tsv file when it's supposed to be comma separated? is this a standard MATSim output?
-# XXXX - what are time bins? qsim mode?
+# XXXX - what are time bins? qsim mode? are they supposed to be parameters? how are they provided?
 
 #' Load a MATSim linkstats file into memory
 #'

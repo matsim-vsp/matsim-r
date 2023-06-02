@@ -1854,7 +1854,7 @@ appendDistanceCategory <- function(tripsTable){
 #' creating a tibble with columns as in csv file
 #'
 #' @param input_path character string, path to matsim output directory or http link to the file.
-#' @param n_max integer, maximum number of lines to read within output_trips
+#' @param n_max optional, integer, maximum number of lines to read, standard value is Inf
 #' @return tibble of trips_output
 #'
 #' @export
@@ -1890,7 +1890,7 @@ read_output_trips <- function(input_path = ".", n_max = Inf) {
                                    )
   )
   # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
-  # doesn't reads coordinates correctly
+  # doesn't read coordinates correctly
   trips_output_table <- trips_output_table %>%
     mutate(
       start_x = as.double(start_x),
@@ -1907,34 +1907,34 @@ read_output_trips <- function(input_path = ".", n_max = Inf) {
 
 #####Plotting#####
 
-#' Plot main_mode distribution as a Pie Chart
+#' Plot the distribution of modes in main_modes as a pie chart
 #'
-#' Takes Table trips_output (from \link{readTripsTable}),
-#' to plot pie chart with with values that represent
-#' percentage of using transport modes from trips
+#' Uses the dataframe trips_output (from \link{readTripsTable}),
+#' to plot a pie chart of the modal split using the column main_mode
 #'
-#' Function automatically detects transport_modes from table
-#' and plots pie chart.
-#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#' Function automatically detects transport_modes from table and plots a pie chart.
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 #'
 #' @param trips_table tibble of trips_output (from \link{readTripsTable})
-#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
-#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
 #'
-#' @return Pie Chart plot of transport mode distribution, values given in percents
+#' @return pie chart plot of transport mode distribution, values given in percent
 #'
 #' @export
 plot_mainmode_piechart <- function(trips_table,
-                                   unite.columns = character(0), united.name = "united",
+                                   unite.modes = character(0), united.name = "united",
                                    dump.output.to = matsimDumpOutputDirectory) {
 
-  # If some columns should be united
+  # renaming/uniting of modes
   trips_table = process_rename_mainmodes(trips_table = trips_table,
-                                         unite.columns = unite.columns,
+                                         unite.modes = unite.modes,
                                          united.name = united.name)
 
   # processing
-  # tripsTableCount gives percentage representation out
+  # calculates the mode share and saves it as a tibble
   trips_table_count<-process_get_mainmode_distribution(trips_table,
                                                        percentage= percentage)
 
@@ -1949,35 +1949,37 @@ plot_mainmode_piechart <- function(trips_table,
 }
 
 
-#' Plot main_mode distribution as a bar Chart
+#' Plot the distribution of modes in main_modes as a bar chart
 #'
-#' Takes Table trips_output (from readTripsTable()),
-#' to plot bar chart with with values that represent
-#' percentage of using transport modes from trips
+#' Takes the dataframe trips_output (from \link{readTripsTable()})
+#' to plot a bar chart of the modal split using the column main_mode.
 #'
-#' Function automatically detects transport_modes from table
-#' and plots pie chart with percentage of distribution.
-#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#' The modal shares are given in percentages.
+#'
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 #'
 #'
-#' @param trips_table tible of trips_output (from readTripsTable())
-#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
-#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param trips_table tibble of trips_output (from \link{readTripsTable()})
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
 #'
 #' @return Bar Chart plot of transport mode distribution, values given in percents
 #'
 #' @export
 plot_mainmode_barchart <- function(trips_table,
-                                   unite.columns = character(0),
+                                   unite.modes = character(0),
                                    united.name = "united",
                                    dump.output.to = matsimDumpOutputDirectory,
                                    percentage = FALSE) {
 
-  # If some columns should be united
+  # renaming/uniting of modes
   trips_table <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
+                                          unite.modes = unite.modes,
                                           united.name = united.name)
   # processing
+  # calculates the mode share and saves it as a tibble
   trips_table_count <- process_get_mainmode_distribution(trips_table,
                                                          percentage = percentage)
 
@@ -1993,30 +1995,31 @@ plot_mainmode_barchart <- function(trips_table,
 
 #' Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
 #'
-#' Takes Table trips_output (from readTripsTable()),
-#' to plot bar chart with with values that represent
-#' time spent on traveling/waiting
-#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#' Takes the data frame trips_output (from \links{readTripsTable()}),
+#' to plot a bar chart of travel and wait times.
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 #'
 #'
-#' @param trips_table tible of trips_output (from readTripsTable())
-#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
-#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param trips_table tibble of trips_output (from \links{readTripsTable()})
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
 #'
 #' @return Bar Chart plot of average time spent on travel/wait
 #'
 #' @export
 plot_travelwaittime_mean_barchart <- function(trips_table,
-                                              unite.columns = character(0),
+                                              unite.modes = character(0),
                                               united.name = "united",
                                               time_format = "minute") {
 
-  # If some columns should be united
+  # renaming/uniting of modes
   trips_table <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
+                                          unite.modes = unite.modes,
                                           united.name = united.name)
 
-  #processing of result table
+  #processing
   avg_time = process_get_travelwaittime_by_mainmode(trips_table,time_format = time_format)
 
   #plotting
@@ -2035,24 +2038,26 @@ plot_travelwaittime_mean_barchart <- function(trips_table,
 
 
 
-#' Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
+#' Bar Chart comparing two runs with main_mode on x-axis and average travel/wait time on y-axis
 #'
-#' Takes Table trips_output (from readTripsTable()),
-#' to plot bar chart with with values that represent
-#' time spent on traveling/waiting
-#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#' Takes two data frames (from \link{readTripsTable()}),
+#' to plot a comparison bar chart of travel and wait times.
+#'
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 #'
 #'
-#' @param tripsTable1 tible of trips_output (from readTripsTable())
-#' @param tripsTable2 tible of trips_output (from readTripsTable())
-#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
-#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param tripsTable1 tibble of trips_output (from readTripsTable())
+#' @param tripsTable2 tibble of trips_output (from readTripsTable())
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
 #'
-#' @return Bar Chart plot of average time spent on travel/wait
+#' @return Bar chart plot comparing average time spent on travel/wait of two runs
 #'
 #' @export
 plot_compare_travelwaittime_by_mainmode <- function(trips_table1,trips_table2,
-                                                    unite.columns = character(0),
+                                                    unite.modes = character(0),
                                                     united.name = "united",
                                                     time_format = "minute") {
 
@@ -2061,13 +2066,13 @@ plot_compare_travelwaittime_by_mainmode <- function(trips_table1,trips_table2,
   # . think about comparing processing functions they can appear in future often
 
 
-  # If some columns should be united
+  # renaming/uniting of modes
   trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
-                                          unite.columns = unite.columns,
+                                          unite.modes = unite.modes,
                                           united.name = united.name)
 
   trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
-                                          unite.columns = unite.columns,
+                                          unite.modes = unite.modes,
                                           united.name = united.name)
 
   #processing
@@ -2100,30 +2105,31 @@ plot_compare_travelwaittime_by_mainmode <- function(trips_table1,trips_table2,
 
 }
 
-#' Bar Chart with distance travelled on x-axis and number of trips on y-axis
+#' Bar Chart with distance traveled on x-axis and number of trips on y-axis
 #'
-#' Takes Table trips_output (from readTripsTable()),
-#' to plot bar chart with with values that represent
-#' number of trips ~ distance travelled
-#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#' Takes the data frame trips_output (from \link{readTripsTable()}) and categorizes the traveled distances into pre-defined bins
+#' to plot a histogram of the traveled distances. (Bins: 1000,2000,5000,10000,20000,50000,100000 (m))
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 #'
 #'
-#' @param trips_table tible of trips_output (from readTripsTable())
-#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
-#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param trips_table tibble of trips_output (from readTripsTable())
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
 #' @return Bar Chart plot of count of trips among distance travelled
 #'
 #' @export
 plot_distcat_by_mainmode_barchart <- function(trips_table,
-                                               unite.columns = character(0),
+                                               unite.modes = character(0),
                                                united.name = "united",
                                                dist_column = "dist_cat",
                                                distances_array = c(1000,2000,5000,10000,20000,50000,100000))  {
 
 
-  # If some columns should be united
+  # renaming/uniting of modes
   trips_table <- process_rename_mainmodes(trips_table = trips_table,
-                           unite.columns = unite.columns,
+                           unite.modes = unite.modes,
                            united.name = united.name)
 
   #processing
@@ -2142,27 +2148,28 @@ plot_distcat_by_mainmode_barchart <- function(trips_table,
 
 }
 
-#' Bar Chart with distance travelled on x-axis and number of trips on y-axis
+#' Bar chart with average distance traveled for each mode on x-axis and number of trips on y-axis
 #'
-#' Takes Table trips_output (from readTripsTable()),
-#' to plot bar chart with with values that represent
-#' average distance traveled ~ main mode used
-#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#' Takes the data frame trips_output (from \link{readTripsTable()}),
+#' to plot a bar chart of the average distance traveled for each main mode,
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 #'
 #'
-#' @param trips_table tible of trips_output (from readTripsTable())
-#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
-#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart#'
+#' @param trips_table tibble of trips_output (from readTripsTable())
+#'@param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
 #' @return Bar Chart plot of distance traveled per mode
 #'
 #' @export
 plot_distance_by_mainmode_barchart <- function(trips_table,
-                                   unite.columns = character(0), united.name = "united") {
+                                   unite.modes = character(0), united.name = "united") {
 
 
-  # If some columns should be united
+  # renaming/uniting of modes
   trips_table <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
+                                          unite.modes = unite.modes,
                                           united.name = united.name)
 
   #processing
@@ -2186,34 +2193,33 @@ plot_distance_by_mainmode_barchart <- function(trips_table,
   return(fig)
 }
 
-#' Bar Chart with distance travelled on x-axis and difference of number of trips on y-axis
+#' Bar chart comparing distance traveled on x-axis and number of trips on y-axis for two different runs
 #'
-#' Takes 2 Tables trips_output (from readTripsTable()),
-#' to plot bar chart with with values that represent
-#' difference of number of trips between tripsTable2 and tripsTable1 ~ distance travelled
-#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#' Takes two data frames (from \link{readTripsTable()}), categorizes the traveled distances into pre-defined bins
+#' and plots the difference in number of trips for each bin. (Bins: 1000,2000,5000,10000,20000,50000,100000 (m))
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 #'
 #'
-#' @param tripsTable1 tible of trips_output (from readTripsTable()), number of trips of this table will be extracted from number of trips of tripsTable1
-#' @param tripsTable2 tible of trips_output (from readTripsTable()), from number of trips of this table number of trips of tripsTable1 will be extracted
-#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
-#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
-#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
-#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
+#' @param tripsTable1 tibble of trips_output (from readTripsTable()), number of trips of this table will be extracted from number of trips of tripsTable1
+#' @param tripsTable2 tibble of trips_output (from readTripsTable()), from number of trips of this table number of trips of tripsTable1 will be extracted
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
 #' @return Bar Chart plot of count of trips among distance travelled
 #'
 #' @export
 plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
-                                                       unite.columns = character(0), united.name = "united",
+                                                       unite.modes = character(0), united.name = "united",
                                                        dist_column = "dist_cat",
                                                        distances_array = c(1000,2000,5000,10000,20000,50000,100000)) {
 
   trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
-                                          unite.columns = unite.columns,
+                                          unite.modes = unite.modes,
                                           united.name = united.name)
 
   trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
-                                           unite.columns = unite.columns,
+                                           unite.modes = unite.modes,
                                            united.name = united.name)
 
   modes = unique(c(unique(trips_table1$main_mode),unique(trips_table2$main_mode)))
@@ -2247,28 +2253,29 @@ plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
 }
 
 
-#' Line plot with departure time x-axis and number of trips on y-axis
+#' Line plot with departure time  on x-axis and number of trips on y-axis
 #'
-#' Takes Table trips_output (from readTripsTable()),
-#' to make line plot with with values that represent
-#' count of trips for a specific departure time by main_mode
-#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#' Takes data frame trips_output (from \link{readTripsTable()}),
+#' to create a line plot of the number of trips for a specific departure time by main_mode
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 #'
 #'
-#' @param tripsTable tible of trips_output (from readTripsTable())
-#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
-#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
-#' @return Line Chart plot of trips count by departure mode per mode
+#' @param tripsTable tibble of trips_output (from readTripsTable())
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
+#' @return Line plot of trips count by departure time per mode
 #'
 #' @export
 plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
-                                        unite.columns = character(0),
+                                        unite.modes = character(0),
                                         united.name = "united") {
 
 
-  # If some columns should be united
+  # renaming/uniting of modes
   trips_table <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
+                                          unite.modes = unite.modes,
                                           united.name = united.name)
 
 
@@ -2285,37 +2292,34 @@ plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
   return(fig)
 }
 
-#' Plot bar chart diagram of transport mode changes
+#' Plot bar chart of changes in modal split
 #'
-#' Takes two trips_table (from readTripsTable), and collects
-#' changes between transport mode distribution of these tables
-#' to make bar chart diagram with dodging positioning from this data
+#' Takes two data frames (from \link{readTripsTable()}), calculates the
+#' changes in mode shares and plots them as a bar chart
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 #'
-#' Function calculates number of each transport mode used in
-#' first and second table, and draws plot that represent how
-#' distribution of transport mode has changed (f. e. what part of concrete trasport mode changed to another)
-#' Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united.name is "united")
-#' Using parameter show.onlyChanges
 #'
-#' @param tripsTable1 tible of trips_output (from readTripsTable())
-#' @param tripsTable2 tible of trips_output (from readTripsTable())
-#' @param unite.columns vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
-#' @param united.name if columns were united, you can specify name for the resulting column in plot
 #'
-#' @return plots Bar Chart of transport mode changes with additional files for simwrapper
+#' @param tripsTable1 tibble of trips_output (from readTripsTable())
+#' @param tripsTable2 tibble of trips_output (from readTripsTable())
+#'@param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
+#'
+#' @return plots bar chart of changes in modal split
 #'
 #' @export
 plot_compare_mainmode_barchart <- function(trips_table1, trips_table2,
-                                           unite.columns = character(0),
+                                           unite.modes = character(0),
                                            united.name = "united") {
-  # If the unite.columns is specified, then
-  #print(dump.output.to)
+  # renaming/uniting of modes
   trips_table1 <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
+                                          unite.modes = unite.modes,
                                           united.name = united.name)
 
   trips_table2 <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
+                                          unite.modes = unite.modes,
                                           united.name = united.name)
 
   trips_table1  = trips_table1 %>% mutate(type = "base")
@@ -2333,37 +2337,33 @@ plot_compare_mainmode_barchart <- function(trips_table1, trips_table2,
 
 #' Plot alluvial/sankey diagram of transport mode changes
 #'
-#' Takes two trips_table (from readTripsTable), and collects
-#' changes between transport mode distribution of these tables
-#' to make alluvial diagram from this data
+#' Takes two data frames (from \link{readTripsTable()}) and compares the mode choice for each agent and summarizes the results, showing the modal shift.
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
+#' The parameter show.onlyChanges allows the visualization of only the mode shift (excluding the trips that do not change mode). Standard value is FALSE.
 #'
-#' Function calculates number of each transport mode used in
-#' first and second table, and draws plot that represent how
-#' distribution of transport mode has changed (f. e. what part of concrete trasport mode changed to another)
-#' Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united.name is "united")
-#' Using parameter show.onlyChanges
+#' @param tripsTable1 tibble of trips_output (from readTripsTable())
+#' @param tripsTable2 tibble of trips_output (from readTripsTable())
+#' @param show.onlyChanges boolean, if it is set to TRUE the sankey diagram only shows the mode shift
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
 #'
-#' @param tripsTable1 tible of trips_output (from readTripsTable())
-#' @param tripsTable2 tible of trips_output (from readTripsTable())
-#' @param show.onlyChanges boolean, if it is set to TRUE => sankey diagram only contains changes on axes
-#' @param unite.columns vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
-#' @param united.name if columns were united, you can specify name for the resulting column in plot
-#'
-#' @return Alluvial diagram that represents changes in transport mode distribution of trip tables
+#' @return Alluvial diagram that represents changes in transport mode distribution
 #'
 #' @export
 plot_compare_mainmode_sankey <- function(trips_table1, trips_table2,
                                          show.onlyChanges = FALSE,
-                                         unite.columns = character(0),
+                                         unite.modes = character(0),
                                          united.name = "united") {
 
-  #rename
+  # renaming/uniting of modes
   trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
-                                           unite.columns = unite.columns,
+                                           unite.modes = unite.modes,
                                            united.name = united.name)
 
   trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
-                                           unite.columns = unite.columns,
+                                           unite.modes = unite.modes,
                                            united.name = united.name)
   #processing
   joined <- as_tibble(inner_join(trips_table1, trips_table2 %>%
@@ -2427,10 +2427,10 @@ plot_compare_mainmode_sankey <- function(trips_table1, trips_table2,
 #####Processing#####
 
 process_rename_mainmodes<-function(trips_table,
-                                   unite.columns = character(0), united.name = "united"){
+                                   unite.modes = character(0), united.name = "united"){
 
-  if (length(unite.columns) != 0) {
-    trips_table$main_mode[grep(paste0(unite.columns, collapse = "|")
+  if (length(unite.modes) != 0) {
+    trips_table$main_mode[grep(paste0(unite.modes, collapse = "|")
                                , trips_table$main_mode)] <- united.name
   }
   return(trips_table)
