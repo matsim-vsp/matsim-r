@@ -13,6 +13,16 @@ deriveODMatrix(
   colnames = "numeric",
   outer = FALSE
 )
+
+deriveODMatrix(
+  tripsTable,
+  shapePath,
+  crs,
+  dump.output.to = matsimDumpOutputDirectory,
+  simwrapper = FALSE,
+  colnames = "numeric",
+  outer = FALSE
+)
 }
 \arguments{
 \item{tripsTable}{table of output trips(from readTripsTable) or path to trips_output file}
@@ -31,7 +41,11 @@ deriveODMatrix(
 }
 \value{
 tibble of origin/destination matrix
+
+tibble of origin/destination matrix
 }
 \description{
+Creates an instance of ODMatrix(origin/destination) in conventional form or for the simwrapper
+
 Creates an instance of ODMatrix(origin/destination) in conventional form or for the simwrapper
 }
