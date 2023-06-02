@@ -2071,6 +2071,46 @@ deriveODMatrix<- function(tripsTable,
   return(result_tibble)
 }
 
+
+#' Reads an coordinate referenec system of MATSim output directory
+#' from output_config.xml
+#'
+#' @param folder specifies path to find config
+#'
+#'
+#' @return code of coordinate reference system
+#'
+#' @export
+getCrsFromConfig <- function(folder) {
+
+  if (grepl("output_config.xml$", folder) == TRUE)
+  {
+    config <- read_xml(folder)
+
+    param_nodes = xml_find_all(config,"//param")
+
+    coord_node = param_nodes[xml_attr(param_nodes,"name") == "coordinateSystem"]
+
+    coord_system = xml_attr(coord_node,"value")
+    return(coord_system)
+  }
+
+  files <- list.files(folder, full.names = TRUE)
+  # Read from global/local directory
+  # output_config.xml is contained as output_trips.csv.gz
+  if (length(grep("output_config.xml$", files)) != 0) {
+    config <- read_xml(files[grep("output_config.xml$", files)])
+
+    param_nodes = xml_find_all(config,"//param")
+
+    coord_node = param_nodes[xml_attr(param_nodes,"name") == "coordinateSystem"]
+
+    coord_system = xml_attr(coord_node,"value")
+    return(coord_system)
+  }
+  return(NA)
+}
+
 #####Reading#####
 
 
@@ -2129,23 +2169,7 @@ read_output_trips <- function(input_path = ".", n_max = Inf) {
 
 }
 
-#' Load MATSIM config file into Memory
-#'
-#' Loads a MATSim xml config from file or archive,
-#' creating a list with parameters as in xml file
-#'
-#' @param input_path character string, path to matsim output directory or http link to the file.
-#' @param n_max integer, maximum number of lines to read within output_trips
-#' @return tibble of trips_output
-#'
-#' @export
-read_config <- function(input_path = ".", n_max = Inf) {
 
-
-
-  return(trips_output_table)
-
-}
 
 #####Plotting#####
 
@@ -2414,8 +2438,8 @@ plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 #'
 #'
-#' @param tripsTable1 tible of trips_output (from readTripsTable()), number of trips of this table will be extracted from number of trips of tripsTable1
-#' @param tripsTable2 tible of trips_output (from readTripsTable()), from number of trips of this table number of trips of tripsTable1 will be extracted
+#' @param trips_table1 tible of trips_output (from readTripsTable()), number of trips of this table will be extracted from number of trips of tripsTable1
+#' @param trips_table2 tible of trips_output (from readTripsTable()), from number of trips of this table number of trips of tripsTable1 will be extracted
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
@@ -2442,7 +2466,8 @@ plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
   distribution2 <- process_append_distcat(trips_table2,distances_array = distances_array)
 
 
-  #Get category count difference???
+  #Get category count difference
+
   table_with_сounts1 = distribution1 %>% count(main_mode,dist_cat)
   table_with_сounts2 = distribution2 %>% count(main_mode,dist_cat)
 
@@ -2823,15 +2848,15 @@ process_filter_by_shape <- function(trips_table,
 #' Reads an coordinate referenec system of MATSim output directory
 #' from output_config.xml
 #'
-#' @param folder specifies path to find config
+#' @param config_path specifies path to find config
 #'
 #'
 #' @return code of coordinate reference system
 #'
 #' @export
-getCrsFromConfig <- function(folder) {
+process_get_crs_from_config <- function(config_path) {
 
-  if (grepl("output_config.xml$", folder) == TRUE)
+  if (grepl("output_config.xml$", config_path) == TRUE)
   {
     config <- read_xml(folder)
 
@@ -2843,7 +2868,7 @@ getCrsFromConfig <- function(folder) {
     return(coord_system)
   }
 
-  files <- list.files(folder, full.names = TRUE)
+  files <- list.files(config_path, full.names = TRUE)
   # Read from global/local directory
   # output_config.xml is contained as output_trips.csv.gz
   if (length(grep("output_config.xml$", files)) != 0) {
