@@ -7,7 +7,8 @@
 plot_distance_by_mainmode_barchart(
   trips_table,
   unite.columns = character(0),
-  united.name = "united"
+  united.name = "united",
+  euclidean = FALSE
 )
 }
 \arguments{
