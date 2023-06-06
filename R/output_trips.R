@@ -217,14 +217,15 @@ plotModalSplitBarChart <- function(tripsTable,
 
 #' **Deprecated. (see matsimr-deprecated)** Load MATSIM output_trips table into Memory
 #'
-#' Loads a MATSim CSV output_trips from file or archive,
+#' **readTripsTable** - Loads a MATSim CSV output_trips from file or archive,
 #' creating a tibble with columns as in csv file
 #'
+#' @rdname matsimr-deprecated
 #' @name readTripsTable
 #'
 #' @param input_path character string, path to matsim output directory or http link to the file.
 #' @param n_max integer, maximum number of lines to read within output_trips
-#' @return tibble of trips_output
+#' @return **readTripsTable** - tibble of trips_output
 #'
 #' @export
 readTripsTable <-function(input_path = ".", n_max = Inf) {
@@ -235,8 +236,18 @@ readTripsTable <-function(input_path = ".", n_max = Inf) {
 #' Deprecated function(s) in the matsimr package
 #'
 #'
+#' **plotAverageTravelWait** - Takes Table trips_output (from readTripsTable()),
+#' to plot bar chart with with values that represent
+#' time spent on traveling/waiting
+#' Using parameters unite.columns, specific columns could be given,
+#' to unite them in 1 mode with the name united.name(by default 'united')
+#'
+#'
+#'
 #' @rdname matsimr-deprecated
 #'
+#'
+#' @return **plotAverageTravelWait** - Bar Chart plot of average time spent on travel/wait
 #' @docType package
 #' @export  plotAverageTravelWait
 #' @aliases plotAverageTravelWait

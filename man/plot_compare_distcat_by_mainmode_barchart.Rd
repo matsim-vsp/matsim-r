@@ -14,13 +14,13 @@ plot_compare_distcat_by_mainmode_barchart(
 )
 }
 \arguments{
+\item{trips_table1}{tible of trips_output (from readTripsTable()), number of trips of this table will be extracted from number of trips of tripsTable1}
+
+\item{trips_table2}{tible of trips_output (from readTripsTable()), from number of trips of this table number of trips of tripsTable1 will be extracted}
+
 \item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
 
 \item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart}
-
-\item{tripsTable1}{tible of trips_output (from readTripsTable()), number of trips of this table will be extracted from number of trips of tripsTable1}
-
-\item{tripsTable2}{tible of trips_output (from readTripsTable()), from number of trips of this table number of trips of tripsTable1 will be extracted}
 
 \item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored}
 

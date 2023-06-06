@@ -5,6 +5,7 @@
 \alias{matsimr-deprecated}
 \alias{plotModalSplitPieChart}
 \alias{plotModalSplitBarChart}
+\alias{readTripsTable}
 \alias{plotAverageTravelWait}
 \alias{compareAverageTravelWait}
 \alias{plotModalDistanceDistribution}
@@ -26,6 +27,8 @@ plotModalSplitBarChart(
   dump.output.to = matsimDumpOutputDirectory,
   only.files = FALSE
 )
+
+readTripsTable(input_path = ".", n_max = Inf)
 
 plotAverageTravelWait(
   tripsTable,
@@ -64,14 +67,31 @@ appendDistanceCategory(tripsTable)
 \item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored}
 
 \item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
+
+\item{input_path}{character string, path to matsim output directory or http link to the file.}
+
+\item{n_max}{integer, maximum number of lines to read within output_trips}
 }
 \value{
+**readTripsTable** - tibble of trips_output
+
+**plotAverageTravelWait** - Bar Chart plot of average time spent on travel/wait
+
 Bar Chart plot of count of trips among distance travelled
 }
 \description{
 These functions are provided for compatibility with older version of
 the matsimr package.  They may eventually be completely
 removed.
+
+**readTripsTable** - Loads a MATSim CSV output_trips from file or archive,
+creating a tibble with columns as in csv file
+
+**plotAverageTravelWait** - Takes Table trips_output (from readTripsTable()),
+to plot bar chart with with values that represent
+time spent on traveling/waiting
+Using parameters unite.columns, specific columns could be given,
+to unite them in 1 mode with the name united.name(by default 'united')
 
 Takes Table trips_output (from readTripsTable()),
 to plot bar chart with with values that represent
