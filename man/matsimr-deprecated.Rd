@@ -73,27 +73,27 @@ appendDistanceCategory(tripsTable)
 \item{n_max}{integer, maximum number of lines to read within output_trips}
 }
 \value{
-**readTripsTable** - tibble of trips_output
+\strong{readTripsTable} - tibble of trips_output
 
-**plotAverageTravelWait** - Bar Chart plot of average time spent on travel/wait
+\strong{plotAverageTravelWait} - Bar Chart plot of average time spent on travel/wait
 
-**plotModalDistanceDistribution** Bar Chart plot of count of trips among distance travelled
+\strong{plotModalDistanceDistribution} Bar Chart plot of count of trips among distance travelled
 }
 \description{
 These functions are provided for compatibility with older version of
 the matsimr package.  They may eventually be completely
 removed.
 
-**readTripsTable** - Loads a MATSim CSV output_trips from file or archive,
+\strong{readTripsTable} - Loads a MATSim CSV output_trips from file or archive,
 creating a tibble with columns as in csv file
 
-**plotAverageTravelWait** - Takes Table trips_output (from readTripsTable()),
+\strong{plotAverageTravelWait} - Takes Table trips_output (from readTripsTable()),
 to plot bar chart with with values that represent
 time spent on traveling/waiting
 Using parameters unite.columns, specific columns could be given,
 to unite them in 1 mode with the name united.name(by default 'united')
 
-**plotModalDistanceDistribution** - Takes Table trips_output (from readTripsTable()),
+\strong{plotModalDistanceDistribution} - Takes Table trips_output (from readTripsTable()),
 to plot bar chart with with values that represent
 number of trips ~ distance travelled
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')

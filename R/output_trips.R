@@ -217,7 +217,7 @@ plotModalSplitBarChart <- function(tripsTable,
 
 #' **Deprecated. (see matsimr-deprecated)** Load MATSIM output_trips table into Memory
 #'
-#' **readTripsTable** - Loads a MATSim CSV output_trips from file or archive,
+#' \strong{readTripsTable} - Loads a MATSim CSV output_trips from file or archive,
 #' creating a tibble with columns as in csv file
 #'
 #' @rdname matsimr-deprecated
@@ -225,7 +225,7 @@ plotModalSplitBarChart <- function(tripsTable,
 #'
 #' @param input_path character string, path to matsim output directory or http link to the file.
 #' @param n_max integer, maximum number of lines to read within output_trips
-#' @return **readTripsTable** - tibble of trips_output
+#' @return \strong{readTripsTable} - tibble of trips_output
 #'
 #' @export
 readTripsTable <-function(input_path = ".", n_max = Inf) {
@@ -236,7 +236,7 @@ readTripsTable <-function(input_path = ".", n_max = Inf) {
 #' Deprecated function(s) in the matsimr package
 #'
 #'
-#' **plotAverageTravelWait** - Takes Table trips_output (from readTripsTable()),
+#' \strong{plotAverageTravelWait} - Takes Table trips_output (from readTripsTable()),
 #' to plot bar chart with with values that represent
 #' time spent on traveling/waiting
 #' Using parameters unite.columns, specific columns could be given,
@@ -247,7 +247,7 @@ readTripsTable <-function(input_path = ".", n_max = Inf) {
 #' @rdname matsimr-deprecated
 #'
 #'
-#' @return **plotAverageTravelWait** - Bar Chart plot of average time spent on travel/wait
+#' @return \strong{plotAverageTravelWait} - Bar Chart plot of average time spent on travel/wait
 #' @docType package
 #' @export  plotAverageTravelWait
 #' @aliases plotAverageTravelWait
@@ -341,7 +341,7 @@ compareAverageTravelWait <- function(tripsTable1,tripsTable2, unite.columns = ch
 
 #' Bar Chart with distance travelled on x-axis and number of trips on y-axis
 #'
-#' **plotModalDistanceDistribution** - Takes Table trips_output (from readTripsTable()),
+#' \strong{plotModalDistanceDistribution} - Takes Table trips_output (from readTripsTable()),
 #' to plot bar chart with with values that represent
 #' number of trips ~ distance travelled
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
@@ -356,7 +356,7 @@ compareAverageTravelWait <- function(tripsTable1,tripsTable2, unite.columns = ch
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
-#' @return **plotModalDistanceDistribution** Bar Chart plot of count of trips among distance travelled
+#' @return \strong{plotModalDistanceDistribution} Bar Chart plot of count of trips among distance travelled
 #'
 #' @export
 plotModalDistanceDistribution <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
