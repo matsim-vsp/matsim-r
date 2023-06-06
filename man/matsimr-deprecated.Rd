@@ -77,7 +77,7 @@ appendDistanceCategory(tripsTable)
 
 **plotAverageTravelWait** - Bar Chart plot of average time spent on travel/wait
 
-Bar Chart plot of count of trips among distance travelled
+**plotModalDistanceDistribution** Bar Chart plot of count of trips among distance travelled
 }
 \description{
 These functions are provided for compatibility with older version of
@@ -93,7 +93,7 @@ time spent on traveling/waiting
 Using parameters unite.columns, specific columns could be given,
 to unite them in 1 mode with the name united.name(by default 'united')
 
-Takes Table trips_output (from readTripsTable()),
+**plotModalDistanceDistribution** - Takes Table trips_output (from readTripsTable()),
 to plot bar chart with with values that represent
 number of trips ~ distance travelled
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
