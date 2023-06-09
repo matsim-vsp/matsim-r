@@ -218,12 +218,12 @@ plotModalSplitBarChart <- function(tripsTable,
 
 #' **Deprecated. (see matsimr-deprecated)** Load MATSIM output_trips table into Memory
 #'
-#' Loads a MATSim CSV output_trips from file or archive,
-#' creating a tibble with columns as in csv file
+#' Loads a MATSim output_trips file from file or archive path,
+#' creating a tibble
 #'
 #' @name readTripsTable
 #'
-#' @param input_path character string, path to matsim output directory or http link to the file.
+#' @param input_path character string, path to MATSim output directory or http link to the file.
 #' @param n_max integer, maximum number of lines to read within output_trips
 #' @return tibble of trips_output
 #'
@@ -2073,7 +2073,7 @@ deriveODMatrix<- function(tripsTable,
 }
 
 
-#' Reads an coordinate referenec system of MATSim output directory
+#' Reads an coordinate reference system of MATSim output directory
 #' from output_config.xml
 #'
 #' @param folder specifies path to find config
@@ -2115,12 +2115,12 @@ getCrsFromConfig <- function(folder) {
 #####Reading#####
 
 
-#' Load MATSIM output_trips table into Memory
+#' Load MATSIM output_trips table into memory
 #'
 #' Loads a MATSim CSV output_trips from file or archive,
 #' creating a tibble with columns as in csv file
 #'
-#' @param input_path character string, path to matsim output directory or http link to the file.
+#' @param input_path character string, path to the MATSim output directory or http link to the file.
 #' @param n_max optional, integer, maximum number of lines to read, standard value is Inf
 #' @return tibble of trips_output
 #'
@@ -2174,12 +2174,12 @@ read_output_trips <- function(input_path = ".", n_max = Inf) {
 
 #####Plotting#####
 
-#' Plot the distribution of modes in main_modes as a pie chart
+#' Plot the distribution of modes as a pie chart
 #'
 #' Uses the dataframe trips_output (from \link{readTripsTable}),
 #' to plot a pie chart of the modal split using the column main_mode
 #'
-#' Function automatically detects transport_modes from table and plots a pie chart.
+#' The function automatically detects the modes plots a pie chart.
 #' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 #'
 #' @param trips_table tibble of trips_output (from \link{readTripsTable})
@@ -2216,9 +2216,9 @@ plot_mainmode_piechart <- function(trips_table,
 }
 
 
-#' Plot the distribution of modes in main_modes as a bar chart
+#' Plot the distribution of modes as a bar chart
 #'
-#' Takes the dataframe trips_output (from \link{readTripsTable()})
+#' Takes the data frame trips_output (from \link{readTripsTable()})
 #' to plot a bar chart of the modal split using the column main_mode.
 #'
 #' The modal shares are given in percentages.
@@ -2260,7 +2260,7 @@ plot_mainmode_barchart <- function(trips_table,
   return(fig)
 }
 
-#' Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
+#' Plot travel and wait time for each mode as a bar chart
 #'
 #' Takes the data frame trips_output (from \links{readTripsTable()}),
 #' to plot a bar chart of travel and wait times.
@@ -2524,7 +2524,6 @@ plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
 }
 
 
-<<<<<<< HEAD
 #' Line plot with departure time  on x-axis and number of trips on y-axis
 #'
 #' Takes data frame trips_output (from \link{readTripsTable()}),
@@ -2555,8 +2554,7 @@ plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
   tripsTable = tripsTable %>%
     mutate(dep_time = hour(dep_time)) %>%
     count(dep_time,main_mode)
-=======
->>>>>>> b4c50a65dbd3a28e5601aacf36d1d3cc02fea649
+
 
 
 #' Plot bar chart of changes in modal split
@@ -2691,22 +2689,23 @@ plot_compare_mainmode_sankey <- function(trips_table1, trips_table2,
 
 #' Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
 #'
-#' Takes Table trips_output (from readTripsTable()),
-#' to plot bar chart with with values that represent
-#' time spent on traveling/waiting
-#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#' Takes the data frame trips_output (from \link{readTripsTable()}),
+#' to plot a bar chart of the traveling/waiting time
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 #'
 #'
-#' @param tripsTable1 tible of trips_output (from readTripsTable())
-#' @param tripsTable2 tible of trips_output (from readTripsTable())
-#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
-#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param tripsTable1 tibble of trips_output (from readTripsTable())
+#' @param tripsTable2 tibble of trips_output (from readTripsTable())
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
 #'
 #' @return Bar Chart plot of average time spent on travel/wait
 #'
 #' @export
 plot_compare_travelwaittime_by_mainmode_barchart <- function(trips_table1,trips_table2,
-                                                    unite.columns = character(0),
+                                                    unite.modes = character(0),
                                                     united.name = "united",
                                                     time_format = "minute") {
 
@@ -2717,11 +2716,11 @@ plot_compare_travelwaittime_by_mainmode_barchart <- function(trips_table1,trips_
 
   # If some columns should be united
   trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
-                                           unite.columns = unite.columns,
+                                           unite.modes = unite.modes,
                                            united.name = united.name)
 
   trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
-                                           unite.columns = unite.columns,
+                                           unite.modes = unite.modes,
                                            united.name = united.name)
 
   #processing
@@ -2835,12 +2834,13 @@ process_append_distcat <- function(trips_table,distances_array = c(1000,2000,500
 }
 
 ######Spatial######
-#' Filtering of trips_table(from readTripsTable) depending on how they located in given shape
+#' XXXX trips_table but shapeTable - fix naming
+#' XXXX finish when code revision is done
+#' Filters trips_table(from ,\link{readTripsTable}) depending by location using a shapefile
 #'
-#' Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
-#' Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
-#' transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
-#' and filters the trips from table depending on *.inshape flags:
+#' Uses trips_table and an sf object (can be created using the function st_read()),
+#' transforms both objects to match a mutual coordinate system (crs)
+#' and filters the trips from trips_table depending on *.inshape flags:
 #' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
 #' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
 #' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
@@ -2850,7 +2850,7 @@ process_append_distcat <- function(trips_table,distances_array = c(1000,2000,500
 #'
 #' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
 #'
-#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#' @param crs numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file
 #'
 #' @param start.inshape bool, defines trips to conclude (see Description)
 #'
@@ -2903,10 +2903,10 @@ process_filter_by_shape <- function(trips_table,
   return(trips_table[cont_union, ])
 }
 
-#' Reads an coordinate referenec system of MATSim output directory
-#' from output_config.xml
+#' Reads the coordinate reference system from an MATSim output directory
+#' (output_config.xml)
 #'
-#' @param config_path specifies path to find config
+#' @param config_path specifies path to configuration file
 #'
 #'
 #' @return code of coordinate reference system
@@ -2942,23 +2942,23 @@ process_get_crs_from_config <- function(config_path) {
   return(NA)
 }
 
-#' Creates an instance of ODMatrix(origin/destination) in conventional form or for the simwrapper
+#' Creates an origin/destination matrix either in conventional form (row names = origin, column names = destination)
+#' or for simwrapper (origin and destination as columns)
 #'
 #'
+#' @param tripsTable tibble of trips_output (from \link{readTripsTable})
 #'
-#' @param tripsTable table of output trips(from readTripsTable) or path to trips_output file
+#' @param shapePath string, full path to the shapefile (.shp) (shape files are made up of several files with the same name and the folder also needs to include a .dbf file)
 #'
-#' @param shapePath full path to shapefile (if simwrapper TRUE, folder with shapeFile should contain also .dbf with the same name)
+#' @param crs numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file
 #'
-#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#' @param dump.output.to string, path to a folder to save the .csv file
 #'
-#' @param dump.output.to path to a folder to save csv file of ODMatrix
+#' @param colnames string, column names can be specified (i.e. to fit the shape file), if not they are numbered
 #'
-#' @param colnames if the specific shapefile contains known columns, they could be specified as name for columns OD. If not given then they get numeric values
+#' @param simwrapper boolean, creates output in the format used for simwrapper if the path for the shapefile is specified
 #'
-#' @param simwrapper create output in a simwrapper form if set to path of the shapefile
-#'
-#' @param outer logical that represent if the table should contain outside flow of the shape, it isn't
+#' @param outer boolean, determines if flows outside of the shapefile are used, standard value is FALSE
 #'
 #' @return tibble of origin/destination matrix
 #'
@@ -3088,28 +3088,24 @@ process_get_od_matrix<- function(tripsTable,
 
 
 
-#' Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)
+#' Transforms the data frame trips_output (from \links{readTripsTable}) from tibble to sf (table with geometry features)
 #'
-#' Takes trips_table (from readTripsTable) and transforms trips_table to sf object using start_x, end_x, start_y, end_y as a geometry features
-#' deletes from resulting data.frame start_x, end_x, start_y, end_y.
-#' And adds wkt column, if geometry.type = st_mulitpoint(), or geometry.type = st_linestring()
-#' Or adds start_wkt and end_wkt, if geometry.type = st_point()
-#' Added column/columns projected to given CRS (coordinate reference system),
-#' that can be taken from network file of MATSimOutputDirectory
+#' Transforms the data frame trips_output (from \links{readTripsTable}) into an sf object using start_x, end_x, start_y, end_y as geometry features.
+#' If geometry.type = st_multipoint() or geometry.type = st_linestring() it adds one geometry column (wkt format),
+#' if geometry.type = st_point() it adds the geometry columns start_wkt and end_wkt.
+#' Added column/columns are projected to given CRS (coordinate reference system).
+#' The columns start_x, end_x, start_y, end_y are deleted from the resulting data frame.
 #'
-#' Function also sets attribute geometry.type to resulting table to character value of "POINT","MULTIPOINT","LINESTRING"
-#' to get which type of table was generated, if it is needed
+#' @param table tibble trips_output (from readTripsTable())
 #'
-#' @param table tibble of trips_output (from readTripsTable())
+#' @param crs numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file
 #'
-#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#' @param geometry.type type of sf transformation, default is st_multipoint(), geometry.type can be:
+#' !!!st_point()- resulting table contains two geometry columns: start_wkt and end_wkt, representing start and end points as POINTS!!!  or
+#' !!!st_multipoint()- resulting table contains one geometry column, representing start and end points as MULTIPOINT!!! or
+#' !!!st_linestring() - resulting table contains one geometry column, representing  the line between start and end points as LINESTRING!!!
 #'
-#' @param geometry.type function of sf transformation, geometry.type can be (by default is st_multipoint())
-#' !!!st_point()-resulting table contains 2 geometries start_wkt and end_wkt, representing start and end POINTs, and have type POINT!!!  or
-#' !!!st_multipoint()-resulting table contains 1 geometry wkt, representing start and end POINTS as MULTIPOINT!!! or
-#' !!!st_linestring() - resulting table contains 1 geometry wkt, representing line between start and end points as LINESTRING!!!
-#'
-#' @return sf object (data.frame with geometries depending to geometry.type)
+#' @return sf object (data frame with geometries depending on geometry.type)
 #'
 #' @export
 transformToSf <- function(table,
