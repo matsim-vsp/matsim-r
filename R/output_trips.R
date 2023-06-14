@@ -2552,6 +2552,34 @@ plot_spatialtype_by_shape_piechart <- function(trips_table, shape_table, crs) {
 
 }
 
+#' Bar Chart with tripType on x-axis and travelled distance on y-axis
+#'
+#' Takes Table trips_output (from readTripsTable()),
+#' to plot bar chart with with values that represent
+#' travelled distance of each tripType related to the shapeTable
+#'
+#'
+#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#'
+#' @return Bar Chart plot of distance traveled by spatial type
+#'
+#' @export
+plot_distance_by_spatialcategory <- function(trips_table, shape_table, crs, euclidian = FALSE) {
+
+  #processing
+
+  trips_table<- process_append_spatialcat(trips_table,shape_table, crs = crs)
+
+  #For plotting
+  travelled = trips_table %>% group_by(spatial_category) %>% summarize(travelled = sum(traveled_distance)/1000)
+  fig = plot_ly(data = travelled,x = ~spatial_category,y = ~travelled,type = 'bar',name = "Distance travelled by trip Type")
+  fig = fig %>% layout(yaxis = list(title = "Distance travelled (in kms)"),barmode = "group")
+  fig
+  return(fig)
+}
+
 ###### Compare ######
 
 #' Bar Chart with distance travelled on x-axis and difference of number of trips on y-axis
@@ -2823,7 +2851,7 @@ plot_compare_travelwaittime_by_mainmode_barchart <- function(trips_table1,trips_
 ###### Mapping ######
 
 #####Processing#####
-
+#' @export
 process_rename_mainmodes<-function(trips_table,
                                    unite.columns = character(0), united.name = "united"){
 
@@ -2833,7 +2861,7 @@ process_rename_mainmodes<-function(trips_table,
   }
   return(trips_table)
 }
-
+#' @export
 process_get_mainmode_distribution<-function(trips_table,percentage = FALSE){
 
   trips_table_count <- trips_table %>%
@@ -2853,7 +2881,7 @@ process_get_travdistance_distribution<-function(trips_table,euclidean = FALSE){
 
   return(trips_table)
 }
-
+#' @export
 process_get_travelwaittime_by_mainmode_barchart<-function(trips_table,
                                              time_format = "minute"){#also could be hours/seconds
 
@@ -2876,7 +2904,7 @@ process_get_travelwaittime_by_mainmode_barchart<-function(trips_table,
 }
 
 
-
+#' @export
 process_append_distcat <- function(trips_table,distances_array = c(1000,2000,5000,10000,20000,50000,100000)){
 
   distances_array = sort(c(distances_array,c(0,Inf)))
@@ -2919,7 +2947,7 @@ process_append_distcat <- function(trips_table,distances_array = c(1000,2000,500
 #'
 #' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
 #'
-#' @param spatial_type character parameter, used to specify which kind of trips should be filtered. Takes as input 4 templates: inside, outside, originating, destinating
+#' @param spatial_type character parameter,categories of spatial information used to specify which kind of trips should be filtered. Takes as input 4 templates: inside, outside, originating, destinating
 #'
 #' @return tibble, with filtered trips depending on shapeTable and special flags (see Description)
 #'
@@ -3008,8 +3036,7 @@ process_filter_by_shape <- function(trips_table,
 #' @export
 process_append_spatialcat <- function(trips_table,
                                     shape_table,
-                                    crs,
-                                    spatial_type = "inside") {
+                                    crs) {
 
   start.inshape <- TRUE
   end.inshape <- TRUE

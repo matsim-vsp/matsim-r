@@ -11,7 +11,7 @@ process_filter_by_shape(trips_table, shape_table, crs, spatial_type = "inside")
 
 \item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
 
-\item{spatial_type}{character parameter, used to specify which kind of trips should be filtered. Takes as input 4 templates: inside, outside, originating, destinating}
+\item{spatial_type}{character parameter,categories of spatial information used to specify which kind of trips should be filtered. Takes as input 4 templates: inside, outside, originating, destinating}
 
 \item{shapeTable}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
 }

@@ -4,12 +4,7 @@
 \alias{process_append_spatialcat}
 \title{Appending spatial category as additional column to output_trips tibble}
 \usage{
-process_append_spatialcat(
-  trips_table,
-  shape_table,
-  crs,
-  spatial_type = "inside"
-)
+process_append_spatialcat(trips_table, shape_table, crs)
 }
 \arguments{
 \item{trips_table}{tibble of trips_output (from readTripsTable())}
