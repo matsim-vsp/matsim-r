@@ -2122,6 +2122,83 @@ getCrsFromConfig <- function(folder) {
   return(NA)
 }
 
+
+#' Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)
+#'
+#' Takes trips_table (from readTripsTable) and transforms trips_table to sf object using start_x, end_x, start_y, end_y as a geometry features
+#' deletes from resulting data.frame start_x, end_x, start_y, end_y.
+#' And adds wkt column, if geometry.type = st_mulitpoint(), or geometry.type = st_linestring()
+#' Or adds start_wkt and end_wkt, if geometry.type = st_point()
+#' Added column/columns projected to given CRS (coordinate reference system),
+#' that can be taken from network file of MATSimOutputDirectory
+#'
+#' Function also sets attribute geometry.type to resulting table to character value of "POINT","MULTIPOINT","LINESTRING"
+#' to get which type of table was generated, if it is needed
+#'
+#' @param table tibble of trips_output (from readTripsTable())
+#'
+#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#'
+#' @param geometry.type function of sf transformation, geometry.type can be (by default is st_multipoint())
+#' !!!st_point()-resulting table contains 2 geometries start_wkt and end_wkt, representing start and end POINTs, and have type POINT!!!  or
+#' !!!st_multipoint()-resulting table contains 1 geometry wkt, representing start and end POINTS as MULTIPOINT!!! or
+#' !!!st_linestring() - resulting table contains 1 geometry wkt, representing line between start and end points as LINESTRING!!!
+#'
+#' @return sf object (data.frame with geometries depending to geometry.type)
+#'
+#' @export
+transformToSf <- function(table,
+                          crs,
+                          geometry.type = st_multipoint()) {
+
+  .Deprecated("process_convert_table_to_sf")
+
+  if (class(geometry.type)[2] == "POINT") {
+    table1 <- table %>%
+      # mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep =""))
+      mutate(start_wkt = paste("POINT(", start_x, " ", start_y, ")", sep = ""))
+    table2 <- table %>%
+      mutate(end_wkt = paste("POINT(", end_x, " ", end_y, ")", sep = ""))
+    attr(table, "geometry.type") <- "POINT"
+
+
+    table1_wkt <- st_as_sf(table1, wkt = "start_wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
+    table2_wkt <- st_as_sf(table2, wkt = "end_wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
+
+
+    result_table <- table1_wkt %>% mutate(end_wkt = table2_wkt$end_wkt)
+    st_geometry(result_table) <- "start_wkt"
+    st_crs(result_table) <- crs
+    st_geometry(result_table) <- "end_wkt"
+    st_crs(result_table) <- crs
+    st_geometry(result_table) <- "start_wkt"
+    return(result_table)
+  } else if (class(geometry.type)[2] == "MULTIPOINT") {
+    table <- table %>%
+      mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep = ""))
+    attr(table, "geometry.type") <- "MULTIPOINT"
+
+
+    result_table <- st_as_sf(table, wkt = "wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
+
+    st_crs(result_table) <- crs
+    return(result_table)
+  } else if (class(geometry.type)[2] == "LINESTRING") {
+    table <- table %>%
+      mutate(wkt = paste("LINESTRING(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep = ""))
+    attr(table, "geometry.type") <- "LINESTRING"
+
+
+    result_table <- st_as_sf(table, wkt = "wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
+
+    st_crs(result_table) <- crs
+    return(result_table)
+  } else {
+    return(NA)
+  }
+}
+
+
 #####Reading#####
 
 
@@ -2788,16 +2865,17 @@ process_append_distcat <- function(trips_table,distances_array = c(1000,2000,500
 }
 
 ######Spatial######
+
 #' Filtering of trips_table(from readTripsTable) depending on how they located in given shape
 #'
 #' Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
 #' Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
 #' transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
 #' and filters the trips from table depending on *.inshape flags:
-#' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
-#' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
-#' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
-#' if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
+#' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips \strong{inside} of the given shape
+#' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which \strong{originating} in the shape
+#' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which \strong{destinating} in the shape
+#' if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which \strong{outside} of the given shape
 #'
 #' @param trips_table tibble of trips_output (from readTripsTable())
 #'
@@ -2805,9 +2883,7 @@ process_append_distcat <- function(trips_table,distances_array = c(1000,2000,500
 #'
 #' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
 #'
-#' @param start.inshape bool, defines trips to conclude (see Description)
-#'
-#' @param end.inshape bool, defines trips to conclude (see Description)
+#' @param spatial_type character parameter, used to specify which kind of trips should be filtered. Takes as input 4 templates: inside, outside, originating, destinating
 #'
 #' @return tibble, with filtered trips depending on shapeTable and special flags (see Description)
 #'
@@ -2815,14 +2891,32 @@ process_append_distcat <- function(trips_table,distances_array = c(1000,2000,500
 process_filter_by_shape <- function(trips_table,
                                     shape_table,
                                     crs,
-                                    start.inshape = TRUE, end.inshape = TRUE) {
+                                    spatial_type = "inside") {
 
+  start.inshape <- TRUE
+  end.inshape <- TRUE
+
+  if(spatial_type == "inside"){
+    start.inshape <- TRUE
+    end.inshape <- TRUE
+  }else if(spatial_type == "outside"){
+    start.inshape <- FALSE
+    end.inshape <- FALSE
+  }else if(spatial_type == "originating"){
+    start.inshape <- TRUE
+    end.inshape <- FALSE
+  }else if(spatial_type == "destinating"){
+    start.inshape <- FALSE
+    end.inshape <- TRUE
+  }else{
+    stop("There are only 4 possible spatial_types: inside, outside, originating, destinating")
+  }
   # shape_table <- st_read(shapeFile)
   if (st_crs(shape_table) == NA) {
     st_crs(shape_table) <- crs
   }
 
-  sf_table <- transformToSf(trips_table, crs = crs, geometry.type = st_point())
+  sf_table <- process_convert_table_to_sf(trips_table, crs = crs, geometry.type = st_point())
   shape_table <- st_transform(shape_table, crs = crs)
   # shape_table isn't table - shape
 
@@ -2855,6 +2949,76 @@ process_filter_by_shape <- function(trips_table,
 
   return(trips_table[cont_union, ])
 }
+
+#' Appending spatial category as additional column to output_trips tibble
+#'
+#' Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
+#' Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
+#' transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
+#' and adds to the output_trips from table spatial category depending on postition related to shape file:
+#' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips \strong{inside} of the given shape
+#' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which \strong{originating} in the shape
+#' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which \strong{destinating} in the shape
+#' if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which \strong{outside} of the given shape
+#'
+#' @param trips_table tibble of trips_output (from readTripsTable())
+#'
+#' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#'
+#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#'
+#' @return tibble, with additional spatial column related to given shape
+#'
+#' @export
+process_append_spatialcat <- function(trips_table,
+                                    shape_table,
+                                    crs,
+                                    spatial_type = "inside") {
+
+  start.inshape <- TRUE
+  end.inshape <- TRUE
+
+  # shape_table <- st_read(shapeFile)
+  if (st_crs(shape_table) == NA) {
+    st_crs(shape_table) <- crs
+  }
+
+  sf_table <- process_convert_table_to_sf(trips_table, crs = crs, geometry.type = st_point())
+  shape_table <- st_transform(shape_table, crs = crs)
+  # shape_table isn't table - shape
+
+  union_shape <- st_union(shape_table) # transforms the crs back to the previous in the file
+  union_shape <- st_transform(union_shape, crs = st_crs(shape_table))
+
+
+  st_geometry(sf_table) <- "start_wkt" # Set start_wkt as an active geometry
+  cont1 <- st_contains(union_shape, sf_table)[[1]] # Indexes of rows where start point is in shapefile
+
+  st_geometry(sf_table) <- "end_wkt" # Set end_wkt as and active geometry
+  cont2 <- st_contains(union_shape, sf_table)[[1]] # Indexes of rows where end point is in shapefile
+
+  # get trips that ended outside of shape
+  cont_end_outside <- setdiff(1:nrow(sf_table), cont2)
+
+  # get trips that started outside of shape
+  cont_start_outside <- setdiff(1:nrow(sf_table), cont1)
+
+  cont_union_inside <- intersect(cont1,cont2)
+  cont_union_outside <- intersect(cont_start_outside,cont_end_outside)
+  cont_union_originating <- intersect(cont1,cont_end_outside)
+  cont_union_destinating <- intersect(cont2, cont_start_outside)
+
+  trips_table$spatial_category = NA
+
+  trips_table[cont_union_inside, ]$spatial_category <- "inside"
+  trips_table[cont_union_outside, ]$spatial_category <- "outside"
+  trips_table[cont_union_originating, ]$spatial_category <- "originating"
+  trips_table[cont_union_destinating, ]$spatial_category <- "destinating"
+
+
+  return(trips_table)
+}
+
 
 #' Reads an coordinate referenec system of MATSim output directory
 #' from output_config.xml
@@ -3065,7 +3229,7 @@ process_get_od_matrix<- function(tripsTable,
 #' @return sf object (data.frame with geometries depending to geometry.type)
 #'
 #' @export
-transformToSf <- function(table,
+process_convert_table_to_sf <- function(table,
                           crs,
                           geometry.type = st_multipoint()) {
   if (class(geometry.type)[2] == "POINT") {
