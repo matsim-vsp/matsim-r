@@ -16,8 +16,7 @@ dashboard_file <- "/dashboard-1-trips.yaml"
 #'
 #' These functions are provided for compatibility with older version of
 #' the matsimr package.  They may eventually be completely
-#' removed.
-#'
+#' removed.\cr
 #' \strong{plotModalSplitPieChart} - Takes Table trips_output (from readTripsTable()),
 #' to plot pie chart with with values that represent
 #' percentage of using transport modes from trips

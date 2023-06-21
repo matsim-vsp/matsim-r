@@ -84,7 +84,10 @@ appendDistanceCategory(tripsTable)
 \description{
 These functions are provided for compatibility with older version of
 the matsimr package.  They may eventually be completely
-removed.
+removed.\cr
+\strong{plotModalSplitPieChart} - Takes Table trips_output (from readTripsTable()),
+to plot pie chart with with values that represent
+percentage of using transport modes from trips
 
 \strong{readTripsTable} - Loads a MATSim CSV output_trips from file or archive,
 creating a tibble with columns as in csv file
@@ -99,11 +102,6 @@ to unite them in 1 mode with the name united.name(by default 'united')
 to plot bar chart with with values that represent
 number of trips ~ distance travelled
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
-}
-\details{
-\strong{plotModalSplitPieChart} - Takes Table trips_output (from readTripsTable()),
-to plot pie chart with with values that represent
-percentage of using transport modes from trips
 }
 \section{Details}{
 
