@@ -73,6 +73,8 @@ appendDistanceCategory(tripsTable)
 \item{n_max}{integer, maximum number of lines to read within output_trips}
 }
 \value{
+\strong{plotModalSplitPieChart} - Pie Chart plot of transport mode distribution, values given in percents
+
 \strong{readTripsTable} - tibble of trips_output
 
 \strong{plotAverageTravelWait} - Bar Chart plot of average time spent on travel/wait
@@ -97,6 +99,11 @@ to unite them in 1 mode with the name united.name(by default 'united')
 to plot bar chart with with values that represent
 number of trips ~ distance travelled
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+}
+\details{
+\strong{plotModalSplitPieChart} - Takes Table trips_output (from readTripsTable()),
+to plot pie chart with with values that represent
+percentage of using transport modes from trips
 }
 \section{Details}{
 

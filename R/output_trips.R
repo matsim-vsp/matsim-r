@@ -18,10 +18,21 @@ dashboard_file <- "/dashboard-1-trips.yaml"
 #' the matsimr package.  They may eventually be completely
 #' removed.
 #'
-#'
+#' \strong{plotModalSplitPieChart} - Takes Table trips_output (from readTripsTable()),
+#' to plot pie chart with with values that represent
+#' percentage of using transport modes from trips
 #'
 #' @rdname matsimr-deprecated
 #' @name matsimr-deprecated
+#'
+#'
+#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
+#'
+#' @return \strong{plotModalSplitPieChart} - Pie Chart plot of transport mode distribution, values given in percents
 #'
 #' @docType package
 #' @export  plotModalSplitPieChart
