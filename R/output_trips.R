@@ -854,7 +854,8 @@ plotArrivalTimesPerTripPurpose <- function(tripsTable, unite.columns = character
 #' @return Line plot with arrival time x-axis and number end activities on y-axis
 #'
 #' @export
-plotDepartureTimesPerTripPurpose <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
+plotDepartureTimesPerTripPurpose <- function(tripsTable, unite.columns = character(0), united.name = "united",
+                                             dump.output.to = matsimDumpOutputDirectory,
                                              only.files = FALSE) {
 
 
@@ -1232,6 +1233,7 @@ plotMapWithFilteredTrips <- function(table, shapeTable, crs, start.inshape = TRU
 #'
 #' @export
 plotMapWithTrips <- function(table, crs, optimized = FALSE) {
+
   table_sf <- transformToSf(table, crs = crs, geometry.type = st_point())
   st_geometry(table_sf) <- "start_wkt"
   table_sf_start <- table_sf %>% select(-end_wkt)
@@ -1340,7 +1342,7 @@ plotMapWithTrips <- function(table, crs, optimized = FALSE) {
       # position it on the topleft
       position = "topleft"
     )
-
+  plt
   return(plt)
 }
 
@@ -2566,14 +2568,14 @@ plot_spatialtype_by_shape_piechart <- function(trips_table, shape_table, crs) {
 #' @return Bar Chart plot of distance traveled by spatial type
 #'
 #' @export
-plot_distance_by_spatialcategory <- function(trips_table, shape_table, crs, euclidian = FALSE) {
+plot_distance_by_spatialcat <- function(trips_table, shape_table, crs, euclidian = FALSE) {
 
   #processing
 
   trips_table<- process_append_spatialcat(trips_table,shape_table, crs = crs)
+  travelled = trips_table %>% group_by(spatial_category) %>% summarize(travelled = sum(traveled_distance)/1000)
 
   #For plotting
-  travelled = trips_table %>% group_by(spatial_category) %>% summarize(travelled = sum(traveled_distance)/1000)
   fig = plot_ly(data = travelled,x = ~spatial_category,y = ~travelled,type = 'bar',name = "Distance travelled by trip Type")
   fig = fig %>% layout(yaxis = list(title = "Distance travelled (in kms)"),barmode = "group")
   fig
@@ -2848,7 +2850,439 @@ plot_compare_travelwaittime_by_mainmode_barchart <- function(trips_table1,trips_
 
 }
 
+#' Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
+#'
+#' Takes Table trips_output (from readTripsTable()),
+#' to plot bar chart with with values that represent
+#' time spent on traveling/waiting
+#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#'
+#'
+#' @param tripsTable1 tible of trips_output (from readTripsTable())
+#' @param tripsTable2 tible of trips_output (from readTripsTable())
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#'
+#' @return Bar Chart plot of average time spent on travel/wait
+#'
+#' @export
+plot_compare_count_by_spatialcat <- function(trips_table1,trips_table2, shape_table ,crs,dump.output.to = matsimDumpOutputDirectory) {
+
+  spatial_table1 <- process_append_spatialcat(trips_table = trips_table1,
+                                              shape_table = shape_table,
+                                              crs = crs)
+
+  spatial_table2 <- process_append_spatialcat(trips_table = trips_table2,
+                                              shape_table = shape_table,
+                                              crs = crs)
+
+
+  plt = ggplot(result_table, aes(x =type,fill = factor(table_num)))+
+    geom_bar(position = position_dodge())+
+    coord_flip()
+  plotly::ggplotly(plt)
+
+
+  return(plotly::ggplotly(plt))
+
+}
+
+
+
+
 ###### Mapping ######
+
+
+#' Plots start and end coordinates of the given trips table on an osm map
+#'
+#' @param table tibble of trips_output (from readTripsTable())
+#'
+#'
+#' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates, can be found in network file from output directory of MATSim simulation
+#'
+#' @param optimized bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot
+#'
+#'
+#' @return plot with trips
+#'
+#' @export
+plot_map_trips <- function(trips_table, crs,optimized = FALSE,
+                           shape_table = NULL ) {
+
+  table_sf <- process_convert_table_to_sf(trips_table, crs = crs, geometry.type = st_point())
+  st_geometry(table_sf) <- "start_wkt"
+  table_sf_start <- table_sf %>% select(-end_wkt)
+  st_geometry(table_sf) <- "end_wkt"
+  table_sf_end <- table_sf %>% select(-start_wkt)
+
+  if(!is.null(shape_table)){
+
+    if (st_crs(shape_table) == NA) {
+      ct_crs(shape_table) <- crs
+    }
+    shape_table <- st_transform(shape_table, crs = "+proj=longlat +datum=WGS84 +no_defs")
+
+  }
+
+  table_sf_start <- st_transform(table_sf_start, "+proj=longlat +datum=WGS84 +no_defs")
+  table_sf_end <- st_transform(table_sf_end, "+proj=longlat +datum=WGS84 +no_defs")
+
+  if (optimized) {
+    colors <- c("Start" = "blue", "End" = "red")
+    shapes <- c("Start" = 5, "End" = 3)
+    # ggplot2 isn't interactive!
+    plt <- ggplot() +
+      geom_sf(data = table_sf_start, aes(color = "Start"), size = 1, shape = 5) +
+      geom_sf(data = table_sf_end, aes(color = "End"), size = 1, shape = 3) +
+      labs(color = "Type") +
+      scale_colour_manual(values = colors)
+
+    if(!is.null(shape_table)){
+      plt <-ggplot() +
+         geom_sf(data =  shape_table)+
+        geom_sf(data = table_sf_start, aes(color = "Start"), size = 1, shape = 5) +
+        geom_sf(data = table_sf_end, aes(color = "End"), size = 1, shape = 3) +
+        labs(color = "Type") +
+        scale_colour_manual(values = colors)
+    }
+    plt
+    return(plt)
+  }
+
+
+
+
+
+
+
+
+  # If we need to change design
+  # css_fix <- "div.info.legend.leaflet-control br {clear: both;}"
+  # Convert CSS to HTML
+  # html_fix <- htmltools::tags$style(type = "text/css", css_fix)
+
+  plt <- leaflet() %>%
+    addTiles() %>%
+    addProviderTiles(
+      "OpenStreetMap",
+      # give the layer a name
+      group = "OpenStreetMap"
+    ) %>%
+    addProviderTiles(
+      "Stamen.Toner",
+      group = "Stamen.Toner"
+    ) %>%
+    addProviderTiles(
+      "Stamen.Terrain",
+      group = "Stamen.Terrain"
+    ) %>%
+    addProviderTiles(
+      "Esri.WorldStreetMap",
+      group = "Esri.WorldStreetMap"
+    ) %>%
+    addProviderTiles(
+      "Wikimedia",
+      group = "Wikimedia"
+    ) %>%
+    addProviderTiles(
+      "CartoDB.Positron",
+      group = "CartoDB.Positron"
+    ) %>%
+    addProviderTiles(
+      "Esri.WorldImagery",
+      group = "Esri.WorldImagery"
+    ) %>%
+    addCircleMarkers(table_sf_start,
+                     lng = st_coordinates(table_sf_start$start_wkt)[, 1],
+                     lat = st_coordinates(table_sf_start$start_wkt)[, 2], radius = 3, color = "blue",
+                     label = paste(
+                       "Person_id:",
+                       table_sf_start$person, "<br>",
+                       "Trip_id:",
+                       table_sf_start$trip_id, "<br>",
+                       "main_mode:", table_sf_start$main_mode, "<br>",
+                       "type:", "start", "<br>",
+                       "Start activity:",
+                       table_sf_start$start_activity_type, "<br>"
+                     ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(table_sf_end,
+                     lng = st_coordinates(table_sf_end$end_wkt)[, 1],
+                     lat = st_coordinates(table_sf_end$end_wkt)[, 2], radius = 0.15, color = "red",
+                     label = paste(
+                       "Person_id:",
+                       table_sf_end$person, "<br>",
+                       "Trip_id:",
+                       table_sf_end$trip_id, "<br>",
+                       "main_mode:", table_sf_end$main_mode, "<br>",
+                       "type:", "end", "<br>",
+                       "End activity:",
+                       table_sf_end$end_activity_type, "<br>"
+                     ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addLegend(
+      colors = c("blue", "red"),
+      labels = c("Start of trip", "End of trip"),
+      position = "bottomleft",
+      title = "Type of the point",
+      opacity = 0.9
+    ) %>%
+    addMiniMap() %>%
+    addLayersControl(
+      baseGroups = c(
+        "OpenStreetMap", "Stamen.Toner",
+        "Stamen.Terrain", "Esri.WorldStreetMap",
+        "Wikimedia", "CartoDB.Positron", "Esri.WorldImagery"
+      ),
+      # position it on the topleft
+      position = "topleft"
+    )
+  if(!is.null(shape_table)){
+    plt = plt %>% addPolygons(data = shape_table, opacity = 0.1, color = "green")
+
+  }
+  plt
+  return(plt)
+}
+
+
+#' Plots every type of trips(inside, outside, origin and destinating) on map
+#'
+#'
+#'
+#' @param table tibble of trips_output (from readTripsTable())
+#'
+#' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#'
+#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
+#'
+#' @param optimized bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot
+#'
+#' @return plot that contains every trip with defined trip type
+#'
+#' @export
+plot_map_trips_by_spatialcat <- function(trips_table, shape_table,
+                                   crs, optimized = FALSE) {
+
+
+  #processing
+
+  spatial_table <- process_append_spatialcat(trips_table, shape_table = shape_table,crs = crs)
+
+  filtered_sf_inside <- spatial_table %>% filter(spatial_category == "inside") %>%
+    process_convert_table_to_sf( crs = crs, geometry.type = st_multipoint())
+  filtered_sf_origin <- spatial_table %>% filter(spatial_category == "originating") %>%
+    process_convert_table_to_sf( crs = crs, geometry.type = st_multipoint())
+  filtered_sf_destination <- spatial_table %>% filter(spatial_category == "destinating") %>%
+    process_convert_table_to_sf( crs = crs, geometry.type = st_multipoint())
+  filtered_sf_transit <- spatial_table %>% filter(spatial_category == "outside") %>%
+    process_convert_table_to_sf( crs = crs, geometry.type = st_multipoint())
+
+  if (st_crs(shape_table) == NA) {
+    ct_crs(shape_table) <- crs
+  }
+
+  shape_table <- st_transform(shape_table, crs = "+proj=longlat +datum=WGS84 +no_defs")
+
+  filtered_sf_inside <- st_transform(filtered_sf_inside, "+proj=longlat +datum=WGS84 +no_defs")
+  filtered_sf_origin <- st_transform(filtered_sf_origin, "+proj=longlat +datum=WGS84 +no_defs")
+  filtered_sf_destination <- st_transform(filtered_sf_destination, "+proj=longlat +datum=WGS84 +no_defs")
+  filtered_sf_transit <- st_transform(filtered_sf_transit, "+proj=longlat +datum=WGS84 +no_defs")
+
+
+  #plotting
+  if (optimized) {
+    colors <- c("inside" = "green", "origin" = "red", "destination" = "orange", "transit" = "blue")
+    shapes <- c("Start" = 5, "End" = 3)
+    plt <- ggplot() +
+      geom_sf(data = shape_table) +
+      # geom_sf(data = )
+      geom_sf(data = filtered_sf_inside, aes(color = "inside"), size = 3, alpha = 0.5) +
+      geom_sf(data = filtered_sf_origin, aes(color = "origin"), size = 3, alpha = 0.4) +
+      geom_sf(data = filtered_sf_destination, aes(color = "destination"), size = 3, alpha = 0.3) +
+      geom_sf(data = filtered_sf_transit, aes(color = "transit"), size = 2, alpha = 0.1) +
+      labs(color = "Type") +
+      scale_colour_manual(values = colors)
+    plt
+    return((plt))
+  }
+
+  # If we need to adjust design
+  # css_fix <- "div.info.legend.leaflet-control br {clear: both;}"
+  # Convert CSS to HTML
+  # html_fix <- htmltools::tags$style(type = "text/css", css_fix)
+
+
+  plt <- leaflet() %>%
+    addTiles() %>%
+    addProviderTiles(
+      "OpenStreetMap",
+      # give the layer a name
+      group = "OpenStreetMap"
+    ) %>%
+    addProviderTiles(
+      "Stamen.Toner",
+      group = "Stamen.Toner"
+    ) %>%
+    addProviderTiles(
+      "Stamen.Terrain",
+      group = "Stamen.Terrain"
+    ) %>%
+    addProviderTiles(
+      "Esri.WorldStreetMap",
+      group = "Esri.WorldStreetMap"
+    ) %>%
+    addProviderTiles(
+      "Wikimedia",
+      group = "Wikimedia"
+    ) %>%
+    addProviderTiles(
+      "CartoDB.Positron",
+      group = "CartoDB.Positron"
+    ) %>%
+    addProviderTiles(
+      "Esri.WorldImagery",
+      group = "Esri.WorldImagery"
+    ) %>%
+    addPolygons(data = shape_table, opacity = 0.1, color = "green") %>%
+    addCircleMarkers(filtered_sf_inside,
+                     lng = st_coordinates(filtered_sf_inside$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 1],
+                     lat = st_coordinates(filtered_sf_inside$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 2], radius = 3, color = "blue",
+                     label = paste(
+                       "Person_id:",
+                       filtered_sf_inside$person, "<br>",
+                       "Trip_id:",
+                       filtered_sf_inside$trip_id, "<br>",
+                       "main_mode:", filtered_sf_inside$main_mode, "<br>",
+                       "type:", "start", "<br>",
+                       "Start activity:",
+                       filtered_sf_inside$start_activity_type, "<br>"
+                     ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_inside,
+                     lng = st_coordinates(filtered_sf_inside$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 1],
+                     lat = st_coordinates(filtered_sf_inside$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 2], radius = 3, color = "blue",
+                     label = paste(
+                       "Person_id:",
+                       filtered_sf_inside$person, "<br>",
+                       "Trip_id:",
+                       filtered_sf_inside$trip_id, "<br>",
+                       "main_mode:", filtered_sf_inside$main_mode, "<br>",
+                       "type:", "end", "<br>",
+                       "End activity:",
+                       filtered_sf_inside$end_activity_type, "<br>"
+                     ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_origin,
+                     lng = st_coordinates(filtered_sf_origin$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 1],
+                     lat = st_coordinates(filtered_sf_origin$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 2], radius = 2, color = "red",
+                     label = paste(
+                       "Person_id:",
+                       filtered_sf_origin$person, "<br>",
+                       "Trip_id:",
+                       filtered_sf_origin$trip_id, "<br>",
+                       "main_mode:", filtered_sf_origin$main_mode, "<br>",
+                       "type:", "start", "<br>",
+                       "Start activity:",
+                       filtered_sf_origin$end_activity_type, "<br>"
+                     ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_origin,
+                     lng = st_coordinates(filtered_sf_origin$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 1],
+                     lat = st_coordinates(filtered_sf_origin$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 2], radius = 2, color = "red",
+                     label = paste(
+                       "Person_id:",
+                       filtered_sf_origin$person, "<br>",
+                       "Trip_id:",
+                       filtered_sf_origin$trip_id, "<br>",
+                       "main_mode:", filtered_sf_origin$main_mode, "<br>",
+                       "type:", "end", "<br>",
+                       "End activity:",
+                       filtered_sf_origin$end_activity_type, "<br>"
+                     ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_destination,
+                     lng = st_coordinates(filtered_sf_destination$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 1],
+                     lat = st_coordinates(filtered_sf_destination$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 2], radius = 1, color = "orange",
+                     label = paste(
+                       "Person_id:",
+                       filtered_sf_destination$person, "<br>",
+                       "Trip_id:",
+                       filtered_sf_destination$trip_id, "<br>",
+                       "main_mode:", filtered_sf_destination$main_mode, "<br>",
+                       "type:", "start", "<br>",
+                       "Start activity:",
+                       filtered_sf_destination$end_activity_type, "<br>"
+                     ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_destination,
+                     lng = st_coordinates(filtered_sf_destination$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 1],
+                     lat = st_coordinates(filtered_sf_destination$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 2], radius = 1, color = "orange",
+                     label = paste(
+                       "Person_id:",
+                       filtered_sf_destination$person, "<br>",
+                       "Trip_id:",
+                       filtered_sf_destination$trip_id, "<br>",
+                       "main_mode:", filtered_sf_destination$main_mode, "<br>",
+                       "type:", "end", "<br>",
+                       "End activity:",
+                       filtered_sf_destination$end_activity_type, "<br>"
+                     ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_transit,
+                     lng = st_coordinates(filtered_sf_transit$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 1],
+                     lat = st_coordinates(filtered_sf_transit$wkt)[seq(1, length(filtered_sf_inside$wkt), 2), 2], radius = 0.15, color = "black",
+                     label = paste(
+                       "Person_id:",
+                       filtered_sf_transit$person, "<br>",
+                       "Trip_id:",
+                       filtered_sf_transit$trip_id, "<br>",
+                       "main_mode:", filtered_sf_transit$main_mode, "<br>",
+                       "type:", "start", "<br>",
+                       "Start activity:",
+                       filtered_sf_transit$end_activity_type, "<br>"
+                     ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addCircleMarkers(filtered_sf_transit,
+                     lng = st_coordinates(filtered_sf_transit$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 1],
+                     lat = st_coordinates(filtered_sf_transit$wkt)[seq(2, length(filtered_sf_inside$wkt), 2), 2], radius = 0.15, color = "black",
+                     label = paste(
+                       "Person_id:",
+                       filtered_sf_transit$person, "<br>",
+                       "Trip_id:",
+                       filtered_sf_transit$trip_id, "<br>",
+                       "main_mode:", filtered_sf_transit$main_mode, "<br>",
+                       "type:", "end", "<br>",
+                       "End activity:",
+                       filtered_sf_transit$end_activity_type, "<br>"
+                     ) %>% lapply(htmltools::HTML)
+    ) %>%
+    addLegend(
+      colors = c("blue", "red", "orange", "black"),
+      labels = c(
+        "Trips inside of region",
+        "Trips with the end outside region",
+        "Trips with the start outside region",
+        "Trips that start and end outside region"
+      ),
+      position = "bottomleft",
+      title = "Type of the point",
+      opacity = 0.9
+    ) %>%
+    addMiniMap() %>%
+    addLayersControl(
+      baseGroups = c(
+        "OpenStreetMap", "Stamen.Toner",
+        "Stamen.Terrain", "Esri.WorldStreetMap",
+        "Wikimedia", "CartoDB.Positron", "Esri.WorldImagery"
+      ),
+      # position it on the topleft
+      position = "topleft"
+    )
+
+  plt
+  return(plt)
+}
 
 #####Processing#####
 #' @export
