@@ -9,6 +9,8 @@
 \alias{plotAverageTravelWait}
 \alias{compareAverageTravelWait}
 \alias{plotModalDistanceDistribution}
+\alias{compareModalDistanceDistribution}
+\alias{plotTripDistanceByMode}
 \alias{appendDistanceCategory}
 \title{Deprecated function(s) in the matsimr package}
 \usage{
@@ -55,6 +57,23 @@ plotModalDistanceDistribution(
   only.files = FALSE
 )
 
+compareModalDistanceDistribution(
+  tripsTable1,
+  tripsTable2,
+  unite.columns = character(0),
+  united.name = "united",
+  dump.output.to = matsimDumpOutputDirectory,
+  only.files = FALSE
+)
+
+plotTripDistanceByMode(
+  tripsTable,
+  unite.columns = character(0),
+  united.name = "united",
+  dump.output.to = matsimDumpOutputDirectory,
+  only.files = FALSE
+)
+
 appendDistanceCategory(tripsTable)
 }
 \arguments{
@@ -71,22 +90,36 @@ appendDistanceCategory(tripsTable)
 \item{input_path}{character string, path to matsim output directory or http link to the file.}
 
 \item{n_max}{integer, maximum number of lines to read within output_trips}
+
+\item{tripsTable1}{tible of trips_output (from readTripsTable()), number of trips of this table will be extracted from number of trips of tripsTable1}
+
+\item{tripsTable2}{tible of trips_output (from readTripsTable()), from number of trips of this table number of trips of tripsTable1 will be extracted}
 }
 \value{
 \strong{plotModalSplitPieChart} - Pie Chart plot of transport mode distribution, values given in percents
+
+\strong{plotModalSplitBarChart} - Bar Chart plot of transport mode distribution, values given in percents
 
 \strong{readTripsTable} - tibble of trips_output
 
 \strong{plotAverageTravelWait} - Bar Chart plot of average time spent on travel/wait
 
 \strong{plotModalDistanceDistribution} Bar Chart plot of count of trips among distance travelled
+
+\strong{compareModalDistanceDistribution} - Bar Chart plot of count of trips among distance travelled
+
+\strong{plotTripDistanceByMode} - Bar Chart plot of distance traveled per mode
 }
 \description{
 These functions are provided for compatibility with older version of
 the matsimr package.  They may eventually be completely
-removed.\cr
+removed.\cr\cr
 \strong{plotModalSplitPieChart} - Takes Table trips_output (from readTripsTable()),
 to plot pie chart with with values that represent
+percentage of using transport modes from trips
+
+\strong{plotModalSplitBarChart} - Takes Table trips_output (from readTripsTable()),
+to plot bar chart with with values that represent
 percentage of using transport modes from trips
 
 \strong{readTripsTable} - Loads a MATSim CSV output_trips from file or archive,
@@ -101,6 +134,16 @@ to unite them in 1 mode with the name united.name(by default 'united')
 \strong{plotModalDistanceDistribution} - Takes Table trips_output (from readTripsTable()),
 to plot bar chart with with values that represent
 number of trips ~ distance travelled
+Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+
+\strong{compareModalDistanceDistribution} - Takes 2 Tables trips_output (from readTripsTable()),
+to plot bar chart with with values that represent
+difference of number of trips between tripsTable2 and tripsTable1 ~ distance travelled
+Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+
+\strong{plotTripDistanceByMode} - Takes Table trips_output (from readTripsTable()),
+to plot bar chart with with values that represent
+average distance traveled ~ main mode used
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 }
 \section{Details}{

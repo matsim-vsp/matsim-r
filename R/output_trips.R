@@ -16,7 +16,7 @@ dashboard_file <- "/dashboard-1-trips.yaml"
 #'
 #' These functions are provided for compatibility with older version of
 #' the matsimr package.  They may eventually be completely
-#' removed.\cr
+#' removed.\cr\cr
 #' \strong{plotModalSplitPieChart} - Takes Table trips_output (from readTripsTable()),
 #' to plot pie chart with with values that represent
 #' percentage of using transport modes from trips
@@ -132,8 +132,20 @@ plotModalSplitPieChart <- function(tripsTable,
 }
 #' Deprecated function(s) in the matsimr package
 #'
+#' \strong{plotModalSplitBarChart} - Takes Table trips_output (from readTripsTable()),
+#' to plot bar chart with with values that represent
+#' percentage of using transport modes from trips
 #'
 #' @rdname matsimr-deprecated
+#'
+#'
+#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
+#'
+#' @return \strong{plotModalSplitBarChart} - Bar Chart plot of transport mode distribution, values given in percents
 #'
 #' @docType package
 #' @export  plotModalSplitBarChart
@@ -256,6 +268,11 @@ readTripsTable <-function(input_path = ".", n_max = Inf) {
 #'
 #' @rdname matsimr-deprecated
 #'
+#' @param tripsTable tible of trips_output (from readTripsTable())
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #'
 #' @return \strong{plotAverageTravelWait} - Bar Chart plot of average time spent on travel/wait
 #' @docType package
@@ -290,6 +307,8 @@ plotAverageTravelWait <- function(tripsTable, unite.columns = character(0), unit
   }
 
 }
+
+###Needs to be added, because in master there isn't propper documentation
 
 #' Deprecated function(s) in the matsimr package
 #'
@@ -349,7 +368,7 @@ compareAverageTravelWait <- function(tripsTable1,tripsTable2, unite.columns = ch
 
 }
 
-#' Bar Chart with distance travelled on x-axis and number of trips on y-axis
+#' Deprecated function(s) in the matsimr package
 #'
 #' \strong{plotModalDistanceDistribution} - Takes Table trips_output (from readTripsTable()),
 #' to plot bar chart with with values that represent
@@ -366,6 +385,7 @@ compareAverageTravelWait <- function(tripsTable1,tripsTable2, unite.columns = ch
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
+#'
 #' @return \strong{plotModalDistanceDistribution} Bar Chart plot of count of trips among distance travelled
 #'
 #' @export
@@ -444,13 +464,14 @@ plotModalDistanceDistribution <- function(tripsTable, unite.columns = character(
 
 }
 
-#' Bar Chart with distance travelled on x-axis and difference of number of trips on y-axis
+#' Deprecated function(s) in the matsimr package
 #'
-#' Takes 2 Tables trips_output (from readTripsTable()),
+#' \strong{compareModalDistanceDistribution} - Takes 2 Tables trips_output (from readTripsTable()),
 #' to plot bar chart with with values that represent
 #' difference of number of trips between tripsTable2 and tripsTable1 ~ distance travelled
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 #'
+#' @rdname matsimr-deprecated
 #'
 #' @param tripsTable1 tible of trips_output (from readTripsTable()), number of trips of this table will be extracted from number of trips of tripsTable1
 #' @param tripsTable2 tible of trips_output (from readTripsTable()), from number of trips of this table number of trips of tripsTable1 will be extracted
@@ -458,7 +479,7 @@ plotModalDistanceDistribution <- function(tripsTable, unite.columns = character(
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
-#' @return Bar Chart plot of count of trips among distance travelled
+#' @return \strong{compareModalDistanceDistribution} - Bar Chart plot of count of trips among distance travelled
 #'
 #' @export
 compareModalDistanceDistribution <- function(tripsTable1,tripsTable2, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
@@ -520,21 +541,21 @@ compareModalDistanceDistribution <- function(tripsTable1,tripsTable2, unite.colu
 
 }
 
-#' Bar Chart with distance travelled on x-axis and number of trips on y-axis
+#' Deprecated function(s) in the matsimr package
 #'
-#' Takes Table trips_output (from readTripsTable()),
+#' \strong{plotTripDistanceByMode} - Takes Table trips_output (from readTripsTable()),
 #' to plot bar chart with with values that represent
 #' average distance traveled ~ main mode used
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 #'
-#'
+#' @rdname matsimr-deprecated
 #' @param tripsTable tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #'
-#' @return Bar Chart plot of distance traveled per mode
+#' @return \strong{plotTripDistanceByMode} - Bar Chart plot of distance traveled per mode
 #'
 #' @export
 plotTripDistanceByMode <- function(tripsTable,
