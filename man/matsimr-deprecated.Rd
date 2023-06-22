@@ -23,7 +23,11 @@
 \alias{plotTripTypesPieChart}
 \alias{compareTripTypesBarChart}
 \alias{plotMapWithTripsType}
+\alias{compareBasePolicyOutput}
+\alias{compareBasePolicyShapeOutput}
 \alias{appendDistanceCategory}
+\alias{deriveODMatrix}
+\alias{getCrsFromConfig}
 \title{Deprecated function(s) in the matsimr package}
 \usage{
 plotModalSplitPieChart(
@@ -166,16 +170,42 @@ compareTripTypesBarChart(
 
 plotMapWithTripsType(table, shapeTable, crs, optimized = FALSE)
 
+compareBasePolicyOutput(
+  baseFolder,
+  policyFolder,
+  dump.output.to = matsimDumpOutputDirectory
+)
+
+compareBasePolicyShapeOutput(
+  baseFolder,
+  policyFolder,
+  shapeFilePath,
+  crs,
+  dump.output.to = matsimDumpOutputDirectory
+)
+
 appendDistanceCategory(tripsTable)
+
+deriveODMatrix(
+  tripsTable,
+  shapePath,
+  crs,
+  dump.output.to = matsimDumpOutputDirectory,
+  simwrapper = FALSE,
+  colnames = "numeric",
+  outer = FALSE
+)
+
+getCrsFromConfig(folder)
 }
 \arguments{
-\item{tripsTable}{tible of trips_output (from readTripsTable())}
+\item{tripsTable}{table of output trips(from readTripsTable) or path to trips_output file}
 
 \item{unite.columns}{vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
 
 \item{united.name}{if columns were united, you can specify name for the resulting column in plot}
 
-\item{dump.output.to}{folder that saves resulting image of BarChart}
+\item{dump.output.to}{path to a folder to save csv file of ODMatrix}
 
 \item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
 
@@ -200,6 +230,22 @@ appendDistanceCategory(tripsTable)
 \item{end.inshape}{bool, defines trips to conclude (see Description)}
 
 \item{optimized}{bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot}
+
+\item{baseFolder}{specifies data source folder with multiple base output_trips}
+
+\item{policyFolder}{specifies data source folder with multiple policy output_trips}
+
+\item{shapeFilePath}{specifies shapeFile used for comparison}
+
+\item{shapePath}{full path to shapefile (if simwrapper TRUE, folder with shapeFile should contain also .dbf with the same name)}
+
+\item{simwrapper}{create output in a simwrapper form if set to path of the shapefile}
+
+\item{colnames}{if the specific shapefile contains known columns, they could be specified as name for columns OD. If not given then they get numeric values}
+
+\item{outer}{logical that represent if the table should contain outside flow of the shape, it isn't}
+
+\item{folder}{specifies path to find config}
 }
 \value{
 \strong{plotModalSplitPieChart} - Pie Chart plot of transport mode distribution, values given in percents
@@ -239,6 +285,16 @@ appendDistanceCategory(tripsTable)
 \strong{compareTripTypesBarChart} - plot with percentage of each type of trips between 2 tables
 
 \strong{plotMapWithTripsType} - plot that contains every trip with defined trip type
+
+\strong{compareBasePolicyOutput} - list of tibbles, list of all base and policy output_trips as tibble
+
+\strong{compareBasePolicyShapeOutput} - list of tibbles, list of all base and policy output_trips as tibble
+
+tibble of output_trips with distance category column
+
+\strong{deriveODMatrix} - tibble of origin/destination matrix
+
+\strong{getCrsFromConfig} - code of coordinate reference system
 }
 \description{
 These functions are provided for compatibility with older version of
@@ -335,6 +391,19 @@ if start.inshape = TRUE & end.inshape = TRUE return table that contains trips in
 and saves output to dump.output.to
 
 \strong{plotMapWithTripsType} - plots every type of trips(inside, outside, origin and destinating) on map
+
+\strong{compareBasePolicyOutput} - Chooses a function to compare output_trips from the folders.
+baseFolder contains all base outputs, policyFolder contains all policy outputs.
+
+\strong{compareBasePolicyShapeOutput} - Chooses a function to compare output_trips from the folders.
+baseFolder contains all base outputs, policyFolder contains all policy outputs.
+
+\strong{appendDistanceCategory} - adds to trips output tibble additional column that represent distance as category
+
+\strong{deriveODMatrix} - Creates an instance of ODMatrix(origin/destination) in conventional form or for the simwrapper
+
+\strong{getCrsFromConfig} - Reads an coordinate referenec system of MATSim output directory
+from output_config.xml
 }
 \section{Details}{
 

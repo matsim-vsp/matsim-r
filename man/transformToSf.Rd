@@ -2,7 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{transformToSf}
 \alias{transformToSf}
-\title{Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)}
+\title{Deprecated function(s) in the matsimr package}
 \usage{
 transformToSf(table, crs, geometry.type = st_multipoint())
 }
@@ -17,17 +17,16 @@ transformToSf(table, crs, geometry.type = st_multipoint())
 !!!st_linestring() - resulting table contains 1 geometry wkt, representing line between start and end points as LINESTRING!!!}
 }
 \value{
-sf object (data.frame with geometries depending to geometry.type)
+\strong{transformToSf} - sf object (data.frame with geometries depending to geometry.type)
 }
 \description{
+\strong{transformToSf} - Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)\cr
 Takes trips_table (from readTripsTable) and transforms trips_table to sf object using start_x, end_x, start_y, end_y as a geometry features
-deletes from resulting data.frame start_x, end_x, start_y, end_y.
-And adds wkt column, if geometry.type = st_mulitpoint(), or geometry.type = st_linestring()
-Or adds start_wkt and end_wkt, if geometry.type = st_point()
+deletes from resulting data.frame start_x, end_x, start_y, end_y.\cr
+And adds wkt column, if geometry.type = st_mulitpoint(), or geometry.type = st_linestring()\cr
+Or adds start_wkt and end_wkt, if geometry.type = st_point()\cr
 Added column/columns projected to given CRS (coordinate reference system),
-that can be taken from network file of MATSimOutputDirectory
-}
-\details{
+that can be taken from network file of MATSimOutputDirectory\cr
 Function also sets attribute geometry.type to resulting table to character value of "POINT","MULTIPOINT","LINESTRING"
 to get which type of table was generated, if it is needed
 }

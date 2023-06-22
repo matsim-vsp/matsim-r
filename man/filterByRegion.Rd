@@ -2,7 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{filterByRegion}
 \alias{filterByRegion}
-\title{Filtering of trips_table(from readTripsTable) depending on how they located in given shape}
+\title{Deprecated function(s) in the matsimr package}
 \usage{
 filterByRegion(
   tripsTable,
@@ -24,9 +24,10 @@ filterByRegion(
 \item{end.inshape}{bool, defines trips to conclude (see Description)}
 }
 \value{
-tibble, with filtered trips depending on shapeTable and special flags (see Description)
+\strong{filterByRegion} - tibble, with filtered trips depending on shapeTable and special flags (see Description)
 }
 \description{
+\strong{filterByRegion} - Filtering of trips_table(from readTripsTable) depending on how they located in given shape\cr
 Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
 Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
 transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
