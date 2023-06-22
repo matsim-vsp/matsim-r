@@ -596,20 +596,21 @@ plotTripDistanceByMode <- function(tripsTable,
 
 
 
-#' Line plot with departure time x-axis and number of trips on y-axis
+#' Deprecated function(s) in the matsimr package
 #'
-#' Takes Table trips_output (from readTripsTable()),
+#' \strong{plotTripCountByDepTime} - Takes Table trips_output (from readTripsTable()),
 #' to make line plot with with values that represent
 #' count of trips for a specific departure time by main_mode
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 #'
+#' @rdname matsimr-deprecated
 #'
 #' @param tripsTable tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
-#' @return Line Chart plot of trips count by departure mode per mode
+#' @return \strong{plotTripCountByDepTime} - Line Chart plot of trips count by departure mode per mode
 #'
 #' @export
 plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
@@ -669,21 +670,21 @@ plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), uni
   }
 }
 
-#' Line plot that shows the number of activities ending at a given time, per activity type.
-#' The activity end time is derived from the departure time in the given trips tibble.
+#' Deprecated function(s) in the matsimr package
 #'
-#' Takes Table trips_output (from readTripsTable()),
+#' \strong{plotActivityEndTimes} - Takes Table trips_output (from readTripsTable()),
 #' to make line plot with with values that represent the
 #' number of activities ending at a specific time.
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 #'
+#' @rdname matsimr-deprecated
 #'
 #' @param tripsTable tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
-#' @return Line plot with departure time x-axis and number start activities on y-axis
+#' @return \strong{plotActivityEndTimes} Line plot with departure time x-axis and number start activities on y-axis
 #'
 #' @export
 plotActivityEndTimes <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
@@ -747,14 +748,14 @@ plotActivityEndTimes <- function(tripsTable, unite.columns = character(0), unite
 
 }
 
-#' This function plots the number of trips ending per trip purpose over time. The trip purpose corresponds to the activity type of the destination activity of a given trip.
-#' Thus, the y-axis of the plot can also be interpreted as the number of activities starting (based on the assumption that trip end time = activity start time).
+#' Deprecated function(s) in the matsimr package
 #'
-#' Takes Table trips_output (from readTripsTable()),
+#' \strong{plotArrivalTimesPerTripPurpose} - Takes Table trips_output (from readTripsTable()),
 #' to make line plot with with values that represent
 #' count of destination activities for a specific arrival time
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 #'
+#' @rdname matsimr-deprecated
 #'
 #' @param tripsTable tibble of trips_output (from readTripsTable())
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
@@ -762,7 +763,7 @@ plotActivityEndTimes <- function(tripsTable, unite.columns = character(0), unite
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #'
-#' @return Line plot with arrival time x-axis and number end activities on y-axis
+#' @return \strong{plotArrivalTimesPerTripPurpose} - Line plot with arrival time x-axis and number end activities on y-axis
 #'
 #' @export
 plotArrivalTimesPerTripPurpose <- function(tripsTable, unite.columns = character(0), united.name = "united",dump.output.to = matsimDumpOutputDirectory,
@@ -868,13 +869,14 @@ plotArrivalTimesPerTripPurpose <- function(tripsTable, unite.columns = character
 }
 
 
-#' This function plots the number of trips starting per trip purpose over time. The trip purpose corresponds to the activity type of the destination activity of a given trip.
+#' Deprecated function(s) in the matsimr package
 #'
-#' Takes Table trips_output (from readTripsTable()),
+#' \strong{plotDepartureTimesPerTripPurpose} - Takes Table trips_output (from readTripsTable()),
 #' to make line plot with with values that represent
 #' count of destination activities for a specific arrival time
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 #'
+#' @rdname matsimr-deprecated
 #'
 #' @param tripsTable tibble of trips_output (from readTripsTable())
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
@@ -882,7 +884,7 @@ plotArrivalTimesPerTripPurpose <- function(tripsTable, unite.columns = character
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
 #'
-#' @return Line plot with arrival time x-axis and number end activities on y-axis
+#' @return \strong{plotDepartureTimesPerTripPurpose} -  Line plot with arrival time x-axis and number end activities on y-axis
 #'
 #' @export
 plotDepartureTimesPerTripPurpose <- function(tripsTable, unite.columns = character(0), united.name = "united",
@@ -940,19 +942,20 @@ plotDepartureTimesPerTripPurpose <- function(tripsTable, unite.columns = charact
 }
 
 
-#' Bar Chart with tripType on x-axis and travelled distance on y-axis
+#' Deprecated function(s) in the matsimr package
 #'
-#' Takes Table trips_output (from readTripsTable()),
+#' \strong{plotTripDistancedByType} - Takes Table trips_output (from readTripsTable()),
 #' to plot bar chart with with values that represent
 #' travelled distance of each tripType related to the shapeTable
 #'
+#' @rdname matsimr-deprecated
 #'
 #' @param tripsTable tible of trips_output (from readTripsTable())
 #' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
 #' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
 #'
-#' @return Bar Chart plot of distance traveled by type
+#' @return \strong{plotTripDistancedByType} - Bar Chart plot of distance traveled by type
 #'
 #' @export
 plotTripDistancedByType <- function(tripsTable,shapeTable,crs,dump.output.to = matsimDumpOutputDirectory) {
@@ -979,17 +982,18 @@ plotTripDistancedByType <- function(tripsTable,shapeTable,crs,dump.output.to = m
 
 
 
-#' Plot alluvial/sankey diagram of transport mode changes
+#' Deprecated function(s) in the matsimr package
 #'
-#' Takes two trips_table (from readTripsTable), and collects
+#' \strong{plotModalShiftSankey} - Takes two trips_table (from readTripsTable), and collects
 #' changes between transport mode distribution of these tables
-#' to make alluvial diagram from this data
-#'
+#' to make alluvial diagram from this data\cr
 #' Function calculates number of each transport mode used in
 #' first and second table, and draws plot that represent how
 #' distribution of transport mode has changed (f. e. what part of concrete trasport mode changed to another)
 #' Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united.name is "united")
 #' Using parameter show.onlyChanges
+#'
+#' @rdname matsimr-deprecated
 #'
 #' @param tripsTable1 tible of trips_output (from readTripsTable())
 #' @param tripsTable2 tible of trips_output (from readTripsTable())
@@ -998,7 +1002,7 @@ plotTripDistancedByType <- function(tripsTable,shapeTable,crs,dump.output.to = m
 #' @param united.name if columns were united, you can specify name for the resulting column in plot
 #' @param dump.output.to folder that saves and configures yaml for simwrapper. folder where png of plot is stored
 #'
-#' @return Alluvial diagram that represents changes in transport mode distribution of trip tables
+#' @return \strong{plotModalShiftSankey} - Alluvial diagram that represents changes in transport mode distribution of trip tables
 #'
 #' @export
 plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FALSE, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory) {
@@ -1048,25 +1052,24 @@ plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FA
   return(plt)
 }
 
-#' Plot bar chart diagram of transport mode changes
+#' Deprecated function(s) in the matsimr package
 #'
-#' Takes two trips_table (from readTripsTable), and collects
+#' \strong{plotModalShiftBar} - Takes two trips_table (from readTripsTable), and collects
 #' changes between transport mode distribution of these tables
-#' to make bar chart diagram with dodging positioning from this data
-#'
+#' to make bar chart diagram with dodging positioning from this data\cr
 #' Function calculates number of each transport mode used in
 #' first and second table, and draws plot that represent how
 #' distribution of transport mode has changed (f. e. what part of concrete trasport mode changed to another)
 #' Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united.name is "united")
 #' Using parameter show.onlyChanges
-#'
+#' @rdname matsimr-deprecated
 #' @param tripsTable1 tible of trips_output (from readTripsTable())
 #' @param tripsTable2 tible of trips_output (from readTripsTable())
 #' @param unite.columns vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name if columns were united, you can specify name for the resulting column in plot
 #' @param dump.output.to folder that saves and configures yaml for simwrapper. folder where png of plot is stored
 #'
-#' @return plots Bar Chart of transport mode changes with additional files for simwrapper
+#' @return \strong{plotModalShiftBar} - plots Bar Chart of transport mode changes with additional files for simwrapper
 #'
 #' @export
 plotModalShiftBar <- function(tripsTable1, tripsTable2, unite.columns = character(0), united.name = "united", dump.output.to = matsimDumpOutputDirectory,
@@ -1094,17 +1097,18 @@ plotModalShiftBar <- function(tripsTable1, tripsTable2, unite.columns = characte
 
 
 
-#' Plots result of filtered trips on the map (from shape)
+#' Deprecated function(s) in the matsimr package
 #'
-#' Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file))
+#' \strong{plotMapWithFilteredTrips} - Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file))
 #' transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
-#' and filters the trips from table depending on *.inshape flags:
+#' and filters the trips from table depending on *.inshape flags:\cr
 #' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
-#' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
-#' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
-#' if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
-#' result of filtering is plotted on map of shapeTable where green points are startpoints of trip and red points are endpoints of trip
+#' \cr if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
+#' \cr if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
+#' \cr if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
+#' \cr result of filtering is plotted on map of shapeTable where green points are startpoints of trip and red points are endpoints of trip
 #'
+#' @rdname matsimr-deprecated
 #' @param table tibble of trips_output (from readTripsTable())
 #'
 #' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
@@ -1118,7 +1122,7 @@ plotModalShiftBar <- function(tripsTable1, tripsTable2, unite.columns = characte
 #' @param optimized bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot
 #'
 #'
-#' @return plot with trips filtered depending on flags *.inshape on map from shapeTable
+#' @return \strong{plotMapWithFilteredTrips} - plot with trips filtered depending on flags *.inshape on map from shapeTable
 #'
 #' @export
 plotMapWithFilteredTrips <- function(table, shapeTable, crs, start.inshape = TRUE, end.inshape = TRUE, optimized = FALSE) {
@@ -1250,8 +1254,11 @@ plotMapWithFilteredTrips <- function(table, shapeTable, crs, start.inshape = TRU
   return(plt)
 }
 
-#' Plots start and end coordinates of the given trips table on an osm map
+
+#' Deprecated function(s) in the matsimr package
 #'
+#' \strong{plotMapWithTrips} - Plots start and end coordinates of the given trips table on an osm map
+#' @rdname matsimr-deprecated
 #' @param table tibble of trips_output (from readTripsTable())
 #'
 #'
@@ -1260,7 +1267,7 @@ plotMapWithFilteredTrips <- function(table, shapeTable, crs, start.inshape = TRU
 #' @param optimized bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot
 #'
 #'
-#' @return plot with trips
+#' @return \strong{plotMapWithTrips} - plot with trips
 #'
 #' @export
 plotMapWithTrips <- function(table, crs, optimized = FALSE) {
@@ -1377,9 +1384,11 @@ plotMapWithTrips <- function(table, crs, optimized = FALSE) {
   return(plt)
 }
 
-#' Plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
+#' Deprecated function(s) in the matsimr package
 #'
+#' \strong{plotTripTypesPieChart} - plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
 #'
+#' @rdname matsimr-deprecated
 #'
 #' @param table tibble of trips_output (from readTripsTable())
 #'
@@ -1389,7 +1398,7 @@ plotMapWithTrips <- function(table, crs, optimized = FALSE) {
 #'
 #'
 #'
-#' @return plot with percentage of each type of trips
+#' @return \strong{plotTripTypesPieChart} - plot with percentage of each type of trips
 #'
 #' @export
 plotTripTypesPieChart <- function(table, shapeTable, crs) {
@@ -1433,10 +1442,13 @@ plotTripTypesPieChart <- function(table, shapeTable, crs) {
            ggtitle("Distribution"))
 }
 
-#' Creates BarChart of changing trip types(originating,transit etc) between 2 tables
+
+#' Deprecated function(s) in the matsimr package
+#'
+#' \strong{compareTripTypesBarChart} - Creates BarChart of changing trip types(originating,transit etc) between 2 tables
 #' and saves output to dump.output.to
 #'
-#'
+#' @rdname matsimr-deprecated
 #'
 #' @param tripsTable1 tibble of trips_output (from readTripsTable(),f.e. base case)
 #'
@@ -1449,7 +1461,7 @@ plotTripTypesPieChart <- function(table, shapeTable, crs) {
 #' @param dump.output.to folder that saves resulting image of BarChart
 #'
 #'
-#' @return plot with percentage of each type of trips between 2 tables
+#' @return \strong{compareTripTypesBarChart} - plot with percentage of each type of trips between 2 tables
 #'
 #' @export
 compareTripTypesBarChart <- function(tripsTable1,tripsTable2,shapeTable,crs,dump.output.to = matsimDumpOutputDirectory){
@@ -1493,9 +1505,12 @@ compareTripTypesBarChart <- function(tripsTable1,tripsTable2,shapeTable,crs,dump
 
 }
 
-#' Plots every type of trips(inside, outside, origin and destinating) on map
+
+#' Deprecated function(s) in the matsimr package
 #'
+#' \strong{plotMapWithTripsType} - plots every type of trips(inside, outside, origin and destinating) on map
 #'
+#' @rdname matsimr-deprecated
 #'
 #' @param table tibble of trips_output (from readTripsTable())
 #'
@@ -1505,7 +1520,7 @@ compareTripTypesBarChart <- function(tripsTable1,tripsTable2,shapeTable,crs,dump
 #'
 #' @param optimized bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot
 #'
-#' @return plot that contains every trip with defined trip type
+#' @return \strong{plotMapWithTripsType} - plot that contains every trip with defined trip type
 #'
 #' @export
 plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {

@@ -11,6 +11,18 @@
 \alias{plotModalDistanceDistribution}
 \alias{compareModalDistanceDistribution}
 \alias{plotTripDistanceByMode}
+\alias{plotTripCountByDepTime}
+\alias{plotActivityEndTimes}
+\alias{plotArrivalTimesPerTripPurpose}
+\alias{plotDepartureTimesPerTripPurpose}
+\alias{plotTripDistancedByType}
+\alias{plotModalShiftSankey}
+\alias{plotModalShiftBar}
+\alias{plotMapWithFilteredTrips}
+\alias{plotMapWithTrips}
+\alias{plotTripTypesPieChart}
+\alias{compareTripTypesBarChart}
+\alias{plotMapWithTripsType}
 \alias{appendDistanceCategory}
 \title{Deprecated function(s) in the matsimr package}
 \usage{
@@ -74,16 +86,96 @@ plotTripDistanceByMode(
   only.files = FALSE
 )
 
+plotTripCountByDepTime(
+  tripsTable,
+  unite.columns = character(0),
+  united.name = "united",
+  dump.output.to = matsimDumpOutputDirectory,
+  only.files = FALSE
+)
+
+plotActivityEndTimes(
+  tripsTable,
+  unite.columns = character(0),
+  united.name = "united",
+  dump.output.to = matsimDumpOutputDirectory,
+  only.files = FALSE
+)
+
+plotArrivalTimesPerTripPurpose(
+  tripsTable,
+  unite.columns = character(0),
+  united.name = "united",
+  dump.output.to = matsimDumpOutputDirectory,
+  only.files = FALSE
+)
+
+plotDepartureTimesPerTripPurpose(
+  tripsTable,
+  unite.columns = character(0),
+  united.name = "united",
+  dump.output.to = matsimDumpOutputDirectory,
+  only.files = FALSE
+)
+
+plotTripDistancedByType(
+  tripsTable,
+  shapeTable,
+  crs,
+  dump.output.to = matsimDumpOutputDirectory
+)
+
+plotModalShiftSankey(
+  tripsTable1,
+  tripsTable2,
+  show.onlyChanges = FALSE,
+  unite.columns = character(0),
+  united.name = "united",
+  dump.output.to = matsimDumpOutputDirectory
+)
+
+plotModalShiftBar(
+  tripsTable1,
+  tripsTable2,
+  unite.columns = character(0),
+  united.name = "united",
+  dump.output.to = matsimDumpOutputDirectory,
+  output.name = "modalShiftBarChart"
+)
+
+plotMapWithFilteredTrips(
+  table,
+  shapeTable,
+  crs,
+  start.inshape = TRUE,
+  end.inshape = TRUE,
+  optimized = FALSE
+)
+
+plotMapWithTrips(table, crs, optimized = FALSE)
+
+plotTripTypesPieChart(table, shapeTable, crs)
+
+compareTripTypesBarChart(
+  tripsTable1,
+  tripsTable2,
+  shapeTable,
+  crs,
+  dump.output.to = matsimDumpOutputDirectory
+)
+
+plotMapWithTripsType(table, shapeTable, crs, optimized = FALSE)
+
 appendDistanceCategory(tripsTable)
 }
 \arguments{
 \item{tripsTable}{tible of trips_output (from readTripsTable())}
 
-\item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
+\item{unite.columns}{vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
 
-\item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart}
+\item{united.name}{if columns were united, you can specify name for the resulting column in plot}
 
-\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored}
+\item{dump.output.to}{folder that saves resulting image of BarChart}
 
 \item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
 
@@ -91,9 +183,23 @@ appendDistanceCategory(tripsTable)
 
 \item{n_max}{integer, maximum number of lines to read within output_trips}
 
-\item{tripsTable1}{tible of trips_output (from readTripsTable()), number of trips of this table will be extracted from number of trips of tripsTable1}
+\item{tripsTable1}{tibble of trips_output (from readTripsTable(),f.e. base case)}
 
-\item{tripsTable2}{tible of trips_output (from readTripsTable()), from number of trips of this table number of trips of tripsTable1 will be extracted}
+\item{tripsTable2}{tibble of trips_output (from readTripsTable(),f.e. policy case)}
+
+\item{shapeTable}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
+
+\item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
+
+\item{show.onlyChanges}{boolean, if it is set to TRUE => sankey diagram only contains changes on axes}
+
+\item{table}{tibble of trips_output (from readTripsTable())}
+
+\item{start.inshape}{bool, defines trips to conclude (see Description)}
+
+\item{end.inshape}{bool, defines trips to conclude (see Description)}
+
+\item{optimized}{bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot}
 }
 \value{
 \strong{plotModalSplitPieChart} - Pie Chart plot of transport mode distribution, values given in percents
@@ -109,6 +215,30 @@ appendDistanceCategory(tripsTable)
 \strong{compareModalDistanceDistribution} - Bar Chart plot of count of trips among distance travelled
 
 \strong{plotTripDistanceByMode} - Bar Chart plot of distance traveled per mode
+
+\strong{plotTripCountByDepTime} - Line Chart plot of trips count by departure mode per mode
+
+\strong{plotActivityEndTimes} Line plot with departure time x-axis and number start activities on y-axis
+
+\strong{plotArrivalTimesPerTripPurpose} - Line plot with arrival time x-axis and number end activities on y-axis
+
+\strong{plotDepartureTimesPerTripPurpose} -  Line plot with arrival time x-axis and number end activities on y-axis
+
+\strong{plotTripDistancedByType} - Bar Chart plot of distance traveled by type
+
+\strong{plotModalShiftSankey} - Alluvial diagram that represents changes in transport mode distribution of trip tables
+
+\strong{plotModalShiftBar} - plots Bar Chart of transport mode changes with additional files for simwrapper
+
+\strong{plotMapWithFilteredTrips} - plot with trips filtered depending on flags *.inshape on map from shapeTable
+
+\strong{plotMapWithTrips} - plot with trips
+
+\strong{plotTripTypesPieChart} - plot with percentage of each type of trips
+
+\strong{compareTripTypesBarChart} - plot with percentage of each type of trips between 2 tables
+
+\strong{plotMapWithTripsType} - plot that contains every trip with defined trip type
 }
 \description{
 These functions are provided for compatibility with older version of
@@ -145,6 +275,66 @@ Using parameters unite.columns, specific columns could be given, to unite them i
 to plot bar chart with with values that represent
 average distance traveled ~ main mode used
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+
+\strong{plotTripCountByDepTime} - Takes Table trips_output (from readTripsTable()),
+to make line plot with with values that represent
+count of trips for a specific departure time by main_mode
+Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+
+\strong{plotActivityEndTimes} - Takes Table trips_output (from readTripsTable()),
+to make line plot with with values that represent the
+number of activities ending at a specific time.
+Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+
+\strong{plotArrivalTimesPerTripPurpose} - Takes Table trips_output (from readTripsTable()),
+to make line plot with with values that represent
+count of destination activities for a specific arrival time
+Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+
+\strong{plotDepartureTimesPerTripPurpose} - Takes Table trips_output (from readTripsTable()),
+to make line plot with with values that represent
+count of destination activities for a specific arrival time
+Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+
+\strong{plotTripDistancedByType} - Takes Table trips_output (from readTripsTable()),
+to plot bar chart with with values that represent
+travelled distance of each tripType related to the shapeTable
+
+\strong{plotModalShiftSankey} - Takes two trips_table (from readTripsTable), and collects
+changes between transport mode distribution of these tables
+to make alluvial diagram from this data\cr
+Function calculates number of each transport mode used in
+first and second table, and draws plot that represent how
+distribution of transport mode has changed (f. e. what part of concrete trasport mode changed to another)
+Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united.name is "united")
+Using parameter show.onlyChanges
+
+\strong{plotModalShiftBar} - Takes two trips_table (from readTripsTable), and collects
+changes between transport mode distribution of these tables
+to make bar chart diagram with dodging positioning from this data\cr
+Function calculates number of each transport mode used in
+first and second table, and draws plot that represent how
+distribution of transport mode has changed (f. e. what part of concrete trasport mode changed to another)
+Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united.name is "united")
+Using parameter show.onlyChanges
+
+\strong{plotMapWithFilteredTrips} - Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file))
+transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
+and filters the trips from table depending on *.inshape flags:\cr
+if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
+\cr if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
+\cr if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
+\cr if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
+\cr result of filtering is plotted on map of shapeTable where green points are startpoints of trip and red points are endpoints of trip
+
+\strong{plotMapWithTrips} - Plots start and end coordinates of the given trips table on an osm map
+
+\strong{plotTripTypesPieChart} - plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
+
+\strong{compareTripTypesBarChart} - Creates BarChart of changing trip types(originating,transit etc) between 2 tables
+and saves output to dump.output.to
+
+\strong{plotMapWithTripsType} - plots every type of trips(inside, outside, origin and destinating) on map
 }
 \section{Details}{
 
