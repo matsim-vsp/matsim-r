@@ -1740,11 +1740,12 @@ plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {
 }
 
 
-
-#' Chooses a function to compare output_trips from the folders.
+#' Deprecated function(s) in the matsimr package
+#'
+#' \strong{compareBasePolicyOutput} - Chooses a function to compare output_trips from the folders.
 #' baseFolder contains all base outputs, policyFolder contains all policy outputs.
 #'
-#'
+#' @rdname matsimr-deprecated
 #'
 #' @param baseFolder specifies data source folder with multiple base output_trips
 #'
@@ -1753,7 +1754,7 @@ plotMapWithTripsType <- function(table, shapeTable, crs, optimized = FALSE) {
 #' @param dump.output.to that saves result of all comparisons between each base and each policy.
 #' For now it creates plotModalShiftBar() for the output_trips
 #'
-#' @return list of tibbles, list of all base and policy output_trips as tibble
+#' @return \strong{compareBasePolicyOutput} - list of tibbles, list of all base and policy output_trips as tibble
 #'
 #' @export
 compareBasePolicyOutput <- function(baseFolder,policyFolder,dump.output.to = matsimDumpOutputDirectory) {
@@ -1806,10 +1807,13 @@ compareBasePolicyOutput <- function(baseFolder,policyFolder,dump.output.to = mat
   }
   invisible(list(base = base_trips,policy = policy_trips))
 }
-#' Chooses a function to compare output_trips from the folders.
+
+#' Deprecated function(s) in the matsimr package
+#'
+#' \strong{compareBasePolicyShapeOutput} - Chooses a function to compare output_trips from the folders.
 #' baseFolder contains all base outputs, policyFolder contains all policy outputs.
 #'
-#'
+#' @rdname matsimr-deprecated
 #'
 #' @param baseFolder specifies data source folder with multiple base output_trips
 #'
@@ -1820,7 +1824,7 @@ compareBasePolicyOutput <- function(baseFolder,policyFolder,dump.output.to = mat
 #' @param dump.output.to that saves result of all comparisons between each base and each policy.
 #' For now it creates plotModalShiftBar() for the output_trips
 #'
-#' @return list of tibbles, list of all base and policy output_trips as tibble
+#' @return \strong{compareBasePolicyShapeOutput} - list of tibbles, list of all base and policy output_trips as tibble
 #'
 #' @export
 compareBasePolicyShapeOutput <- function(baseFolder,policyFolder,shapeFilePath,crs,dump.output.to = matsimDumpOutputDirectory) {
@@ -1878,13 +1882,15 @@ compareBasePolicyShapeOutput <- function(baseFolder,policyFolder,shapeFilePath,c
 
 #' Deprecated function(s) in the matsimr package
 #'
+#' \strong{appendDistanceCategory} - adds to trips output tibble additional column that represent distance as category
 #'
 #' @rdname matsimr-deprecated
 #'
-#' @docType package
-#' @export  compareAverageTravelWait
-#' @aliases compareAverageTravelWait
+#' @return tibble of output_trips with distance category column
 #'
+#' @docType package
+#'
+#' @export
 appendDistanceCategory <- function(tripsTable){
 
   .Deprecated("process_append_distcat")
@@ -1918,8 +1924,9 @@ appendDistanceCategory <- function(tripsTable){
   return(tripsTable_result)
 }
 
-#' Filtering of trips_table(from readTripsTable) depending on how they located in given shape
+#' Deprecated function(s) in the matsimr package
 #'
+#' \strong{filterByRegion} - Filtering of trips_table(from readTripsTable) depending on how they located in given shape\cr
 #' Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
 #' Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
 #' transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
@@ -1939,7 +1946,7 @@ appendDistanceCategory <- function(tripsTable){
 #'
 #' @param end.inshape bool, defines trips to conclude (see Description)
 #'
-#' @return tibble, with filtered trips depending on shapeTable and special flags (see Description)
+#' @return \strong{filterByRegion} - tibble, with filtered trips depending on shapeTable and special flags (see Description)
 #'
 #' @export
 filterByRegion <- function(tripsTable,
@@ -1987,9 +1994,12 @@ filterByRegion <- function(tripsTable,
 }
 
 
-#' Creates an instance of ODMatrix(origin/destination) in conventional form or for the simwrapper
+
+#' Deprecated function(s) in the matsimr package
 #'
+#' \strong{deriveODMatrix} - Creates an instance of ODMatrix(origin/destination) in conventional form or for the simwrapper
 #'
+#' @rdname matsimr-deprecated
 #'
 #' @param tripsTable table of output trips(from readTripsTable) or path to trips_output file
 #'
@@ -2005,7 +2015,7 @@ filterByRegion <- function(tripsTable,
 #'
 #' @param outer logical that represent if the table should contain outside flow of the shape, it isn't
 #'
-#' @return tibble of origin/destination matrix
+#' @return \strong{deriveODMatrix} - tibble of origin/destination matrix
 #'
 #' @export
 deriveODMatrix<- function(tripsTable,
@@ -2131,14 +2141,17 @@ deriveODMatrix<- function(tripsTable,
   return(result_tibble)
 }
 
-
-#' Reads an coordinate referenec system of MATSim output directory
+#' Deprecated function(s) in the matsimr package
+#'
+#' \strong{getCrsFromConfig} - Reads an coordinate referenec system of MATSim output directory
 #' from output_config.xml
+#'
+#' @rdname matsimr-deprecated
 #'
 #' @param folder specifies path to find config
 #'
 #'
-#' @return code of coordinate reference system
+#' @return \strong{getCrsFromConfig} - code of coordinate reference system
 #'
 #' @export
 getCrsFromConfig <- function(folder) {
@@ -2172,15 +2185,15 @@ getCrsFromConfig <- function(folder) {
 }
 
 
-#' Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)
+#' Deprecated function(s) in the matsimr package
 #'
+#' \strong{transformToSf} - Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)\cr
 #' Takes trips_table (from readTripsTable) and transforms trips_table to sf object using start_x, end_x, start_y, end_y as a geometry features
-#' deletes from resulting data.frame start_x, end_x, start_y, end_y.
-#' And adds wkt column, if geometry.type = st_mulitpoint(), or geometry.type = st_linestring()
-#' Or adds start_wkt and end_wkt, if geometry.type = st_point()
+#' deletes from resulting data.frame start_x, end_x, start_y, end_y.\cr
+#' And adds wkt column, if geometry.type = st_mulitpoint(), or geometry.type = st_linestring()\cr
+#' Or adds start_wkt and end_wkt, if geometry.type = st_point()\cr
 #' Added column/columns projected to given CRS (coordinate reference system),
-#' that can be taken from network file of MATSimOutputDirectory
-#'
+#' that can be taken from network file of MATSimOutputDirectory\cr
 #' Function also sets attribute geometry.type to resulting table to character value of "POINT","MULTIPOINT","LINESTRING"
 #' to get which type of table was generated, if it is needed
 #'
@@ -2193,7 +2206,7 @@ getCrsFromConfig <- function(folder) {
 #' !!!st_multipoint()-resulting table contains 1 geometry wkt, representing start and end POINTS as MULTIPOINT!!! or
 #' !!!st_linestring() - resulting table contains 1 geometry wkt, representing line between start and end points as LINESTRING!!!
 #'
-#' @return sf object (data.frame with geometries depending to geometry.type)
+#' @return \strong{transformToSf} - sf object (data.frame with geometries depending to geometry.type)
 #'
 #' @export
 transformToSf <- function(table,
