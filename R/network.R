@@ -45,7 +45,7 @@ utils::globalVariables(c("name"))
 #' additional columns in the respective node and link tibbles.
 #'
 #' The links table is automatically joined with the nodes table so that
-#' node x/y coordinates (and any other node attributes) are available on the
+#' node x/y coordinates (and any other node attributes) are available in the
 #' links table without additional processing.
 #'
 #' @param filename File to load. Can be XML or gzipped XML
@@ -85,9 +85,9 @@ read_network <- function(filename) {
 
     # convert to a format we can join to the links
     nodeAttributes <- (nodeAttributes
-    %>% select(-class)
-      %>% pivot_wider(names_from = "name", values_from = "value")
-      %>% mutate_at(vars(one_of(convert)), as.double)
+                       %>% select(-class)
+                       %>% pivot_wider(names_from = "name", values_from = "value")
+                       %>% mutate_at(vars(one_of(convert)), as.double)
     )
     nodes <- nodes %>% left_join(nodeAttributes, by = "id")
   }
@@ -108,8 +108,8 @@ read_network <- function(filename) {
 
   # merge node coordinates
   links <- (links
-  %>% left_join(nodes, by = c("from" = "id"))
-    %>% left_join(nodes, by = c("to" = "id"), suffix = c(".from", ".to"))
+            %>% left_join(nodes, by = c("from" = "id"))
+            %>% left_join(nodes, by = c("to" = "id"), suffix = c(".from", ".to"))
   )
 
   # attributes don't have IDs on them! JFC, MATSim!
@@ -135,9 +135,9 @@ read_network <- function(filename) {
 
     # convert to a format we can join to the links
     linkAttributes <- (linkAttributes
-    %>% select(-class)
-      %>% pivot_wider(names_from = "name", values_from = "value")
-      %>% mutate_at(vars(one_of(convert)), as.double)
+                       %>% select(-class)
+                       %>% pivot_wider(names_from = "name", values_from = "value")
+                       %>% mutate_at(vars(one_of(convert)), as.double)
     )
 
     links <- links %>% left_join(linkAttributes, by = "id", suffix = c(".link", ".attr"))
@@ -161,9 +161,9 @@ read_network <- function(filename) {
 
     # convert to a format we can join to the links
     networkAttributes <- (networkAttributes
-    %>% select(-class)
-      %>% pivot_wider(names_from = "name", values_from = "value")
-      %>% mutate_at(vars(one_of(convert)), as.double)
+                          %>% select(-class)
+                          %>% pivot_wider(names_from = "name", values_from = "value")
+                          %>% mutate_at(vars(one_of(convert)), as.double)
     )
   }
 
