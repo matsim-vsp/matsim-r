@@ -23,7 +23,14 @@
 \alias{plotTripTypesPieChart}
 \alias{compareTripTypesBarChart}
 \alias{plotMapWithTripsType}
+\alias{compareBasePolicyOutput}
+\alias{compareBasePolicyShapeOutput}
 \alias{appendDistanceCategory}
+\alias{filterByRegion}
+\alias{deriveODMatrix}
+\alias{getCrsFromConfig}
+\alias{transformToSf}
+\alias{plot_deptime_by_act}
 \title{Deprecated function(s) in the matsimr package}
 \usage{
 plotModalSplitPieChart(
@@ -166,16 +173,58 @@ compareTripTypesBarChart(
 
 plotMapWithTripsType(table, shapeTable, crs, optimized = FALSE)
 
+compareBasePolicyOutput(
+  baseFolder,
+  policyFolder,
+  dump.output.to = matsimDumpOutputDirectory
+)
+
+compareBasePolicyShapeOutput(
+  baseFolder,
+  policyFolder,
+  shapeFilePath,
+  crs,
+  dump.output.to = matsimDumpOutputDirectory
+)
+
 appendDistanceCategory(tripsTable)
+
+filterByRegion(
+  tripsTable,
+  shapeTable,
+  crs,
+  start.inshape = TRUE,
+  end.inshape = TRUE
+)
+
+deriveODMatrix(
+  tripsTable,
+  shapePath,
+  crs,
+  dump.output.to = matsimDumpOutputDirectory,
+  simwrapper = FALSE,
+  colnames = "numeric",
+  outer = FALSE
+)
+
+getCrsFromConfig(folder)
+
+transformToSf(table, crs, geometry.type = st_multipoint())
+
+plot_deptime_by_act(
+  trips_table,
+  unite_activities = character(0),
+  united_name = "united"
+)
 }
 \arguments{
-\item{tripsTable}{tible of trips_output (from readTripsTable())}
+\item{tripsTable}{tibble of trips_output (from readTripsTable())}
 
-\item{unite.columns}{vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
+\item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
 
-\item{united.name}{if columns were united, you can specify name for the resulting column in plot}
+\item{united.name}{character string, if columns were united, you can specify name for the resulting column in plot}
 
-\item{dump.output.to}{folder that saves resulting image of BarChart}
+\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored}
 
 \item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
 
@@ -200,6 +249,27 @@ appendDistanceCategory(tripsTable)
 \item{end.inshape}{bool, defines trips to conclude (see Description)}
 
 \item{optimized}{bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot}
+
+\item{baseFolder}{specifies data source folder with multiple base output_trips}
+
+\item{policyFolder}{specifies data source folder with multiple policy output_trips}
+
+\item{shapeFilePath}{specifies shapeFile used for comparison}
+
+\item{shapePath}{full path to shapefile (if simwrapper TRUE, folder with shapeFile should contain also .dbf with the same name)}
+
+\item{simwrapper}{create output in a simwrapper form if set to path of the shapefile}
+
+\item{colnames}{if the specific shapefile contains known columns, they could be specified as name for columns OD. If not given then they get numeric values}
+
+\item{outer}{logical that represent if the table should contain outside flow of the shape, it isn't}
+
+\item{folder}{specifies path to find config}
+
+\item{geometry.type}{function of sf transformation, geometry.type can be (by default is st_multipoint())\cr
+!!!st_point()-resulting table contains 2 geometries start_wkt and end_wkt, representing start and end POINTs, and have type POINT!!!  or \cr
+!!!st_multipoint()-resulting table contains 1 geometry wkt, representing start and end POINTS as MULTIPOINT!!! or \cr
+!!!st_linestring() - resulting table contains 1 geometry wkt, representing line between start and end points as LINESTRING!!!}
 }
 \value{
 \strong{plotModalSplitPieChart} - Pie Chart plot of transport mode distribution, values given in percents
@@ -239,6 +309,22 @@ appendDistanceCategory(tripsTable)
 \strong{compareTripTypesBarChart} - plot with percentage of each type of trips between 2 tables
 
 \strong{plotMapWithTripsType} - plot that contains every trip with defined trip type
+
+\strong{compareBasePolicyOutput} - list of tibbles, list of all base and policy output_trips as tibble
+
+\strong{compareBasePolicyShapeOutput} - list of tibbles, list of all base and policy output_trips as tibble
+
+tibble of output_trips with distance category column
+
+\strong{filterByRegion} - tibble, with filtered trips depending on shapeTable and special flags (see Description)
+
+\strong{deriveODMatrix} - tibble of origin/destination matrix
+
+\strong{getCrsFromConfig} - code of coordinate reference system
+
+\strong{transformToSf} - sf object (data.frame with geometries depending to geometry.type)
+
+\strong{plotDepartureTimesPerTripPurpose} -  Line plot with arrival time x-axis and number end activities on y-axis
 }
 \description{
 These functions are provided for compatibility with older version of
@@ -335,6 +421,44 @@ if start.inshape = TRUE & end.inshape = TRUE return table that contains trips in
 and saves output to dump.output.to
 
 \strong{plotMapWithTripsType} - plots every type of trips(inside, outside, origin and destinating) on map
+
+\strong{compareBasePolicyOutput} - Chooses a function to compare output_trips from the folders.
+baseFolder contains all base outputs, policyFolder contains all policy outputs.
+
+\strong{compareBasePolicyShapeOutput} - Chooses a function to compare output_trips from the folders.
+baseFolder contains all base outputs, policyFolder contains all policy outputs.
+
+\strong{appendDistanceCategory} - adds to trips output tibble additional column that represent distance as category
+
+\strong{filterByRegion} - Filtering of trips_table(from readTripsTable) depending on how they located in given shape\cr
+Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
+Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
+transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
+and filters the trips from table depending on *.inshape flags: \cr
+if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape\cr
+if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape\cr
+if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape\cr
+if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
+
+\strong{deriveODMatrix} - Creates an instance of ODMatrix(origin/destination) in conventional form or for the simwrapper
+
+\strong{getCrsFromConfig} - Reads an coordinate referenec system of MATSim output directory
+from output_config.xml
+
+\strong{transformToSf} - Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)\cr
+Takes trips_table (from readTripsTable) and transforms trips_table to sf object using start_x, end_x, start_y, end_y as a geometry features
+deletes from resulting data.frame start_x, end_x, start_y, end_y.\cr
+And adds wkt column, if geometry.type = st_mulitpoint(), or geometry.type = st_linestring()\cr
+Or adds start_wkt and end_wkt, if geometry.type = st_point()\cr
+Added column/columns projected to given CRS (coordinate reference system),
+that can be taken from network file of MATSimOutputDirectory\cr
+Function also sets attribute geometry.type to resulting table to character value of "POINT","MULTIPOINT","LINESTRING"
+to get which type of table was generated, if it is needed
+
+\strong{plotDepartureTimesPerTripPurpose} - Takes Table trips_output (from readTripsTable()),
+to make line plot with with values that represent
+count of destination activities for a specific arrival time
+Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 }
 \section{Details}{
 

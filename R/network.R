@@ -54,6 +54,7 @@ utils::globalVariables(c("name"))
 #'
 #' @export
 read_network <- function(filename) {
+
   cat(filename, ": ")
   network <- read_xml(filename)
 

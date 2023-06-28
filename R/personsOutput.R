@@ -63,6 +63,7 @@ readPersonsTable <- function(input_path = ".",  n_max = Inf) {
 #'
 #' @export
 boxplotScoreDifferences <- function(personTibble_base, personTibble_policy){
+  s
   joined <- inner_join(personTibble_base, personTibble_policy, by = "person", suffix = c("_base", "_policy")) %>%
     select(person,
            executed_score_base,

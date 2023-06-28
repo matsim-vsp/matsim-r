@@ -798,7 +798,7 @@ plotArrivalTimesPerTripPurpose <- function(tripsTable, unite.columns = character
     for(dtime in diff){
       newColumn = rbind(newColumn,c(dtime,0))
     }
-    newColumn = newColumn %>%arrange(arr_time) %>% select(-arr_time) %>% mutate(act = as.numeric(act))
+    newColumn = newColumn %>%arrange(arr_time) %>% select(-arr_time) %>% mutate(act = as.ncheumeric(act))
     colnames(newColumn)[1] = act
     #print(newColumn)
     tableToWrite = cbind(tableToWrite,newColumn)
@@ -1930,11 +1930,13 @@ appendDistanceCategory <- function(tripsTable){
 #' Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
 #' Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
 #' transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
-#' and filters the trips from table depending on *.inshape flags:
-#' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
-#' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
-#' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
+#' and filters the trips from table depending on *.inshape flags: \cr
+#' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape\cr
+#' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape\cr
+#' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape\cr
 #' if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
+#'
+#' @rdname matsimr-deprecated
 #'
 #' @param tripsTable tibble of trips_output (from readTripsTable())
 #'
@@ -2197,13 +2199,15 @@ getCrsFromConfig <- function(folder) {
 #' Function also sets attribute geometry.type to resulting table to character value of "POINT","MULTIPOINT","LINESTRING"
 #' to get which type of table was generated, if it is needed
 #'
+#' @rdname matsimr-deprecated
+#'
 #' @param table tibble of trips_output (from readTripsTable())
 #'
 #' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
 #'
-#' @param geometry.type function of sf transformation, geometry.type can be (by default is st_multipoint())
-#' !!!st_point()-resulting table contains 2 geometries start_wkt and end_wkt, representing start and end POINTs, and have type POINT!!!  or
-#' !!!st_multipoint()-resulting table contains 1 geometry wkt, representing start and end POINTS as MULTIPOINT!!! or
+#' @param geometry.type function of sf transformation, geometry.type can be (by default is st_multipoint())\cr
+#' !!!st_point()-resulting table contains 2 geometries start_wkt and end_wkt, representing start and end POINTs, and have type POINT!!!  or \cr
+#' !!!st_multipoint()-resulting table contains 1 geometry wkt, representing start and end POINTS as MULTIPOINT!!! or \cr
 #' !!!st_linestring() - resulting table contains 1 geometry wkt, representing line between start and end points as LINESTRING!!!
 #'
 #' @return \strong{transformToSf} - sf object (data.frame with geometries depending to geometry.type)
@@ -2640,6 +2644,104 @@ plot_distance_by_spatialcat <- function(trips_table, shape_table, crs, euclidian
   fig
   return(fig)
 }
+
+
+#' Deprecated function(s) in the matsimr package
+#'
+#' \strong{plot_arrtime_by_act} - Takes Table trips_output (from readTripsTable()),
+#' to make line plot with with values that represent
+#' count of destination activities for a specific arrival time
+#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#'
+#'
+#' @param trips_table tibble of trips_output (from readTripsTable())
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in plot
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
+#'
+#' @return \strong{plot_arrtime_by_act} - Line plot with arrival time x-axis and number end activities on y-axis
+#'
+#' @export
+plot_arrtime_by_act <- function(trips_table, unite_activities = character(0), united_name = "united") {
+
+
+
+  # If some columns should be united
+  trips_table <- process_rename_category(trips_table = trips_table,
+                                         unite_template = unite_activities,
+                                         united_name = united_name,
+                                        column = "end_activity_type")
+
+
+  trips_table = trips_table %>%
+    mutate(arr_time = hour(hms(trips_table$dep_time)+hms(trips_table$trav_time))) %>%
+    mutate(end_activity_type = sapply(strsplit(end_activity_type,"_"),"[[",1)) %>%
+    count(arr_time,end_activity_type)
+
+
+  activities = levels(factor(trips_table$end_activity_type))
+
+
+
+  fig = plot_ly(trips_table,x = ~arr_time,y = ~n,type = "scatter",mode = "line",linetype = ~end_activity_type)
+  fig = fig %>% layout(yaxis = list(title = "Number of trips ending per trip purpose / Count of activities starting"),
+                       xaxis = list(title = "Time [h]"),
+                       barmode = "group")
+
+
+  fig
+  return(fig)
+
+}
+
+#' Deprecated function(s) in the matsimr package
+#'
+#' \strong{plotDepartureTimesPerTripPurpose} - Takes Table trips_output (from readTripsTable()),
+#' to make line plot with with values that represent
+#' count of destination activities for a specific arrival time
+#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+#'
+#' @rdname matsimr-deprecated
+#'
+#' @param tripsTable tibble of trips_output (from readTripsTable())
+#' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns
+#' @param united.name character string, if columns were united, you can specify name for the resulting column in plot
+#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
+#' @param only.files boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly
+#'
+#' @return \strong{plotDepartureTimesPerTripPurpose} -  Line plot with arrival time x-axis and number end activities on y-axis
+#'
+#' @export
+plot_deptime_by_act <- function(trips_table, unite_activities = character(0), united_name = "united") {
+
+
+  # If some columns should be united
+  trips_table <- process_rename_category(trips_table = trips_table,
+                                         unite_template = unite_activities,
+                                         united_name = united_name,
+                                         column = "end_activity_type")
+
+
+  trips_table = trips_table %>%
+    mutate(dep_time = hour(dep_time)) %>%
+    mutate(end_activity_type = sapply(strsplit(end_activity_type,"_"),"[[",1)) %>%
+    count(dep_time,end_activity_type)
+
+
+
+
+  fig = plot_ly(trips_table,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~end_activity_type)
+  fig = fig %>% layout(yaxis = list(title = "Number of trips ending per trip purpose / Count of activities starting"),
+                       xaxis = list(title = "Time [h]"),
+                       barmode = "group")
+
+
+  fig
+  return(fig)
+
+}
+
 
 ###### Compare ######
 
@@ -3344,6 +3446,7 @@ plot_map_trips_by_spatialcat <- function(trips_table, shape_table,
 }
 
 #####Processing#####
+
 #' @export
 process_rename_mainmodes<-function(trips_table,
                                    unite.columns = character(0), united.name = "united"){
@@ -3354,6 +3457,17 @@ process_rename_mainmodes<-function(trips_table,
   }
   return(trips_table)
 }
+
+#' @export
+process_rename_category<-function(trips_table,
+                                   unite_template= character(0), united_name = "united",column = "main_mode"){
+
+  if (length(unite_template) != 0) {
+    trips_table[[column]][grep(paste0(unite_template, collapse = "|"), trips_table[[column]])] <- united_name
+  }
+  return(trips_table)
+}
+
 #' @export
 process_get_mainmode_distribution<-function(trips_table,percentage = FALSE){
 
@@ -3375,23 +3489,18 @@ process_get_travdistance_distribution<-function(trips_table,euclidean = FALSE){
   return(trips_table)
 }
 #' @export
-process_get_travelwaittime_by_mainmode_barchart<-function(trips_table,
+process_get_travelwaittime_by_mainmode<-function(trips_table,
                                              time_format = "minute"){#also could be hours/seconds
 
   #get 2 columns with mean travel time and mean wait time grouped by main_mode in seconds
-   avg_time = trips_table %>% group_by(main_mode)%>%
-    summarize(trav_time_avg = hms::hms(seconds_to_period(mean(trav_time))),
-              wait_time_avg = hms::hms(seconds_to_period(mean(wait_time)))) %>%
-    mutate(trav_time_avg = as.numeric(trav_time_avg),wait_time_avg = as.numeric(wait_time_avg))
 
-   if(time_format == "minute"){
-     #convert seconds to minutes
-     avg_time = avg_time %>% mutate(trav_time_avg = trav_time_avg/60, wait_time_avg = wait_time_avg/60)
-     return(avg_time)
-   }else if(time_format == "hour"){
-     avg_time = avg_time %>% mutate(trav_time_avg = trav_time_avg/3600, wait_time_avg = wait_time_avg/3600)
-     return(avg_time)
-   }
+   trips_table <-trips_table %>%
+     process_convert_time(time_format = time_format, time_column = "trav_time") %>%
+     process_convert_time(time_format = time_format, time_column = "wait_time")
+
+   avg_time = trips_table %>% group_by(main_mode)%>%
+    summarize(trav_time_avg = mean(trav_time),
+              wait_time_avg = mean(wait_time))
 
    return(avg_time)
 }
@@ -3421,8 +3530,25 @@ process_append_distcat <- function(trips_table,distances_array = c(1000,2000,500
   return(result_table)
 }
 
-######Spatial######
+#' @export
+process_convert_time <- function(trips_table,time_format = "hour",time_column = "dep_time"){
 
+  #get 2 columns with mean travel time and mean wait time grouped by main_mode in seconds
+  trips_table[[time_column]] = as.numeric(hms::hms(seconds_to_period(trips_table[[time_column]])))
+
+  if(time_format == "minute"){
+    #convert seconds to minutes
+    trips_table[[time_column]] = trips_table[[time_column]]/60
+    return(trips_table)
+  }else if(time_format == "hour"){
+    trips_table[[time_column]] = trips_table[[time_column]]/3600
+    return(trips_table)
+  }
+
+  return(trips_table)
+}
+
+######Spatial######
 #' Filtering of trips_table(from readTripsTable) depending on how they located in given shape
 #'
 #' Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
