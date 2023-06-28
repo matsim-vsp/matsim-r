@@ -31,6 +31,7 @@
 \alias{getCrsFromConfig}
 \alias{transformToSf}
 \alias{plot_deptime_by_act}
+
 \title{Deprecated function(s) in the matsimr package}
 \usage{
 plotModalSplitPieChart(
@@ -209,6 +210,7 @@ deriveODMatrix(
 
 getCrsFromConfig(folder)
 
+
 transformToSf(table, crs, geometry.type = st_multipoint())
 
 plot_deptime_by_act(
@@ -218,13 +220,14 @@ plot_deptime_by_act(
 )
 }
 \arguments{
-\item{tripsTable}{tibble of trips_output (from readTripsTable())}
+\item{tripsTable}{table of output trips(from readTripsTable) or path to trips_output file}
 
 \item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
 
 \item{united.name}{character string, if columns were united, you can specify name for the resulting column in plot}
 
 \item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored}
+
 
 \item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
 
@@ -266,10 +269,12 @@ plot_deptime_by_act(
 
 \item{folder}{specifies path to find config}
 
+
 \item{geometry.type}{function of sf transformation, geometry.type can be (by default is st_multipoint())\cr
 !!!st_point()-resulting table contains 2 geometries start_wkt and end_wkt, representing start and end POINTs, and have type POINT!!!  or \cr
 !!!st_multipoint()-resulting table contains 1 geometry wkt, representing start and end POINTS as MULTIPOINT!!! or \cr
 !!!st_linestring() - resulting table contains 1 geometry wkt, representing line between start and end points as LINESTRING!!!}
+
 }
 \value{
 \strong{plotModalSplitPieChart} - Pie Chart plot of transport mode distribution, values given in percents
@@ -325,6 +330,7 @@ tibble of output_trips with distance category column
 \strong{transformToSf} - sf object (data.frame with geometries depending to geometry.type)
 
 \strong{plotDepartureTimesPerTripPurpose} -  Line plot with arrival time x-axis and number end activities on y-axis
+
 }
 \description{
 These functions are provided for compatibility with older version of
@@ -459,6 +465,7 @@ to get which type of table was generated, if it is needed
 to make line plot with with values that represent
 count of destination activities for a specific arrival time
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+
 }
 \section{Details}{
 
