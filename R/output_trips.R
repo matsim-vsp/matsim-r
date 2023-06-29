@@ -2562,8 +2562,7 @@ plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
 
   fig
   return(fig)
-
-
+}
 #' Plot bar chart of changes in modal split
 #'
 #' Takes two data frames (from \link{readTripsTable()}), calculates the
