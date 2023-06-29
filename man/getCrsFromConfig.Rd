@@ -2,7 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{getCrsFromConfig}
 \alias{getCrsFromConfig}
-\title{Reads an coordinate referenec system of MATSim output directory
+\title{Reads an coordinate reference system of MATSim output directory
 from output_config.xml}
 \usage{
 getCrsFromConfig(folder)
@@ -14,6 +14,6 @@ getCrsFromConfig(folder)
 code of coordinate reference system
 }
 \description{
-Reads an coordinate referenec system of MATSim output directory
+Reads an coordinate reference system of MATSim output directory
 from output_config.xml
 }

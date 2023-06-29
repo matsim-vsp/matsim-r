@@ -7,7 +7,7 @@
 readTripsTable(input_path = ".", n_max = Inf)
 }
 \arguments{
-\item{input_path}{character string, path to matsim output directory or http link to the file.}
+\item{input_path}{character string, path to MATSim output directory or http link to the file.}
 
 \item{n_max}{integer, maximum number of lines to read within output_trips}
 }
@@ -15,6 +15,6 @@ readTripsTable(input_path = ".", n_max = Inf)
 tibble of trips_output
 }
 \description{
-Loads a MATSim CSV output_trips from file or archive,
-creating a tibble with columns as in csv file
+Loads a MATSim output_trips file from file or archive path,
+creating a tibble
 }

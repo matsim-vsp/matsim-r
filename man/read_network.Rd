@@ -19,6 +19,6 @@ additional columns in the respective node and link tibbles.
 }
 \details{
 The links table is automatically joined with the nodes table so that
-node x/y coordinates (and any other node attributes) are available on the
+node x/y coordinates (and any other node attributes) are available in the
 links table without additional processing.
 }

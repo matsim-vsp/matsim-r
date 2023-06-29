@@ -2,29 +2,30 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_distcat_by_mainmode_barchart}
 \alias{plot_distcat_by_mainmode_barchart}
-\title{Bar Chart with distance travelled on x-axis and number of trips on y-axis}
+\title{Bar Chart with distance traveled on x-axis and number of trips on y-axis}
 \usage{
 plot_distcat_by_mainmode_barchart(
   trips_table,
-  unite.columns = character(0),
+  unite.modes = character(0),
   united.name = "united",
   dist_column = "dist_cat",
   distances_array = c(1000, 2000, 5000, 10000, 20000, 50000, 1e+05)
 )
 }
 \arguments{
-\item{trips_table}{tible of trips_output (from readTripsTable())}
+\item{trips_table}{tibble of trips_output (from readTripsTable())}
 
-\item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
+\item{unite.modes}{vector of character strings,
+changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+using the function (\link{process_rename_mainmodes})}
 
-\item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart}
+\item{united.name}{character string, specifies the name of the united mode}
 }
 \value{
 Bar Chart plot of count of trips among distance travelled
 }
 \description{
-Takes Table trips_output (from readTripsTable()),
-to plot bar chart with with values that represent
-number of trips ~ distance travelled
-Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+Takes the data frame trips_output (from \link{readTripsTable()}) and categorizes the traveled distances into pre-defined bins
+to plot a histogram of the traveled distances. (Bins: 1000,2000,5000,10000,20000,50000,100000 (m))
+Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 }

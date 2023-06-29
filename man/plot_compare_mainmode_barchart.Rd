@@ -2,36 +2,31 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_compare_mainmode_barchart}
 \alias{plot_compare_mainmode_barchart}
-\title{Plot bar chart diagram of transport mode changes}
+\title{Plot bar chart of changes in modal split}
 \usage{
 plot_compare_mainmode_barchart(
   trips_table1,
   trips_table2,
-  unite.columns = character(0),
+  unite.modes = character(0),
   united.name = "united"
 )
 }
 \arguments{
-\item{unite.columns}{vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
+\item{unite.modes}{vector of character strings,
+changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+using the function (\link{process_rename_mainmodes})}
 
-\item{united.name}{if columns were united, you can specify name for the resulting column in plot}
+\item{united.name}{character string, specifies the name of the united mode}
 
-\item{tripsTable1}{tible of trips_output (from readTripsTable())}
+\item{tripsTable1}{tibble of trips_output (from readTripsTable())}
 
-\item{tripsTable2}{tible of trips_output (from readTripsTable())}
+\item{tripsTable2}{tibble of trips_output (from readTripsTable())}
 }
 \value{
-plots Bar Chart of transport mode changes with additional files for simwrapper
+plots bar chart of changes in modal split
 }
 \description{
-Takes two trips_table (from readTripsTable), and collects
-changes between transport mode distribution of these tables
-to make bar chart diagram with dodging positioning from this data
-}
-\details{
-Function calculates number of each transport mode used in
-first and second table, and draws plot that represent how
-distribution of transport mode has changed (f. e. what part of concrete trasport mode changed to another)
-Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united.name is "united")
-Using parameter show.onlyChanges
+Takes two data frames (from \link{readTripsTable()}), calculates the
+changes in mode shares and plots them as a bar chart
+Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 }

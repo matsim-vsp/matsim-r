@@ -2,7 +2,7 @@
 % Please edit documentation in R/simwrapper.R
 \name{prepareSimwrapperDashboardFromTable}
 \alias{prepareSimwrapperDashboardFromTable}
-\title{Creates dashboard for the given table or folder with data}
+\title{Creates dashboard for the given table with data}
 \usage{
 prepareSimwrapperDashboardFromTable(
   table,
@@ -13,14 +13,14 @@ prepareSimwrapperDashboardFromTable(
 \arguments{
 \item{table}{trips_output tibble from readTripsTable()}
 
-\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard and all plots using functions:
+\item{dump.output.to}{output folder, yaml files and plots from the following functions are saved there:
 plotModalSplitBarChart(),plotModalSplitPieChart(),plotModalShift().}
 
-\item{append}{specifies if the ouput folder should be erased before creating}
+\item{append}{specifies if the ouput folder should be erased before creating, default = FALSE}
 }
 \value{
 generates folder with content for simwrapper out of trips table
 }
 \description{
-Creates dashboard for the given table or folder with data
+Creates dashboard for the given table with data
 }
