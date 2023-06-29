@@ -2564,604 +2564,604 @@ plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
 }
 
 
-  #' Plot bar chart of changes in modal split
-  #'
-  #' Takes two data frames (from \link{readTripsTable()}), calculates the
-  #' changes in mode shares and plots them as a bar chart
-  #' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
-  #'
-  #'
-  #'
-  #' @param tripsTable1 tibble of trips_output (from readTripsTable())
-  #' @param tripsTable2 tibble of trips_output (from readTripsTable())
-  #'@param unite.modes vector of character strings,
-  #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
-  #' using the function (\link{process_rename_mainmodes})
-  #' @param united.name character string, specifies the name of the united mode
-  #'
-  #' @return plots bar chart of changes in modal split
-  #'
-  #' @export
-  plot_compare_mainmode_barchart <- function(trips_table1, trips_table2,
-                                             unite.modes = character(0),
-                                             united.name = "united") {
-    # renaming/uniting of modes
-    trips_table1 <- process_rename_mainmodes(trips_table = trips_table,
-                                             unite.modes = unite.modes,
-                                             united.name = united.name)
-
-    trips_table2 <- process_rename_mainmodes(trips_table = trips_table,
-                                             unite.modes = unite.modes,
-                                             united.name = united.name)
-
-    trips_table1  = trips_table1 %>% mutate(type = "base")
-    trips_table2  = trips_table2 %>% mutate(type = "policy")
-
-    total_trips = rbind(trips_table1,trips_table2)
-
-    plt = ggplot(total_trips, aes(x =main_mode,fill = factor(type)))+
-      geom_bar(position = position_dodge())+
-      coord_flip()
-    plotly::ggplotly(plt)
-
-    return(plotly::ggplotly(plt))
-  }
-
-  #' Plot alluvial/sankey diagram of transport mode changes
-  #'
-  #' Takes two data frames (from \link{readTripsTable()}) and compares the mode choice for each agent and summarizes the results, showing the modal shift.
-  #' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
-  #' The parameter show.onlyChanges allows the visualization of only the mode shift (excluding the trips that do not change mode). Standard value is FALSE.
-  #'
-  #' @param tripsTable1 tibble of trips_output (from readTripsTable())
-  #' @param tripsTable2 tibble of trips_output (from readTripsTable())
-  #' @param show.onlyChanges boolean, if it is set to TRUE the sankey diagram only shows the mode shift
-  #' @param unite.modes vector of character strings,
-  #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
-  #' using the function (\link{process_rename_mainmodes})
-  #' @param united.name character string, specifies the name of the united mode
-  #'
-  #' @return Alluvial diagram that represents changes in transport mode distribution
-  #'
-  #' @export
-  plot_compare_mainmode_sankey <- function(trips_table1, trips_table2,
-                                           show.onlyChanges = FALSE,
+#' Plot bar chart of changes in modal split
+#'
+#' Takes two data frames (from \link{readTripsTable()}), calculates the
+#' changes in mode shares and plots them as a bar chart
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
+#'
+#'
+#'
+#' @param tripsTable1 tibble of trips_output (from readTripsTable())
+#' @param tripsTable2 tibble of trips_output (from readTripsTable())
+#'@param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
+#'
+#' @return plots bar chart of changes in modal split
+#'
+#' @export
+plot_compare_mainmode_barchart <- function(trips_table1, trips_table2,
                                            unite.modes = character(0),
                                            united.name = "united") {
+  # renaming/uniting of modes
+  trips_table1 <- process_rename_mainmodes(trips_table = trips_table,
+                                           unite.modes = unite.modes,
+                                           united.name = united.name)
 
-    # renaming/uniting of modes
-    trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
-                                             unite.modes = unite.modes,
-                                             united.name = united.name)
+  trips_table2 <- process_rename_mainmodes(trips_table = trips_table,
+                                           unite.modes = unite.modes,
+                                           united.name = united.name)
 
-    trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
-                                             unite.modes = unite.modes,
-                                             united.name = united.name)
-    #processing
-    joined <- as_tibble(inner_join(trips_table1, trips_table2 %>%
-                                     select(trip_id, main_mode), by = "trip_id") %>%
-                          dplyr::rename(base_mode = main_mode.x, policy_mode = main_mode.y))
+  trips_table1  = trips_table1 %>% mutate(type = "base")
+  trips_table2  = trips_table2 %>% mutate(type = "policy")
 
-    #if onlychanges, then we should exclude base_mode=policy_mode
-    if (show.onlyChanges == TRUE) {
-      joined <- joined %>%
-        filter(base_mode != policy_mode)
-    }
+  total_trips = rbind(trips_table1,trips_table2)
 
+  plt = ggplot(total_trips, aes(x =main_mode,fill = factor(type)))+
+    geom_bar(position = position_dodge())+
+    coord_flip()
+  plotly::ggplotly(plt)
+
+  return(plotly::ggplotly(plt))
+}
+
+#' Plot alluvial/sankey diagram of transport mode changes
+#'
+#' Takes two data frames (from \link{readTripsTable()}) and compares the mode choice for each agent and summarizes the results, showing the modal shift.
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
+#' The parameter show.onlyChanges allows the visualization of only the mode shift (excluding the trips that do not change mode). Standard value is FALSE.
+#'
+#' @param tripsTable1 tibble of trips_output (from readTripsTable())
+#' @param tripsTable2 tibble of trips_output (from readTripsTable())
+#' @param show.onlyChanges boolean, if it is set to TRUE the sankey diagram only shows the mode shift
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
+#'
+#' @return Alluvial diagram that represents changes in transport mode distribution
+#'
+#' @export
+plot_compare_mainmode_sankey <- function(trips_table1, trips_table2,
+                                         show.onlyChanges = FALSE,
+                                         unite.modes = character(0),
+                                         united.name = "united") {
+
+  # renaming/uniting of modes
+  trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
+                                           unite.modes = unite.modes,
+                                           united.name = united.name)
+
+  trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
+                                           unite.modes = unite.modes,
+                                           united.name = united.name)
+  #processing
+  joined <- as_tibble(inner_join(trips_table1, trips_table2 %>%
+                                   select(trip_id, main_mode), by = "trip_id") %>%
+                        dplyr::rename(base_mode = main_mode.x, policy_mode = main_mode.y))
+
+  #if onlychanges, then we should exclude base_mode=policy_mode
+  if (show.onlyChanges == TRUE) {
     joined <- joined %>%
-      group_by(base_mode, policy_mode) %>%
-      count()
+      filter(base_mode != policy_mode)
+  }
 
-    modes = unique(c(joined$base_mode,joined$policy_mode))
+  joined <- joined %>%
+    group_by(base_mode, policy_mode) %>%
+    count()
 
-    joined$base_mode <- as.numeric(factor(joined$base_mode,levels = modes))
-    joined$policy_mode <- as.numeric(factor(joined$policy_mode,levels = modes))
+  modes = unique(c(joined$base_mode,joined$policy_mode))
+
+  joined$base_mode <- as.numeric(factor(joined$base_mode,levels = modes))
+  joined$policy_mode <- as.numeric(factor(joined$policy_mode,levels = modes))
 
 
-    #plotting
-    palette <- colorRampPalette( c( "blue", "red" ) )( 7 )
+  #plotting
+  palette <- colorRampPalette( c( "blue", "red" ) )( 7 )
 
 
-    fig <- plot_ly(
-      type = "sankey",
-      orientation = "h",
+  fig <- plot_ly(
+    type = "sankey",
+    orientation = "h",
 
-      node = list(
-        label = c(modes,modes),
-        color = c(palette,palette),
-        pad = 15,
-        thickness = 20,
-        line = list(
-          color = "black",
-          width = 0.5
-        )
-      ),
-
-      link = list(
-        source = joined$base_mode-1,
-        target = joined$policy_mode+6,
-        value =  joined$n
+    node = list(
+      label = c(modes,modes),
+      color = c(palette,palette),
+      pad = 15,
+      thickness = 20,
+      line = list(
+        color = "black",
+        width = 0.5
       )
+    ),
+
+    link = list(
+      source = joined$base_mode-1,
+      target = joined$policy_mode+6,
+      value =  joined$n
     )
-    fig <- fig %>% layout(
-      title = "Basic Sankey Diagram",
-      font = list(
-        size = 10
-      )
+  )
+  fig <- fig %>% layout(
+    title = "Basic Sankey Diagram",
+    font = list(
+      size = 10
     )
+  )
 
-    fig
-    return(fig)
+  fig
+  return(fig)
+}
+
+#' Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
+#'
+#' Takes the data frame trips_output (from \link{readTripsTable()}),
+#' to plot a bar chart of the traveling/waiting time
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
+#'
+#'
+#' @param tripsTable1 tibble of trips_output (from readTripsTable())
+#' @param tripsTable2 tibble of trips_output (from readTripsTable())
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
+#'
+#' @return Bar Chart plot of average time spent on travel/wait
+#'
+#' @export
+plot_compare_travelwaittime_by_mainmode_barchart <- function(trips_table1,trips_table2,
+                                                             unite.modes = character(0),
+                                                             united.name = "united",
+                                                             time_format = "minute") {
+
+  #TODO:
+  # . Document and add title to show what means positive/negative value
+  # . think about comparing processing functions they can appear in future often
+
+
+  # If some columns should be united
+  trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
+                                           unite.modes = unite.modes,
+                                           united.name = united.name)
+
+  trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
+                                           unite.modes = unite.modes,
+                                           united.name = united.name)
+
+  #processing
+  avg_time1 = process_get_travelwaittime_by_mainmode(trips_table1,time_format = time_format)
+
+
+
+  avg_time2 = process_get_travelwaittime_by_mainmode(trips_table2,time_format = time_format)
+
+
+  avg_time = full_join(avg_time1, avg_time2, by = "main_mode") %>%
+    replace_na(list(trav_time_avg.x = 0,wait_time_avg.x = 0,trav_time_avg.y = 0,wait_time_avg.y = 0))
+
+
+
+  avg_time  = avg_time %>% mutate(trav_time_avg = trav_time_avg.x - trav_time_avg.y,
+                                  wait_time_avg =wait_time_avg.x - wait_time_avg.y )%>%
+    select(-wait_time_avg.x,-wait_time_avg.y, -trav_time_avg.x,-trav_time_avg.y)
+
+
+
+  #plotting
+  fig = plot_ly(data = avg_time,x = ~main_mode,y = ~trav_time_avg,type = 'bar',name = "AVG Time Travelling")
+  fig = fig %>% add_trace(y = ~wait_time_avg,name = "AVG Time Waiting")
+  fig = fig %>% layout(yaxis = list(title = paste0("Time spent (in ",time_format,"s)")),barmode = "group")
+
+
+  fig
+  return(fig)
+
+}
+
+###### Mapping ######
+
+#####Processing#####
+
+process_rename_mainmodes<-function(trips_table,
+                                   unite.modes = character(0), united.name = "united"){
+
+  if (length(unite.modes) != 0) {
+    trips_table$main_mode[grep(paste0(unite.modes, collapse = "|")
+                               , trips_table$main_mode)] <- united.name
+  }
+  return(trips_table)
+}
+
+process_get_mainmode_distribution<-function(trips_table,percentage = FALSE){
+
+  trips_table_count <- trips_table %>%
+    count(main_mode)
+  if(percentage){
+    trips_table_count<- trips_table_count %>% mutate(n = n / sum(n) * 100)
   }
 
-  #' Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
-  #'
-  #' Takes the data frame trips_output (from \link{readTripsTable()}),
-  #' to plot a bar chart of the traveling/waiting time
-  #' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
-  #'
-  #'
-  #' @param tripsTable1 tibble of trips_output (from readTripsTable())
-  #' @param tripsTable2 tibble of trips_output (from readTripsTable())
-  #' @param unite.modes vector of character strings,
-  #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
-  #' using the function (\link{process_rename_mainmodes})
-  #' @param united.name character string, specifies the name of the united mode
-  #'
-  #' @return Bar Chart plot of average time spent on travel/wait
-  #'
-  #' @export
-  plot_compare_travelwaittime_by_mainmode_barchart <- function(trips_table1,trips_table2,
-                                                               unite.modes = character(0),
-                                                               united.name = "united",
-                                                               time_format = "minute") {
+  return(trips_table_count)
+}
 
-    #TODO:
-    # . Document and add title to show what means positive/negative value
-    # . think about comparing processing functions they can appear in future often
+process_get_travdistance_distribution<-function(trips_table,euclidean = FALSE){
 
+  trips_table = trips_table %>%
+    group_by(main_mode) %>%
+    summarize(avg_dist = if_else(euclidian,mean(euclidean_distance),mean(traveled_distance)))
 
-    # If some columns should be united
-    trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
-                                             unite.modes = unite.modes,
-                                             united.name = united.name)
+  return(trips_table)
+}
 
-    trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
-                                             unite.modes = unite.modes,
-                                             united.name = united.name)
+process_get_travelwaittime_by_mainmode_barchart<-function(trips_table,
+                                                          time_format = "minute"){#also could be hours/seconds
 
-    #processing
-    avg_time1 = process_get_travelwaittime_by_mainmode(trips_table1,time_format = time_format)
+  #get 2 columns with mean travel time and mean wait time grouped by main_mode in seconds
+  avg_time = trips_table %>% group_by(main_mode)%>%
+    summarize(trav_time_avg = hms::hms(seconds_to_period(mean(trav_time))),
+              wait_time_avg = hms::hms(seconds_to_period(mean(wait_time)))) %>%
+    mutate(trav_time_avg = as.numeric(trav_time_avg),wait_time_avg = as.numeric(wait_time_avg))
 
-
-
-    avg_time2 = process_get_travelwaittime_by_mainmode(trips_table2,time_format = time_format)
-
-
-    avg_time = full_join(avg_time1, avg_time2, by = "main_mode") %>%
-      replace_na(list(trav_time_avg.x = 0,wait_time_avg.x = 0,trav_time_avg.y = 0,wait_time_avg.y = 0))
-
-
-
-    avg_time  = avg_time %>% mutate(trav_time_avg = trav_time_avg.x - trav_time_avg.y,
-                                    wait_time_avg =wait_time_avg.x - wait_time_avg.y )%>%
-      select(-wait_time_avg.x,-wait_time_avg.y, -trav_time_avg.x,-trav_time_avg.y)
-
-
-
-    #plotting
-    fig = plot_ly(data = avg_time,x = ~main_mode,y = ~trav_time_avg,type = 'bar',name = "AVG Time Travelling")
-    fig = fig %>% add_trace(y = ~wait_time_avg,name = "AVG Time Waiting")
-    fig = fig %>% layout(yaxis = list(title = paste0("Time spent (in ",time_format,"s)")),barmode = "group")
-
-
-    fig
-    return(fig)
-
-  }
-
-  ###### Mapping ######
-
-  #####Processing#####
-
-  process_rename_mainmodes<-function(trips_table,
-                                     unite.modes = character(0), united.name = "united"){
-
-    if (length(unite.modes) != 0) {
-      trips_table$main_mode[grep(paste0(unite.modes, collapse = "|")
-                                 , trips_table$main_mode)] <- united.name
-    }
-    return(trips_table)
-  }
-
-  process_get_mainmode_distribution<-function(trips_table,percentage = FALSE){
-
-    trips_table_count <- trips_table %>%
-      count(main_mode)
-    if(percentage){
-      trips_table_count<- trips_table_count %>% mutate(n = n / sum(n) * 100)
-    }
-
-    return(trips_table_count)
-  }
-
-  process_get_travdistance_distribution<-function(trips_table,euclidean = FALSE){
-
-    trips_table = trips_table %>%
-      group_by(main_mode) %>%
-      summarize(avg_dist = if_else(euclidian,mean(euclidean_distance),mean(traveled_distance)))
-
-    return(trips_table)
-  }
-
-  process_get_travelwaittime_by_mainmode_barchart<-function(trips_table,
-                                                            time_format = "minute"){#also could be hours/seconds
-
-    #get 2 columns with mean travel time and mean wait time grouped by main_mode in seconds
-    avg_time = trips_table %>% group_by(main_mode)%>%
-      summarize(trav_time_avg = hms::hms(seconds_to_period(mean(trav_time))),
-                wait_time_avg = hms::hms(seconds_to_period(mean(wait_time)))) %>%
-      mutate(trav_time_avg = as.numeric(trav_time_avg),wait_time_avg = as.numeric(wait_time_avg))
-
-    if(time_format == "minute"){
-      #convert seconds to minutes
-      avg_time = avg_time %>% mutate(trav_time_avg = trav_time_avg/60, wait_time_avg = wait_time_avg/60)
-      return(avg_time)
-    }else if(time_format == "hour"){
-      avg_time = avg_time %>% mutate(trav_time_avg = trav_time_avg/3600, wait_time_avg = wait_time_avg/3600)
-      return(avg_time)
-    }
-
+  if(time_format == "minute"){
+    #convert seconds to minutes
+    avg_time = avg_time %>% mutate(trav_time_avg = trav_time_avg/60, wait_time_avg = wait_time_avg/60)
+    return(avg_time)
+  }else if(time_format == "hour"){
+    avg_time = avg_time %>% mutate(trav_time_avg = trav_time_avg/3600, wait_time_avg = wait_time_avg/3600)
     return(avg_time)
   }
 
+  return(avg_time)
+}
 
 
-  process_append_distcat <- function(trips_table,distances_array = c(1000,2000,5000,10000,20000,50000,100000)){
 
-    distances_array = sort(c(distances_array,c(0,Inf)))
-    modes = levels(factor(trips_table$main_mode))
+process_append_distcat <- function(trips_table,distances_array = c(1000,2000,5000,10000,20000,50000,100000)){
 
-    #Also filtering table into a new doesn't creates new objects in memory, so it works fast
-    #Upd: it creates copy of dataframe on each mutate :/
+  distances_array = sort(c(distances_array,c(0,Inf)))
+  modes = levels(factor(trips_table$main_mode))
 
-    result_table <- c(NULL)
+  #Also filtering table into a new doesn't creates new objects in memory, so it works fast
+  #Upd: it creates copy of dataframe on each mutate :/
 
-    str_factors<-c(NULL)
-    for(i in 1:(length(distances_array)-1)){
-      part_table <- trips_table %>%
-        filter(traveled_distance>=distances_array[i] & traveled_distance<distances_array[i+1]) %>%
-        mutate(dist_cat = paste0(distances_array[i],"-",distances_array[i+1]))
-      str_factors<- c(str_factors,paste0(distances_array[i],"-",distances_array[i+1]))
-      result_table <- rbind(result_table,part_table)
+  result_table <- c(NULL)
+
+  str_factors<-c(NULL)
+  for(i in 1:(length(distances_array)-1)){
+    part_table <- trips_table %>%
+      filter(traveled_distance>=distances_array[i] & traveled_distance<distances_array[i+1]) %>%
+      mutate(dist_cat = paste0(distances_array[i],"-",distances_array[i+1]))
+    str_factors<- c(str_factors,paste0(distances_array[i],"-",distances_array[i+1]))
+    result_table <- rbind(result_table,part_table)
+  }
+
+  result_table$dist_cat = factor(result_table$dist_cat,levels = str_factors)
+  return(result_table)
+}
+
+######Spatial######
+#' XXXX trips_table but shapeTable - fix naming
+#' XXXX finish when code revision is done
+#' Filters trips_table(from ,\link{readTripsTable}) depending by location using a shapefile
+#'
+#' Uses trips_table and an sf object (can be created using the function st_read()),
+#' transforms both objects to match a mutual coordinate system (crs)
+#' and filters the trips from trips_table depending on *.inshape flags:
+#' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
+#' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
+#' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
+#' if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
+#'
+#' @param trips_table tibble of trips_output (from readTripsTable())
+#'
+#' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#'
+#' @param crs numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file
+#'
+#' @param start.inshape bool, defines trips to conclude (see Description)
+#'
+#' @param end.inshape bool, defines trips to conclude (see Description)
+#'
+#' @return tibble, with filtered trips depending on shapeTable and special flags (see Description)
+#'
+#' @export
+process_filter_by_shape <- function(trips_table,
+                                    shape_table,
+                                    crs,
+                                    start.inshape = TRUE, end.inshape = TRUE) {
+
+  # shape_table <- st_read(shapeFile)
+  if (st_crs(shape_table) == NA) {
+    st_crs(shape_table) <- crs
+  }
+
+  sf_table <- transformToSf(trips_table, crs = crs, geometry.type = st_point())
+  shape_table <- st_transform(shape_table, crs = crs)
+  # shape_table isn't table - shape
+
+  union_shape <- st_union(shape_table) # transforms the crs back to the previous in the file
+  union_shape <- st_transform(union_shape, crs = st_crs(shape_table))
+
+
+  st_geometry(sf_table) <- "start_wkt" # Set start_wkt as an active geometry
+  cont1 <- st_contains(union_shape, sf_table)[[1]] # Indexes of rows where start point is in shapefile
+
+  st_geometry(sf_table) <- "end_wkt" # Set end_wkt as and active geometry
+  cont2 <- st_contains(union_shape, sf_table)[[1]] # Indexes of rows where end point is in shapefile
+
+  # get trips that ended outside of shape
+  cont_end_outside <- setdiff(1:nrow(sf_table), cont2)
+
+  # get trips that started outside of shape
+  cont_start_outside <- setdiff(1:nrow(sf_table), cont1)
+
+  if (start.inshape == TRUE && end.inshape == TRUE) {
+    cont_union <- intersect(cont1, cont2)
+  } else if (start.inshape == TRUE && end.inshape == FALSE) {
+    cont_union <- intersect(cont1, cont_end_outside)
+  } else if (start.inshape == FALSE && end.inshape == TRUE) {
+    cont_union <- intersect(cont2, cont_start_outside)
+  } else {
+    cont_union <- intersect(cont_start_outside, cont_end_outside) # Give back trips that are neither starting and ending outside the area
+  }
+
+
+  return(trips_table[cont_union, ])
+}
+
+#' Reads the coordinate reference system from an MATSim output directory
+#' (output_config.xml)
+#'
+#' @param config_path specifies path to configuration file
+#'
+#'
+#' @return code of coordinate reference system
+#'
+#' @export
+process_get_crs_from_config <- function(config_path) {
+
+  if (grepl("output_config.xml$", config_path) == TRUE)
+  {
+    config <- read_xml(folder)
+
+    param_nodes = xml_find_all(config,"//param")
+
+    coord_node = param_nodes[xml_attr(param_nodes,"name") == "coordinateSystem"]
+
+    coord_system = xml_attr(coord_node,"value")
+    return(coord_system)
+  }
+
+  files <- list.files(config_path, full.names = TRUE)
+  # Read from global/local directory
+  # output_config.xml is contained as output_trips.csv.gz
+  if (length(grep("output_config.xml$", files)) != 0) {
+    config <- read_xml(files[grep("output_config.xml$", files)])
+
+    param_nodes = xml_find_all(config,"//param")
+
+    coord_node = param_nodes[xml_attr(param_nodes,"name") == "coordinateSystem"]
+
+    coord_system = xml_attr(coord_node,"value")
+    return(coord_system)
+  }
+  return(NA)
+}
+
+#' Creates an origin/destination matrix either in conventional form (row names = origin, column names = destination)
+#' or for simwrapper (origin and destination as columns)
+#'
+#'
+#' @param tripsTable tibble of trips_output (from \link{readTripsTable})
+#'
+#' @param shapePath string, full path to the shapefile (.shp) (shape files are made up of several files with the same name and the folder also needs to include a .dbf file)
+#'
+#' @param crs numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file
+#'
+#' @param dump.output.to string, path to a folder to save the .csv file
+#'
+#' @param colnames string, column names can be specified (i.e. to fit the shape file), if not they are numbered
+#'
+#' @param simwrapper boolean, creates output in the format used for simwrapper if the path for the shapefile is specified
+#'
+#' @param outer boolean, determines if flows outside of the shapefile are used, standard value is FALSE
+#'
+#' @return tibble of origin/destination matrix
+#'
+#' @export
+process_get_od_matrix<- function(tripsTable,
+                                 shapePath,
+                                 crs,
+                                 dump.output.to = matsimDumpOutputDirectory,
+                                 simwrapper = FALSE,
+                                 colnames = "numeric",
+                                 outer = FALSE){
+
+  defaultW <- getOption("warn")
+  options(warn = -1)
+
+  #if tripstable given as folder/file
+  if(sum(class(tripsTable) %in% c("tbl_df","tbl","data.frame"))<1){
+    tripsTable <- readTripsTable(tripsTable)
+  }
+
+  sfTable <- transformToSf(tripsTable,crs,geometry.type = st_point())
+
+  shape = st_read(shapePath)
+
+  if (st_crs(shape) == NA) {
+    st_crs(shape) <- crs
+  }
+  shape = st_transform(shape,crs = crs)
+
+  sf_table <- transformToSf(tripsTable, crs = crs, geometry.type = st_point())
+
+  sf_start = sfTable %>% select(trip_id,start_wkt)
+  st_geometry(sfTable) = "end_wkt"
+  sf_end = sfTable %>% select(trip_id,end_wkt)
+
+  #Get all inner intersects
+  sf_intersect_start = st_contains(shape,sf_start)
+  sf_intersect_end = st_contains(shape,sf_end)
+
+
+  if(outer == TRUE){
+    #Get all outer intersects
+    joined_shape = st_union(shape)
+
+    start_inside = st_contains(joined_shape,sf_start)
+    end_inside = st_contains(joined_shape,sf_end)
+
+    start_outside = 1:nrow(sf_start)
+    end_outside = 1:nrow(sf_end)
+
+    start_outside = start_outside[! start_outside %in% start_inside[[1]]]
+
+    end_outside = end_outside[! end_outside %in% end_inside[[1]]]
+
+    sf_intersect_start = append(sf_intersect_start,list(start_outside))
+    sf_intersect_end = append(sf_intersect_end,list(end_outside))
+  }
+
+  # Create matrix out of it
+  result_tibble = as_tibble(data.frame(matrix(nrow=0,ncol=nrow(shape))))
+  colnames(result_tibble) = 1:nrow(shape)
+
+  for(i in 1:length(sf_intersect_start)){
+    temp = c()
+    for(j in 1:length(sf_intersect_start)){
+      start_i = sf_intersect_start[[i]]
+      end_j = sf_intersect_end[[j]]
+
+      number_of_trips = length(intersect(start_i,end_j))
+
+      temp = append(temp,number_of_trips)
+
+    }
+    result_tibble = rbind(result_tibble,temp)
+  }
+
+  if(colnames!="numeric" & colnames %in% colnames(shape)){
+    colnames(result_tibble) = shape[[colnames]]
+    if(outer == TRUE){
+      rownames(result_tibble) = c(shape[[colnames]],"outer")
+      colnames(result_tibble)[length(colnames(result_tibble))]  = "outer"
+    }else{
+      rownames(result_tibble) = shape[[colnames]]
     }
 
-    result_table$dist_cat = factor(result_table$dist_cat,levels = str_factors)
+  }else{
+    colnames(result_tibble) = sapply(1:length(sf_intersect_start),as.character)
+    rownames(result_tibble) = sapply(1:length(sf_intersect_start),as.character)
+  }
+
+
+  result_melt = melt(as.matrix(result_tibble))
+  colnames(result_melt) = c("origin","destination",1)
+  # Generating yaml and output_files
+
+
+
+  if (file.exists(dump.output.to) & simwrapper == TRUE) {
+    write.table(result_melt,paste0(dump.output.to,"/ODMatrix.csv"),row.names = FALSE,sep = ";")
+  } else if(!file.exists(dump.output.to) & simwrapper == TRUE) {
+    dir.create(dump.output.to)
+    write.table(result_melt,paste0(dump.output.to,"/ODMatrix.csv"),row.names = FALSE,sep = ";")
+  } else if (file.exists(dump.output.to) & simwrapper == FALSE) {
+    write_csv2(result_tibble,paste0(dump.output.to,"/ODMatrix.csv"))
+  } else {
+    dir.create(dump.output.to)
+    write_csv2(result_tibble,paste0(dump.output.to,"/ODMatrix.csv"))
+  }
+
+  yaml_list <- list(
+    title = "OD Flow",
+    description = "generated by deriveODMatrix",
+    projection = st_crs(shape)$input,
+    shpFile = paste0("../",shapePath),
+    dbfFile = paste0("../",substr(shapePath,start = 1,stop = nchar(shapePath)-3),"dbf"),
+    scaleFactor = 1,
+    lineWidth = 50,
+    csvFile = "ODMatrix.csv",
+    idColumn = colnames(shape)[1] # at the moment idColumn of shapefile should be the first column
+
+  )
+  write_yaml(yaml_list, paste0(dump.output.to, "/viz-od-flow.yaml"))
+
+  options(warn = defaultW)
+  return(result_tibble)
+}
+
+
+
+#' Transforms the data frame trips_output (from \links{readTripsTable}) from tibble to sf (table with geometry features)
+#'
+#' Transforms the data frame trips_output (from \links{readTripsTable}) into an sf object using start_x, end_x, start_y, end_y as geometry features.
+#' If geometry.type = st_multipoint() or geometry.type = st_linestring() it adds one geometry column (wkt format),
+#' if geometry.type = st_point() it adds the geometry columns start_wkt and end_wkt.
+#' Added column/columns are projected to given CRS (coordinate reference system).
+#' The columns start_x, end_x, start_y, end_y are deleted from the resulting data frame.
+#'
+#' @param table tibble trips_output (from readTripsTable())
+#'
+#' @param crs numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file
+#'
+#' @param geometry.type type of sf transformation, default is st_multipoint(), geometry.type can be:
+#' !!!st_point()- resulting table contains two geometry columns: start_wkt and end_wkt, representing start and end points as POINTS!!!  or
+#' !!!st_multipoint()- resulting table contains one geometry column, representing start and end points as MULTIPOINT!!! or
+#' !!!st_linestring() - resulting table contains one geometry column, representing  the line between start and end points as LINESTRING!!!
+#'
+#' @return sf object (data frame with geometries depending on geometry.type)
+#'
+#' @export
+transformToSf <- function(table,
+                          crs,
+                          geometry.type = st_multipoint()) {
+  if (class(geometry.type)[2] == "POINT") {
+    table1 <- table %>%
+      # mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep =""))
+      mutate(start_wkt = paste("POINT(", start_x, " ", start_y, ")", sep = ""))
+    table2 <- table %>%
+      mutate(end_wkt = paste("POINT(", end_x, " ", end_y, ")", sep = ""))
+    attr(table, "geometry.type") <- "POINT"
+
+
+    table1_wkt <- st_as_sf(table1, wkt = "start_wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
+    table2_wkt <- st_as_sf(table2, wkt = "end_wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
+
+
+    result_table <- table1_wkt %>% mutate(end_wkt = table2_wkt$end_wkt)
+    st_geometry(result_table) <- "start_wkt"
+    st_crs(result_table) <- crs
+    st_geometry(result_table) <- "end_wkt"
+    st_crs(result_table) <- crs
+    st_geometry(result_table) <- "start_wkt"
     return(result_table)
-  }
-
-  ######Spatial######
-  #' XXXX trips_table but shapeTable - fix naming
-  #' XXXX finish when code revision is done
-  #' Filters trips_table(from ,\link{readTripsTable}) depending by location using a shapefile
-  #'
-  #' Uses trips_table and an sf object (can be created using the function st_read()),
-  #' transforms both objects to match a mutual coordinate system (crs)
-  #' and filters the trips from trips_table depending on *.inshape flags:
-  #' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
-  #' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
-  #' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
-  #' if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
-  #'
-  #' @param trips_table tibble of trips_output (from readTripsTable())
-  #'
-  #' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
-  #'
-  #' @param crs numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file
-  #'
-  #' @param start.inshape bool, defines trips to conclude (see Description)
-  #'
-  #' @param end.inshape bool, defines trips to conclude (see Description)
-  #'
-  #' @return tibble, with filtered trips depending on shapeTable and special flags (see Description)
-  #'
-  #' @export
-  process_filter_by_shape <- function(trips_table,
-                                      shape_table,
-                                      crs,
-                                      start.inshape = TRUE, end.inshape = TRUE) {
-
-    # shape_table <- st_read(shapeFile)
-    if (st_crs(shape_table) == NA) {
-      st_crs(shape_table) <- crs
-    }
-
-    sf_table <- transformToSf(trips_table, crs = crs, geometry.type = st_point())
-    shape_table <- st_transform(shape_table, crs = crs)
-    # shape_table isn't table - shape
-
-    union_shape <- st_union(shape_table) # transforms the crs back to the previous in the file
-    union_shape <- st_transform(union_shape, crs = st_crs(shape_table))
+  } else if (class(geometry.type)[2] == "MULTIPOINT") {
+    table <- table %>%
+      mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep = ""))
+    attr(table, "geometry.type") <- "MULTIPOINT"
 
 
-    st_geometry(sf_table) <- "start_wkt" # Set start_wkt as an active geometry
-    cont1 <- st_contains(union_shape, sf_table)[[1]] # Indexes of rows where start point is in shapefile
+    result_table <- st_as_sf(table, wkt = "wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
 
-    st_geometry(sf_table) <- "end_wkt" # Set end_wkt as and active geometry
-    cont2 <- st_contains(union_shape, sf_table)[[1]] # Indexes of rows where end point is in shapefile
-
-    # get trips that ended outside of shape
-    cont_end_outside <- setdiff(1:nrow(sf_table), cont2)
-
-    # get trips that started outside of shape
-    cont_start_outside <- setdiff(1:nrow(sf_table), cont1)
-
-    if (start.inshape == TRUE && end.inshape == TRUE) {
-      cont_union <- intersect(cont1, cont2)
-    } else if (start.inshape == TRUE && end.inshape == FALSE) {
-      cont_union <- intersect(cont1, cont_end_outside)
-    } else if (start.inshape == FALSE && end.inshape == TRUE) {
-      cont_union <- intersect(cont2, cont_start_outside)
-    } else {
-      cont_union <- intersect(cont_start_outside, cont_end_outside) # Give back trips that are neither starting and ending outside the area
-    }
+    st_crs(result_table) <- crs
+    return(result_table)
+  } else if (class(geometry.type)[2] == "LINESTRING") {
+    table <- table %>%
+      mutate(wkt = paste("LINESTRING(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep = ""))
+    attr(table, "geometry.type") <- "LINESTRING"
 
 
-    return(trips_table[cont_union, ])
-  }
+    result_table <- st_as_sf(table, wkt = "wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
 
-  #' Reads the coordinate reference system from an MATSim output directory
-  #' (output_config.xml)
-  #'
-  #' @param config_path specifies path to configuration file
-  #'
-  #'
-  #' @return code of coordinate reference system
-  #'
-  #' @export
-  process_get_crs_from_config <- function(config_path) {
-
-    if (grepl("output_config.xml$", config_path) == TRUE)
-    {
-      config <- read_xml(folder)
-
-      param_nodes = xml_find_all(config,"//param")
-
-      coord_node = param_nodes[xml_attr(param_nodes,"name") == "coordinateSystem"]
-
-      coord_system = xml_attr(coord_node,"value")
-      return(coord_system)
-    }
-
-    files <- list.files(config_path, full.names = TRUE)
-    # Read from global/local directory
-    # output_config.xml is contained as output_trips.csv.gz
-    if (length(grep("output_config.xml$", files)) != 0) {
-      config <- read_xml(files[grep("output_config.xml$", files)])
-
-      param_nodes = xml_find_all(config,"//param")
-
-      coord_node = param_nodes[xml_attr(param_nodes,"name") == "coordinateSystem"]
-
-      coord_system = xml_attr(coord_node,"value")
-      return(coord_system)
-    }
+    st_crs(result_table) <- crs
+    return(result_table)
+  } else {
     return(NA)
   }
-
-  #' Creates an origin/destination matrix either in conventional form (row names = origin, column names = destination)
-  #' or for simwrapper (origin and destination as columns)
-  #'
-  #'
-  #' @param tripsTable tibble of trips_output (from \link{readTripsTable})
-  #'
-  #' @param shapePath string, full path to the shapefile (.shp) (shape files are made up of several files with the same name and the folder also needs to include a .dbf file)
-  #'
-  #' @param crs numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file
-  #'
-  #' @param dump.output.to string, path to a folder to save the .csv file
-  #'
-  #' @param colnames string, column names can be specified (i.e. to fit the shape file), if not they are numbered
-  #'
-  #' @param simwrapper boolean, creates output in the format used for simwrapper if the path for the shapefile is specified
-  #'
-  #' @param outer boolean, determines if flows outside of the shapefile are used, standard value is FALSE
-  #'
-  #' @return tibble of origin/destination matrix
-  #'
-  #' @export
-  process_get_od_matrix<- function(tripsTable,
-                                   shapePath,
-                                   crs,
-                                   dump.output.to = matsimDumpOutputDirectory,
-                                   simwrapper = FALSE,
-                                   colnames = "numeric",
-                                   outer = FALSE){
-
-    defaultW <- getOption("warn")
-    options(warn = -1)
-
-    #if tripstable given as folder/file
-    if(sum(class(tripsTable) %in% c("tbl_df","tbl","data.frame"))<1){
-      tripsTable <- readTripsTable(tripsTable)
-    }
-
-    sfTable <- transformToSf(tripsTable,crs,geometry.type = st_point())
-
-    shape = st_read(shapePath)
-
-    if (st_crs(shape) == NA) {
-      st_crs(shape) <- crs
-    }
-    shape = st_transform(shape,crs = crs)
-
-    sf_table <- transformToSf(tripsTable, crs = crs, geometry.type = st_point())
-
-    sf_start = sfTable %>% select(trip_id,start_wkt)
-    st_geometry(sfTable) = "end_wkt"
-    sf_end = sfTable %>% select(trip_id,end_wkt)
-
-    #Get all inner intersects
-    sf_intersect_start = st_contains(shape,sf_start)
-    sf_intersect_end = st_contains(shape,sf_end)
+}
 
 
-    if(outer == TRUE){
-      #Get all outer intersects
-      joined_shape = st_union(shape)
-
-      start_inside = st_contains(joined_shape,sf_start)
-      end_inside = st_contains(joined_shape,sf_end)
-
-      start_outside = 1:nrow(sf_start)
-      end_outside = 1:nrow(sf_end)
-
-      start_outside = start_outside[! start_outside %in% start_inside[[1]]]
-
-      end_outside = end_outside[! end_outside %in% end_inside[[1]]]
-
-      sf_intersect_start = append(sf_intersect_start,list(start_outside))
-      sf_intersect_end = append(sf_intersect_end,list(end_outside))
-    }
-
-    # Create matrix out of it
-    result_tibble = as_tibble(data.frame(matrix(nrow=0,ncol=nrow(shape))))
-    colnames(result_tibble) = 1:nrow(shape)
-
-    for(i in 1:length(sf_intersect_start)){
-      temp = c()
-      for(j in 1:length(sf_intersect_start)){
-        start_i = sf_intersect_start[[i]]
-        end_j = sf_intersect_end[[j]]
-
-        number_of_trips = length(intersect(start_i,end_j))
-
-        temp = append(temp,number_of_trips)
-
-      }
-      result_tibble = rbind(result_tibble,temp)
-    }
-
-    if(colnames!="numeric" & colnames %in% colnames(shape)){
-      colnames(result_tibble) = shape[[colnames]]
-      if(outer == TRUE){
-        rownames(result_tibble) = c(shape[[colnames]],"outer")
-        colnames(result_tibble)[length(colnames(result_tibble))]  = "outer"
-      }else{
-        rownames(result_tibble) = shape[[colnames]]
-      }
-
-    }else{
-      colnames(result_tibble) = sapply(1:length(sf_intersect_start),as.character)
-      rownames(result_tibble) = sapply(1:length(sf_intersect_start),as.character)
-    }
-
-
-    result_melt = melt(as.matrix(result_tibble))
-    colnames(result_melt) = c("origin","destination",1)
-    # Generating yaml and output_files
-
-
-
-    if (file.exists(dump.output.to) & simwrapper == TRUE) {
-      write.table(result_melt,paste0(dump.output.to,"/ODMatrix.csv"),row.names = FALSE,sep = ";")
-    } else if(!file.exists(dump.output.to) & simwrapper == TRUE) {
-      dir.create(dump.output.to)
-      write.table(result_melt,paste0(dump.output.to,"/ODMatrix.csv"),row.names = FALSE,sep = ";")
-    } else if (file.exists(dump.output.to) & simwrapper == FALSE) {
-      write_csv2(result_tibble,paste0(dump.output.to,"/ODMatrix.csv"))
-    } else {
-      dir.create(dump.output.to)
-      write_csv2(result_tibble,paste0(dump.output.to,"/ODMatrix.csv"))
-    }
-
-    yaml_list <- list(
-      title = "OD Flow",
-      description = "generated by deriveODMatrix",
-      projection = st_crs(shape)$input,
-      shpFile = paste0("../",shapePath),
-      dbfFile = paste0("../",substr(shapePath,start = 1,stop = nchar(shapePath)-3),"dbf"),
-      scaleFactor = 1,
-      lineWidth = 50,
-      csvFile = "ODMatrix.csv",
-      idColumn = colnames(shape)[1] # at the moment idColumn of shapefile should be the first column
-
-    )
-    write_yaml(yaml_list, paste0(dump.output.to, "/viz-od-flow.yaml"))
-
-    options(warn = defaultW)
-    return(result_tibble)
-  }
-
-
-
-  #' Transforms the data frame trips_output (from \links{readTripsTable}) from tibble to sf (table with geometry features)
-  #'
-  #' Transforms the data frame trips_output (from \links{readTripsTable}) into an sf object using start_x, end_x, start_y, end_y as geometry features.
-  #' If geometry.type = st_multipoint() or geometry.type = st_linestring() it adds one geometry column (wkt format),
-  #' if geometry.type = st_point() it adds the geometry columns start_wkt and end_wkt.
-  #' Added column/columns are projected to given CRS (coordinate reference system).
-  #' The columns start_x, end_x, start_y, end_y are deleted from the resulting data frame.
-  #'
-  #' @param table tibble trips_output (from readTripsTable())
-  #'
-  #' @param crs numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file
-  #'
-  #' @param geometry.type type of sf transformation, default is st_multipoint(), geometry.type can be:
-  #' !!!st_point()- resulting table contains two geometry columns: start_wkt and end_wkt, representing start and end points as POINTS!!!  or
-  #' !!!st_multipoint()- resulting table contains one geometry column, representing start and end points as MULTIPOINT!!! or
-  #' !!!st_linestring() - resulting table contains one geometry column, representing  the line between start and end points as LINESTRING!!!
-  #'
-  #' @return sf object (data frame with geometries depending on geometry.type)
-  #'
-  #' @export
-  transformToSf <- function(table,
-                            crs,
-                            geometry.type = st_multipoint()) {
-    if (class(geometry.type)[2] == "POINT") {
-      table1 <- table %>%
-        # mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep =""))
-        mutate(start_wkt = paste("POINT(", start_x, " ", start_y, ")", sep = ""))
-      table2 <- table %>%
-        mutate(end_wkt = paste("POINT(", end_x, " ", end_y, ")", sep = ""))
-      attr(table, "geometry.type") <- "POINT"
-
-
-      table1_wkt <- st_as_sf(table1, wkt = "start_wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
-      table2_wkt <- st_as_sf(table2, wkt = "end_wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
-
-
-      result_table <- table1_wkt %>% mutate(end_wkt = table2_wkt$end_wkt)
-      st_geometry(result_table) <- "start_wkt"
-      st_crs(result_table) <- crs
-      st_geometry(result_table) <- "end_wkt"
-      st_crs(result_table) <- crs
-      st_geometry(result_table) <- "start_wkt"
-      return(result_table)
-    } else if (class(geometry.type)[2] == "MULTIPOINT") {
-      table <- table %>%
-        mutate(wkt = paste("MULTIPOINT(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep = ""))
-      attr(table, "geometry.type") <- "MULTIPOINT"
-
-
-      result_table <- st_as_sf(table, wkt = "wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
-
-      st_crs(result_table) <- crs
-      return(result_table)
-    } else if (class(geometry.type)[2] == "LINESTRING") {
-      table <- table %>%
-        mutate(wkt = paste("LINESTRING(", start_x, " ", start_y, ",", end_x, " ", end_y, ")", sep = ""))
-      attr(table, "geometry.type") <- "LINESTRING"
-
-
-      result_table <- st_as_sf(table, wkt = "wkt") %>% select(-start_x, -start_y, -end_x, -end_y)
-
-      st_crs(result_table) <- crs
-      return(result_table)
-    } else {
-      return(NA)
-    }
-  }
-
-
-  #####Helping functions####
+#####Helping functions####
