@@ -38,4 +38,5 @@ read_config <- function(input_path = ".", n_max = Inf) {
 
   return(result_list)
 
+
 }

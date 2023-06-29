@@ -1,12 +1,12 @@
-#' Creates dashboard for the given table or folder with data
-#'
+
+#' Creates dashboard for the given table with data
 #'
 #'
 #' @param table trips_output tibble from readTripsTable()
 #'
-#' @param append specifies if the ouput folder should be erased before creating
+#' @param append specifies if the ouput folder should be erased before creating, default = FALSE
 #'
-#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard and all plots using functions:
+#' @param dump.output.to output folder, yaml files and plots from the following functions are saved there:
 #' plotModalSplitBarChart(),plotModalSplitPieChart(),plotModalShift().
 #'
 #' @return generates folder with content for simwrapper out of trips table
@@ -32,17 +32,17 @@ prepareSimwrapperDashboardFromTable <- function(table, dump.output.to = matsimDu
 
 
 
-#' Creates dashboard for the given table or folder with data
+#' Creates dashboard for the given folder with data
 #'
 #'
 #'
-#' @param folder specifies data source folder with tripsOutput
+#' @param folder file path, specifies data source folder that includes a output_trips.csv file
 #'
-#' @param append specifies if the ouput folder should be erased before creating
+#' @param append specifies if the ouput folder should be erased before creating, default = FALSE
 #'
-#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard and all plots
+#' @param dump.output.to output folder, yaml files are saved there
 #'
-#' @return tibble of output_trips from folder. Generates content needed for Simwrapper
+#' @return tibble of output_trips from folder and content needed for Simwrapper
 #'
 #' @export
 prepareSimwrapperDashboardFromFolder <- function(folder,dump.output.to = matsimDumpOutputDirectory, append = FALSE) {
@@ -59,11 +59,11 @@ prepareSimwrapperDashboardFromFolder <- function(folder,dump.output.to = matsimD
 
 #' Creates/adds XY hexagon definition of output trips to a summary dashboard
 #'
-#' @param pathToOutputTrips specifies path to a data source of output_trips
+#' @param pathToOutputTrips file path to output_trips.csv file
 #'
-#' @param crs specifies an coordinate reference system of output_trips
+#' @param crs specifies the coordinate reference system of output_trips
 #'
-#' @param dump.output.to path to an folder with dashboard
+#' @param dump.output.to path to a folder with simwrapper dashboard
 #'
 #' @return changed file
 #'
@@ -127,7 +127,7 @@ clearDashboard<- function(matsimOutputFolder){
 
 
 
-#' Creates comparison dashboard for the 2 given tables or folder with data
+#' Creates comparison dashboard for the two given tables or folders with data
 #'
 #'
 #'
@@ -135,12 +135,12 @@ clearDashboard<- function(matsimOutputFolder){
 #'
 #' @param table2 trips_output tibble from readTripsTable()
 #'
-#' @param append specifies if the ouput folder should be erased before creating
+#' @param append specifies if the output folder should be erased before creating, default = FALSE
 #'
-#' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard and all plots using functions:
+#' @param dump.output.to output folder, yaml files and plots from the following functions are saved there:
 #' plotModalSplitBarChart(),plotModalSplitPieChart(),plotModalShift().
 #'
-#' @return generates folder with content for simwrapper out of trips table
+#' @return generates folder with content for simwrapper from a trips table
 #'
 #' @export
 prepareComparisonSimwrapperDashboardFromTable <- function(table1,table2, dump.output.to = matsimDumpOutputDirectory, append = FALSE) {

@@ -228,7 +228,7 @@ plot_deptime_by_act(
 
 \item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
 
-\item{input_path}{character string, path to matsim output directory or http link to the file.}
+\item{input_path}{character string, path to MATSim output directory or http link to the file.}
 
 \item{n_max}{integer, maximum number of lines to read within output_trips}
 
@@ -338,8 +338,8 @@ percentage of using transport modes from trips
 to plot bar chart with with values that represent
 percentage of using transport modes from trips
 
-\strong{readTripsTable} - Loads a MATSim CSV output_trips from file or archive,
-creating a tibble with columns as in csv file
+\strong{readTripsTable} - Loads a MATSim output_trips file from file or archive path,
+creating a tibble
 
 \strong{plotAverageTravelWait} - Takes Table trips_output (from readTripsTable()),
 to plot bar chart with with values that represent
@@ -442,7 +442,7 @@ if start.inshape = FALSE & end.inshape = FALSE return table that contains trips 
 
 \strong{deriveODMatrix} - Creates an instance of ODMatrix(origin/destination) in conventional form or for the simwrapper
 
-\strong{getCrsFromConfig} - Reads an coordinate referenec system of MATSim output directory
+\strong{getCrsFromConfig} - Reads an coordinate reference system of MATSim output directory
 from output_config.xml
 
 \strong{transformToSf} - Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)\cr
@@ -454,11 +454,6 @@ Added column/columns projected to given CRS (coordinate reference system),
 that can be taken from network file of MATSimOutputDirectory\cr
 Function also sets attribute geometry.type to resulting table to character value of "POINT","MULTIPOINT","LINESTRING"
 to get which type of table was generated, if it is needed
-
-\strong{plotDepartureTimesPerTripPurpose} - Takes Table trips_output (from readTripsTable()),
-to make line plot with with values that represent
-count of destination activities for a specific arrival time
-Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 }
 \section{Details}{
 

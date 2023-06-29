@@ -2,7 +2,8 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_spatialtype_by_shape_piechart}
 \alias{plot_spatialtype_by_shape_piechart}
-\title{Plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart}
+\title{Plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
+XXXX}
 \usage{
 plot_spatialtype_by_shape_piechart(trips_table, shape_table, crs)
 }
@@ -18,4 +19,5 @@ plot with percentage of each type of trips
 }
 \description{
 Plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
+XXXX
 }

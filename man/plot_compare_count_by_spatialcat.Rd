@@ -2,7 +2,12 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_compare_count_by_spatialcat}
 \alias{plot_compare_count_by_spatialcat}
-\title{Bar Chart with main_mode on x-axis and average travel/wait time on y-axis}
+\title{Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
+XXXX
+Takes Table trips_output (from readTripsTable()),
+to plot bar chart with with values that represent
+time spent on traveling/waiting
+Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')}
 \usage{
 plot_compare_count_by_spatialcat(
   trips_table1,
@@ -25,6 +30,8 @@ plot_compare_count_by_spatialcat(
 Bar Chart plot of average time spent on travel/wait
 }
 \description{
+Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
+XXXX
 Takes Table trips_output (from readTripsTable()),
 to plot bar chart with with values that represent
 time spent on traveling/waiting

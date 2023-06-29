@@ -2,7 +2,8 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_map_trips}
 \alias{plot_map_trips}
-\title{Plots start and end coordinates of the given trips table on an osm map}
+\title{Plots start and end coordinates of the given trips table on an osm map
+XXXX}
 \usage{
 plot_map_trips(trips_table, crs, optimized = FALSE, shape_table = NULL)
 }
@@ -18,4 +19,5 @@ plot with trips
 }
 \description{
 Plots start and end coordinates of the given trips table on an osm map
+XXXX
 }

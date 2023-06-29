@@ -2,21 +2,21 @@
 % Please edit documentation in R/counts.R
 \name{processLinkStatsDtvDistribution}
 \alias{processLinkStatsDtvDistribution}
-\title{Categorize DTV and calculate DTV distribution}
+\title{Categorize daily traffic volume (DTV) and calculate DTV for different link types.}
 \usage{
 processLinkStatsDtvDistribution(joinedFrame, from = 0, to = 40000, by = 5000)
 }
 \arguments{
 \item{joinedFrame}{A tibble from mergeCountsAndLinks}
 
-\item{from}{Lower limit for count bin}
+\item{from}{Integer. Lower limit for count bin, default = 0.}
 
-\item{to}{Upper limit for count bins}
+\item{to}{Integer. Upper limit for count bins, default = 40000.}
 
-\item{by}{Size of each count bin}
+\item{by}{Integer. Size of each count bin, default = 5000.}
 }
 \value{
-A long-format tibble which contains share of DTV Categories
+A long-format tibble which contains share of DTV for link types
 }
 \description{
 Takes a tibble from mergeCountsAndLinks. DTV is categorized into bins. Finally

@@ -2,7 +2,12 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_arrtime_by_act}
 \alias{plot_arrtime_by_act}
-\title{Deprecated function(s) in the matsimr package}
+\title{Deprecated function(s) in the matsimr package
+XXXX
+\strong{plot_arrtime_by_act} - Takes Table trips_output (from readTripsTable()),
+to make line plot with with values that represent
+count of destination activities for a specific arrival time
+Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')}
 \usage{
 plot_arrtime_by_act(
   trips_table,
@@ -25,6 +30,8 @@ plot_arrtime_by_act(
 \strong{plot_arrtime_by_act} - Line plot with arrival time x-axis and number end activities on y-axis
 }
 \description{
+Deprecated function(s) in the matsimr package
+XXXX
 \strong{plot_arrtime_by_act} - Takes Table trips_output (from readTripsTable()),
 to make line plot with with values that represent
 count of destination activities for a specific arrival time

@@ -2,7 +2,7 @@
 % Please edit documentation in R/simwrapper.R
 \name{prepareSimwrapperDashboardFromFolder}
 \alias{prepareSimwrapperDashboardFromFolder}
-\title{Creates dashboard for the given table or folder with data}
+\title{Creates dashboard for the given folder with data}
 \usage{
 prepareSimwrapperDashboardFromFolder(
   folder,
@@ -11,15 +11,15 @@ prepareSimwrapperDashboardFromFolder(
 )
 }
 \arguments{
-\item{folder}{specifies data source folder with tripsOutput}
+\item{folder}{file path, specifies data source folder that includes a output_trips.csv file}
 
-\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard and all plots}
+\item{dump.output.to}{output folder, yaml files are saved there}
 
-\item{append}{specifies if the ouput folder should be erased before creating}
+\item{append}{specifies if the ouput folder should be erased before creating, default = FALSE}
 }
 \value{
-tibble of output_trips from folder. Generates content needed for Simwrapper
+tibble of output_trips from folder and content needed for Simwrapper
 }
 \description{
-Creates dashboard for the given table or folder with data
+Creates dashboard for the given folder with data
 }

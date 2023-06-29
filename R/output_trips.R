@@ -54,7 +54,7 @@ plotModalSplitPieChart <- function(tripsTable,
     tripsTable$main_mode[grep(paste0(unite.columns, collapse = "|"), tripsTable$main_mode)] <- united.name
   }
 
-  # tripsTableCount gives percentage representation out
+  # calculates the mode share and saves it as a tibble
   tripsTableCount <- tripsTable %>%
     count(main_mode) %>%
     mutate(n = n / sum(n) * 100)
@@ -80,6 +80,7 @@ plotModalSplitPieChart <- function(tripsTable,
     ggtitle("Distribution of transport type") +
     theme_void()
   plt
+
   if (file.exists(dump.output.to)) {
     ggsave(paste0(dump.output.to, "/modalSplitPieChart.png"),width = 6,height = 10, plt)
   } else {
@@ -239,13 +240,13 @@ plotModalSplitBarChart <- function(tripsTable,
 
 #' **Deprecated. (see matsimr-deprecated)** Load MATSIM output_trips table into Memory
 #'
-#' \strong{readTripsTable} - Loads a MATSim CSV output_trips from file or archive,
-#' creating a tibble with columns as in csv file
+#' \strong{readTripsTable} - Loads a MATSim output_trips file from file or archive path,
+#' creating a tibble
 #'
 #' @rdname matsimr-deprecated
 #' @name readTripsTable
 #'
-#' @param input_path character string, path to matsim output directory or http link to the file.
+#' @param input_path character string, path to MATSim output directory or http link to the file.
 #' @param n_max integer, maximum number of lines to read within output_trips
 #' @return \strong{readTripsTable} - tibble of trips_output
 #'
@@ -2145,7 +2146,7 @@ deriveODMatrix<- function(tripsTable,
 
 #' Deprecated function(s) in the matsimr package
 #'
-#' \strong{getCrsFromConfig} - Reads an coordinate referenec system of MATSim output directory
+#' \strong{getCrsFromConfig} - Reads an coordinate reference system of MATSim output directory
 #' from output_config.xml
 #'
 #' @rdname matsimr-deprecated
@@ -2310,7 +2311,8 @@ read_output_trips <- function(input_path = ".", n_max = Inf) {
                                    )
   )
   # person is mostly integer, but contains also chars(see Hamburg 110813 observation)
-  # doesn't reads coordinates correctly
+
+  # doesn't read coordinates correctly
   trips_output_table <- trips_output_table %>%
     mutate(
       start_x = as.double(start_x),
@@ -2345,16 +2347,16 @@ read_output_trips <- function(input_path = ".", n_max = Inf) {
 #'
 #' @export
 plot_mainmode_piechart <- function(trips_table,
-                                   unite.columns = character(0), united.name = "united",
+                                   unite.modes = character(0), united.name = "united",
                                    dump.output.to = matsimDumpOutputDirectory) {
 
-  # If some columns should be united
+  # renaming/uniting of modes
   trips_table = process_rename_mainmodes(trips_table = trips_table,
-                                         unite.columns = unite.columns,
+                                         unite.modes = unite.modes,
                                          united.name = united.name)
 
   # processing
-  # tripsTableCount gives percentage representation out
+  # calculates the mode share and saves it as a tibble
   trips_table_count<-process_get_mainmode_distribution(trips_table,
                                                        percentage= percentage)
 
@@ -2389,16 +2391,17 @@ plot_mainmode_piechart <- function(trips_table,
 #'
 #' @export
 plot_mainmode_barchart <- function(trips_table,
-                                   unite.columns = character(0),
+                                   unite.modes = character(0),
                                    united.name = "united",
                                    dump.output.to = matsimDumpOutputDirectory,
                                    percentage = FALSE) {
 
-  # If some columns should be united
+  # renaming/uniting of modes
   trips_table <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
+                                          unite.modes = unite.modes,
                                           united.name = united.name)
   # processing
+  # calculates the mode share and saves it as a tibble
   trips_table_count <- process_get_mainmode_distribution(trips_table,
                                                          percentage = percentage)
 
@@ -2429,16 +2432,16 @@ plot_mainmode_barchart <- function(trips_table,
 #'
 #' @export
 plot_travelwaittime_mean_barchart <- function(trips_table,
-                                              unite.columns = character(0),
+                                              unite.modes = character(0),
                                               united.name = "united",
                                               time_format = "minute") {
 
-  # If some columns should be united
+  # renaming/uniting of modes
   trips_table <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
+                                          unite.modes = unite.modes,
                                           united.name = united.name)
 
-  #processing of result table
+  #processing
   avg_time = process_get_travelwaittime_by_mainmode(trips_table,time_format = time_format)
 
   #plotting
@@ -2458,6 +2461,71 @@ plot_travelwaittime_mean_barchart <- function(trips_table,
 
 
 
+#' Bar Chart comparing two runs with main_mode on x-axis and average travel/wait time on y-axis
+#'
+#' Takes two data frames (from \link{readTripsTable()}),
+#' to plot a comparison bar chart of travel and wait times.
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
+#'
+#'
+#' @param tripsTable1 tibble of trips_output (from readTripsTable())
+#' @param tripsTable2 tibble of trips_output (from readTripsTable())
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
+#'
+#' @return Bar chart plot comparing average time spent on travel/wait of two runs
+#'
+#' @export
+plot_compare_travelwaittime_by_mainmode <- function(trips_table1,trips_table2,
+                                                    unite.modes = character(0),
+                                                    united.name = "united",
+                                                    time_format = "minute") {
+
+  #TODO:
+  # . Document and add title to show what means positive/negative value
+  # . think about comparing processing functions they can appear in future often
+
+
+  # renaming/uniting of modes
+  trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
+                                           unite.modes = unite.modes,
+                                           united.name = united.name)
+
+  trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
+                                           unite.modes = unite.modes,
+                                           united.name = united.name)
+
+  #processing
+  avg_time1 = process_get_travelwaittime_by_mainmode(trips_table1,time_format = time_format)
+
+
+
+  avg_time2 = process_get_travelwaittime_by_mainmode(trips_table2,time_format = time_format)
+
+
+  avg_time = full_join(avg_time1, avg_time2, by = "main_mode") %>%
+    replace_na(list(trav_time_avg.x = 0,wait_time_avg.x = 0,trav_time_avg.y = 0,wait_time_avg.y = 0))
+
+
+
+  avg_time  = avg_time %>% mutate(trav_time_avg = trav_time_avg.x - trav_time_avg.y,
+                                  wait_time_avg =wait_time_avg.x - wait_time_avg.y )%>%
+    select(-wait_time_avg.x,-wait_time_avg.y, -trav_time_avg.x,-trav_time_avg.y)
+
+
+
+  #plotting
+  fig = plot_ly(data = avg_time,x = ~main_mode,y = ~trav_time_avg,type = 'bar',name = "AVG Time Travelling")
+  fig = fig %>% add_trace(y = ~wait_time_avg,name = "AVG Time Waiting")
+  fig = fig %>% layout(yaxis = list(title = paste0("Time spent (in ",time_format,"s)")),barmode = "group")
+
+
+  fig
+  return(fig)
+
+}
 
 #' Bar Chart with distance traveled on x-axis and number of trips on y-axis
 #'
@@ -2475,20 +2543,20 @@ plot_travelwaittime_mean_barchart <- function(trips_table,
 #'
 #' @export
 plot_distcat_by_mainmode_barchart <- function(trips_table,
-                                               unite.columns = character(0),
-                                               united.name = "united",
-                                               dist_column = "dist_cat",
-                                               distances_array = c(1000,2000,5000,10000,20000,50000,100000))  {
+                                              unite.modes = character(0),
+                                              united.name = "united",
+                                              dist_column = "dist_cat",
+                                              distances_array = c(1000,2000,5000,10000,20000,50000,100000))  {
 
 
-  # If some columns should be united
+  # renaming/uniting of modes
   trips_table <- process_rename_mainmodes(trips_table = trips_table,
-                           unite.columns = unite.columns,
-                           united.name = united.name)
+                                          unite.modes = unite.modes,
+                                          united.name = united.name)
 
   #processing
   trips_table <- process_append_distcat(trips_table =trips_table,
-                                  distances_array = distances_array)
+                                        distances_array = distances_array)
 
 
   #plotting
@@ -2518,13 +2586,13 @@ plot_distcat_by_mainmode_barchart <- function(trips_table,
 #'
 #' @export
 plot_distance_by_mainmode_barchart <- function(trips_table,
-                                   unite.columns = character(0), united.name = "united",
-                                   euclidean = FALSE) {
+                                               unite.modes = character(0), united.name = "united",
+                                               euclidean = FALSE) {
 
 
-  # If some columns should be united
+  # renaming/uniting of modes
   trips_table <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
+                                          unite.modes = unite.modes,
                                           united.name = united.name)
 
   #processing
@@ -2538,15 +2606,17 @@ plot_distance_by_mainmode_barchart <- function(trips_table,
   #plotting
   text_for_y <- round(trips_table$avg_dist,digits = 2)
   fig <- plot_ly(data = trips_table,x = ~main_mode,y = ~avg_dist,
-                type = 'bar',
-                text = text_for_y,
-                textposition = "auto",
-                name = paste0("AVG " ,if_else(euclidean,"eucliden ","traveled ") ,"distance  by mode over a day"))
+
+                 type = 'bar',
+                 text = text_for_y,
+                 textposition = "auto",
+                 name = paste0("AVG " ,if_else(euclidean,"eucliden ","traveled ") ,"distance  by mode over a day"))
   fig <- fig %>% layout(yaxis = list(title = "Distance (in meters)"),barmode = "group")
 
   fig
   return(fig)
 }
+
 
 #' Line plot with departure time  on x-axis and number of trips on y-axis
 #'
@@ -2768,16 +2838,16 @@ plot_deptime_by_act <- function(trips_table, unite_activities = character(0), un
 #'
 #' @export
 plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
-                                                       unite.columns = character(0), united.name = "united",
-                                                       dist_column = "dist_cat",
-                                                       distances_array = c(1000,2000,5000,10000,20000,50000,100000)) {
+                                                      unite.modes = character(0), united.name = "united",
+                                                      dist_column = "dist_cat",
+                                                      distances_array = c(1000,2000,5000,10000,20000,50000,100000)) {
 
   trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
-                                          unite.columns = unite.columns,
-                                          united.name = united.name)
+                                           unite.modes = unite.modes,
+                                           united.name = united.name)
 
   trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
-                                           unite.columns = unite.columns,
+                                           unite.modes = unite.modes,
                                            united.name = united.name)
 
   modes = unique(c(unique(trips_table1$main_mode),unique(trips_table2$main_mode)))
@@ -2812,7 +2882,45 @@ plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
 }
 
 
+#' Line plot with departure time  on x-axis and number of trips on y-axis
+#'
+#' Takes data frame trips_output (from \link{readTripsTable()}),
+#' to create a line plot of the number of trips for a specific departure time by main_mode
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
+#'
+#'
+#' @param tripsTable tibble of trips_output (from readTripsTable())
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
+#' @return Line plot of trips count by departure time per mode
+#'
+#' @export
+plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
+                                                               unite.columns = character(0),
+                                                               united.name = "united") {
 
+
+  # If some columns should be united
+  trips_table <- process_rename_mainmodes(trips_table = trips_table,
+                                          unite.columns = unite.columns,
+                                          united.name = united.name)
+
+
+  #processing
+  tripsTable = tripsTable %>%
+    mutate(dep_time = hour(dep_time)) %>%
+    count(dep_time,main_mode)
+
+
+  #plotting
+  fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
+  fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group")
+
+  fig
+  return(fig)
+}
 #' Plot bar chart of changes in modal split
 #'
 #' Takes two data frames (from \link{readTripsTable()}), calculates the
@@ -2832,17 +2940,16 @@ plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
 #'
 #' @export
 plot_compare_mainmode_barchart <- function(trips_table1, trips_table2,
-                                           unite.columns = character(0),
+                                           unite.modes = character(0),
                                            united.name = "united") {
-  # If the unite.columns is specified, then
-  #print(dump.output.to)
+  # renaming/uniting of modes
   trips_table1 <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
-                                          united.name = united.name)
+                                           unite.modes = unite.modes,
+                                           united.name = united.name)
 
   trips_table2 <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
-                                          united.name = united.name)
+                                           unite.modes = unite.modes,
+                                           united.name = united.name)
 
   trips_table1  = trips_table1 %>% mutate(type = "base")
   trips_table2  = trips_table2 %>% mutate(type = "policy")
@@ -2876,16 +2983,16 @@ plot_compare_mainmode_barchart <- function(trips_table1, trips_table2,
 #' @export
 plot_compare_mainmode_sankey <- function(trips_table1, trips_table2,
                                          show.onlyChanges = FALSE,
-                                         unite.columns = character(0),
+                                         unite.modes = character(0),
                                          united.name = "united") {
 
-  #rename
+  # renaming/uniting of modes
   trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
-                                           unite.columns = unite.columns,
+                                           unite.modes = unite.modes,
                                            united.name = united.name)
 
   trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
-                                           unite.columns = unite.columns,
+                                           unite.modes = unite.modes,
                                            united.name = united.name)
   #processing
   joined <- as_tibble(inner_join(trips_table1, trips_table2 %>%
@@ -2962,9 +3069,10 @@ plot_compare_mainmode_sankey <- function(trips_table1, trips_table2,
 #'
 #' @export
 plot_compare_travelwaittime_by_mainmode_barchart <- function(trips_table1,trips_table2,
-                                                    unite.columns = character(0),
-                                                    united.name = "united",
-                                                    time_format = "minute") {
+
+                                                             unite.modes = character(0),
+                                                             united.name = "united",
+                                                             time_format = "minute") {
 
   #TODO:
   # . Document and add title to show what means positive/negative value
@@ -2973,11 +3081,11 @@ plot_compare_travelwaittime_by_mainmode_barchart <- function(trips_table1,trips_
 
   # If some columns should be united
   trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
-                                           unite.columns = unite.columns,
+                                           unite.modes = unite.modes,
                                            united.name = united.name)
 
   trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
-                                           unite.columns = unite.columns,
+                                           unite.modes = unite.modes,
                                            united.name = united.name)
 
   #processing
@@ -3009,6 +3117,7 @@ plot_compare_travelwaittime_by_mainmode_barchart <- function(trips_table1,trips_
   return(fig)
 
 }
+
 
 #' Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
 #' XXXX
@@ -3448,10 +3557,10 @@ plot_map_trips_by_spatialcat <- function(trips_table, shape_table,
 #' XXXX
 #' @export
 process_rename_mainmodes<-function(trips_table,
-                                   unite.columns = character(0), united.name = "united"){
+                                   unite.modes = character(0), united.name = "united"){
 
-  if (length(unite.columns) != 0) {
-    trips_table$main_mode[grep(paste0(unite.columns, collapse = "|")
+  if (length(unite.modes) != 0) {
+    trips_table$main_mode[grep(paste0(unite.modes, collapse = "|")
                                , trips_table$main_mode)] <- united.name
   }
   return(trips_table)
@@ -3487,6 +3596,7 @@ process_get_travdistance_distribution<-function(trips_table,euclidean = FALSE){
 
   return(trips_table)
 }
+
 #' @export
 process_get_travelwaittime_by_mainmode<-function(trips_table,
                                              time_format = "minute"){#also could be hours/seconds
@@ -3548,6 +3658,8 @@ process_convert_time <- function(trips_table,time_format = "hour",time_column = 
 }
 
 ######Spatial######
+
+
 #' XXXX trips_table but shapeTable - fix naming
 #' XXXX finish when code revision is done
 #' Filters trips_table(from ,\link{readTripsTable}) depending by location using a shapefile
@@ -3703,8 +3815,7 @@ process_append_spatialcat <- function(trips_table,
   return(trips_table)
 }
 
-
-#' Reads the coordinate reference system from a MATSim output directory
+#' Reads the coordinate reference system from an MATSim output directory
 #' (output_config.xml)
 #'
 #' @param config_path specifies path to configuration file
@@ -3765,12 +3876,12 @@ process_get_crs_from_config <- function(config_path) {
 #'
 #' @export
 process_get_od_matrix<- function(tripsTable,
-                          shapePath,
-                          crs,
-                          dump.output.to = matsimDumpOutputDirectory,
-                          simwrapper = FALSE,
-                          colnames = "numeric",
-                          outer = FALSE){
+                                 shapePath,
+                                 crs,
+                                 dump.output.to = matsimDumpOutputDirectory,
+                                 simwrapper = FALSE,
+                                 colnames = "numeric",
+                                 outer = FALSE){
 
   defaultW <- getOption("warn")
   options(warn = -1)
@@ -3853,36 +3964,6 @@ process_get_od_matrix<- function(tripsTable,
 
   result_melt = melt(as.matrix(result_tibble))
   colnames(result_melt) = c("origin","destination",1)
-
-
-  # Generating yaml and output_files
-  # We remove it from new version, but still we are gonna use it in generate simwrapper of new version
-
-  # if (file.exists(dump.output.to) & simwrapper == TRUE) {
-  #   write.table(result_melt,paste0(dump.output.to,"/ODMatrix.csv"),row.names = FALSE,sep = ";")
-  # } else if(!file.exists(dump.output.to) & simwrapper == TRUE) {
-  #   dir.create(dump.output.to)
-  #   write.table(result_melt,paste0(dump.output.to,"/ODMatrix.csv"),row.names = FALSE,sep = ";")
-  # } else if (file.exists(dump.output.to) & simwrapper == FALSE) {
-  #   write_csv2(result_tibble,paste0(dump.output.to,"/ODMatrix.csv"))
-  # } else {
-  #   dir.create(dump.output.to)
-  #   write_csv2(result_tibble,paste0(dump.output.to,"/ODMatrix.csv"))
-  # }
-  #
-  # yaml_list <- list(
-  #   title = "OD Flow",
-  #   description = "generated by deriveODMatrix",
-  #   projection = st_crs(shape)$input,
-  #   shpFile = paste0("../",shapePath),
-  #   dbfFile = paste0("../",substr(shapePath,start = 1,stop = nchar(shapePath)-3),"dbf"),
-  #   scaleFactor = 1,
-  #   lineWidth = 50,
-  #   csvFile = "ODMatrix.csv",
-  #   idColumn = colnames(shape)[1] # at the moment idColumn of shapefile should be the first column
-  #
-  # )
-  # write_yaml(yaml_list, paste0(dump.output.to, "/viz-od-flow.yaml"))
 
   options(warn = defaultW)
   return(result_tibble)

@@ -2,8 +2,14 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_trips_count_by_deptime_and_mainmode_linechart}
 \alias{plot_trips_count_by_deptime_and_mainmode_linechart}
-\title{Line plot with departure time x-axis and number of trips on y-axis}
+\title{Line plot with departure time  on x-axis and number of trips on y-axis}
 \usage{
+plot_trips_count_by_deptime_and_mainmode_linechart(
+  trips_table,
+  unite.columns = character(0),
+  united.name = "united"
+)
+
 plot_trips_count_by_deptime_and_mainmode_linechart(
   trips_table,
   unite.columns = character(0),
@@ -11,18 +17,25 @@ plot_trips_count_by_deptime_and_mainmode_linechart(
 )
 }
 \arguments{
-\item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
+\item{united.name}{character string, specifies the name of the united mode}
 
-\item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart}
+\item{tripsTable}{tibble of trips_output (from readTripsTable())}
 
-\item{tripsTable}{tible of trips_output (from readTripsTable())}
+\item{unite.modes}{vector of character strings,
+changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+using the function (\link{process_rename_mainmodes})}
 }
 \value{
-Line Chart plot of trips count by departure mode per mode
+Line plot of trips count by departure time per mode
+
+Line plot of trips count by departure time per mode
 }
 \description{
-Takes Table trips_output (from readTripsTable()),
-to make line plot with with values that represent
-count of trips for a specific departure time by main_mode
-Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+Takes data frame trips_output (from \link{readTripsTable()}),
+to create a line plot of the number of trips for a specific departure time by main_mode
+Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
+
+Takes data frame trips_output (from \link{readTripsTable()}),
+to create a line plot of the number of trips for a specific departure time by main_mode
+Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 }

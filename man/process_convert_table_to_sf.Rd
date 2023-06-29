@@ -2,32 +2,27 @@
 % Please edit documentation in R/output_trips.R
 \name{process_convert_table_to_sf}
 \alias{process_convert_table_to_sf}
-\title{Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)}
+\title{Transforms the data frame trips_output (from \links{readTripsTable}) from tibble to sf (table with geometry features)}
 \usage{
 process_convert_table_to_sf(table, crs, geometry.type = st_multipoint())
 }
 \arguments{
-\item{table}{tibble of trips_output (from readTripsTable())}
+\item{table}{tibble trips_output (from readTripsTable())}
 
-\item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
+\item{crs}{numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file}
 
-\item{geometry.type}{function of sf transformation, geometry.type can be (by default is st_multipoint())
-!!!st_point()-resulting table contains 2 geometries start_wkt and end_wkt, representing start and end POINTs, and have type POINT!!!  or
-!!!st_multipoint()-resulting table contains 1 geometry wkt, representing start and end POINTS as MULTIPOINT!!! or
-!!!st_linestring() - resulting table contains 1 geometry wkt, representing line between start and end points as LINESTRING!!!}
+\item{geometry.type}{type of sf transformation, default is st_multipoint(), geometry.type can be:
+!!!st_point()- resulting table contains two geometry columns: start_wkt and end_wkt, representing start and end points as POINTS!!!  or
+!!!st_multipoint()- resulting table contains one geometry column, representing start and end points as MULTIPOINT!!! or
+!!!st_linestring() - resulting table contains one geometry column, representing  the line between start and end points as LINESTRING!!!}
 }
 \value{
-sf object (data.frame with geometries depending to geometry.type)
+sf object (data frame with geometries depending on geometry.type)
 }
 \description{
-Takes trips_table (from readTripsTable) and transforms trips_table to sf object using start_x, end_x, start_y, end_y as a geometry features
-deletes from resulting data.frame start_x, end_x, start_y, end_y.
-And adds wkt column, if geometry.type = st_mulitpoint(), or geometry.type = st_linestring()
-Or adds start_wkt and end_wkt, if geometry.type = st_point()
-Added column/columns projected to given CRS (coordinate reference system),
-that can be taken from network file of MATSimOutputDirectory
-}
-\details{
-Function also sets attribute geometry.type to resulting table to character value of "POINT","MULTIPOINT","LINESTRING"
-to get which type of table was generated, if it is needed
+Transforms the data frame trips_output (from \links{readTripsTable}) into an sf object using start_x, end_x, start_y, end_y as geometry features.
+If geometry.type = st_multipoint() or geometry.type = st_linestring() it adds one geometry column (wkt format),
+if geometry.type = st_point() it adds the geometry columns start_wkt and end_wkt.
+Added column/columns are projected to given CRS (coordinate reference system).
+The columns start_x, end_x, start_y, end_y are deleted from the resulting data frame.
 }
