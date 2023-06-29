@@ -2540,13 +2540,13 @@ plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
 #'
 #' @export
 plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
-                                                               unite.modes = character(0),
+                                                               unite.columns = character(0),
                                                                united.name = "united") {
 
 
-  # renaming/uniting of modes
+  # If some columns should be united
   trips_table <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.modes = unite.modes,
+                                          unite.columns = unite.columns,
                                           united.name = united.name)
 
 
@@ -2554,7 +2554,14 @@ plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
   tripsTable = tripsTable %>%
     mutate(dep_time = hour(dep_time)) %>%
     count(dep_time,main_mode)
-}
+
+
+  #plotting
+  fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
+  fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group")
+
+  fig
+  return(fig)
 
 
   #' Plot bar chart of changes in modal split

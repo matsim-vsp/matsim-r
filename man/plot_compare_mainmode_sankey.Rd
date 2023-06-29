@@ -8,33 +8,28 @@ plot_compare_mainmode_sankey(
   trips_table1,
   trips_table2,
   show.onlyChanges = FALSE,
-  unite.columns = character(0),
+  unite.modes = character(0),
   united.name = "united"
 )
 }
 \arguments{
-\item{show.onlyChanges}{boolean, if it is set to TRUE => sankey diagram only contains changes on axes}
+\item{show.onlyChanges}{boolean, if it is set to TRUE the sankey diagram only shows the mode shift}
 
-\item{unite.columns}{vector of character string, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
+\item{unite.modes}{vector of character strings,
+changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+using the function (\link{process_rename_mainmodes})}
 
-\item{united.name}{if columns were united, you can specify name for the resulting column in plot}
+\item{united.name}{character string, specifies the name of the united mode}
 
-\item{tripsTable1}{tible of trips_output (from readTripsTable())}
+\item{tripsTable1}{tibble of trips_output (from readTripsTable())}
 
-\item{tripsTable2}{tible of trips_output (from readTripsTable())}
+\item{tripsTable2}{tibble of trips_output (from readTripsTable())}
 }
 \value{
-Alluvial diagram that represents changes in transport mode distribution of trip tables
+Alluvial diagram that represents changes in transport mode distribution
 }
 \description{
-Takes two trips_table (from readTripsTable), and collects
-changes between transport mode distribution of these tables
-to make alluvial diagram from this data
-}
-\details{
-Function calculates number of each transport mode used in
-first and second table, and draws plot that represent how
-distribution of transport mode has changed (f. e. what part of concrete trasport mode changed to another)
-Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united.name is "united")
-Using parameter show.onlyChanges
+Takes two data frames (from \link{readTripsTable()}) and compares the mode choice for each agent and summarizes the results, showing the modal shift.
+Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
+The parameter show.onlyChanges allows the visualization of only the mode shift (excluding the trips that do not change mode). Standard value is FALSE.
 }

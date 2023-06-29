@@ -2,7 +2,9 @@
 % Please edit documentation in R/output_trips.R
 \name{process_filter_by_shape}
 \alias{process_filter_by_shape}
-\title{Filtering of trips_table(from readTripsTable) depending on how they located in given shape}
+\title{XXXX trips_table but shapeTable - fix naming
+XXXX finish when code revision is done
+Filters trips_table(from ,\link{readTripsTable}) depending by location using a shapefile}
 \usage{
 process_filter_by_shape(
   trips_table,
@@ -15,7 +17,7 @@ process_filter_by_shape(
 \arguments{
 \item{trips_table}{tibble of trips_output (from readTripsTable())}
 
-\item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
+\item{crs}{numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file}
 
 \item{start.inshape}{bool, defines trips to conclude (see Description)}
 
@@ -27,10 +29,9 @@ process_filter_by_shape(
 tibble, with filtered trips depending on shapeTable and special flags (see Description)
 }
 \description{
-Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
-Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
-transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
-and filters the trips from table depending on *.inshape flags:
+Uses trips_table and an sf object (can be created using the function st_read()),
+transforms both objects to match a mutual coordinate system (crs)
+and filters the trips from trips_table depending on *.inshape flags:
 if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
 if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
 if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape

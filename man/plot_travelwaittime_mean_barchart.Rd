@@ -2,28 +2,29 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_travelwaittime_mean_barchart}
 \alias{plot_travelwaittime_mean_barchart}
-\title{Bar Chart with main_mode on x-axis and average travel/wait time on y-axis}
+\title{Plot travel and wait time for each mode as a bar chart}
 \usage{
 plot_travelwaittime_mean_barchart(
   trips_table,
-  unite.columns = character(0),
+  unite.modes = character(0),
   united.name = "united",
   time_format = "minute"
 )
 }
 \arguments{
-\item{trips_table}{tible of trips_output (from readTripsTable())}
+\item{trips_table}{tibble of trips_output (from \links{readTripsTable()})}
 
-\item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
+\item{unite.modes}{vector of character strings,
+changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+using the function (\link{process_rename_mainmodes})}
 
-\item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart}
+\item{united.name}{character string, specifies the name of the united mode}
 }
 \value{
 Bar Chart plot of average time spent on travel/wait
 }
 \description{
-Takes Table trips_output (from readTripsTable()),
-to plot bar chart with with values that represent
-time spent on traveling/waiting
-Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+Takes the data frame trips_output (from \links{readTripsTable()}),
+to plot a bar chart of travel and wait times.
+Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 }

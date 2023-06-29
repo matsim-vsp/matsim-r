@@ -2,7 +2,8 @@
 % Please edit documentation in R/output_trips.R
 \name{process_get_od_matrix}
 \alias{process_get_od_matrix}
-\title{Creates an instance of ODMatrix(origin/destination) in conventional form or for the simwrapper}
+\title{Creates an origin/destination matrix either in conventional form (row names = origin, column names = destination)
+or for simwrapper (origin and destination as columns)}
 \usage{
 process_get_od_matrix(
   tripsTable,
@@ -15,23 +16,24 @@ process_get_od_matrix(
 )
 }
 \arguments{
-\item{tripsTable}{table of output trips(from readTripsTable) or path to trips_output file}
+\item{tripsTable}{tibble of trips_output (from \link{readTripsTable})}
 
-\item{shapePath}{full path to shapefile (if simwrapper TRUE, folder with shapeFile should contain also .dbf with the same name)}
+\item{shapePath}{string, full path to the shapefile (.shp) (shape files are made up of several files with the same name and the folder also needs to include a .dbf file)}
 
-\item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
+\item{crs}{numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file}
 
-\item{dump.output.to}{path to a folder to save csv file of ODMatrix}
+\item{dump.output.to}{string, path to a folder to save the .csv file}
 
-\item{simwrapper}{create output in a simwrapper form if set to path of the shapefile}
+\item{simwrapper}{boolean, creates output in the format used for simwrapper if the path for the shapefile is specified}
 
-\item{colnames}{if the specific shapefile contains known columns, they could be specified as name for columns OD. If not given then they get numeric values}
+\item{colnames}{string, column names can be specified (i.e. to fit the shape file), if not they are numbered}
 
-\item{outer}{logical that represent if the table should contain outside flow of the shape, it isn't}
+\item{outer}{boolean, determines if flows outside of the shapefile are used, standard value is FALSE}
 }
 \value{
 tibble of origin/destination matrix
 }
 \description{
-Creates an instance of ODMatrix(origin/destination) in conventional form or for the simwrapper
+Creates an origin/destination matrix either in conventional form (row names = origin, column names = destination)
+or for simwrapper (origin and destination as columns)
 }

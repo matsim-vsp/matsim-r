@@ -2,18 +2,18 @@
 % Please edit documentation in R/output_trips.R
 \name{process_get_crs_from_config}
 \alias{process_get_crs_from_config}
-\title{Reads an coordinate referenec system of MATSim output directory
-from output_config.xml}
+\title{Reads the coordinate reference system from an MATSim output directory
+(output_config.xml)}
 \usage{
 process_get_crs_from_config(config_path)
 }
 \arguments{
-\item{config_path}{specifies path to find config}
+\item{config_path}{specifies path to configuration file}
 }
 \value{
 code of coordinate reference system
 }
 \description{
-Reads an coordinate referenec system of MATSim output directory
-from output_config.xml
+Reads the coordinate reference system from an MATSim output directory
+(output_config.xml)
 }
