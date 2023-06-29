@@ -2554,7 +2554,7 @@ plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
   tripsTable = tripsTable %>%
     mutate(dep_time = hour(dep_time)) %>%
     count(dep_time,main_mode)
-
+}
 
 
   #' Plot bar chart of changes in modal split
