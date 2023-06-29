@@ -2555,13 +2555,13 @@ plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
     mutate(dep_time = hour(dep_time)) %>%
     count(dep_time,main_mode)
 
+
   #plotting
   fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
   fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group")
 
   fig
   return(fig)
-}
 
 
 #' Plot bar chart of changes in modal split
