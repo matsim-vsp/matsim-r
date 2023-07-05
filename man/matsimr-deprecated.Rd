@@ -458,9 +458,41 @@ to get which type of table was generated, if it is needed
 \section{Details}{
 
 \tabular{rl}{
+  \strong{Plotting functions}:\cr
   \code{plotModalSplitPieChart} \tab now a synonym for \code{\link{plot_mainmode_piechart}}\cr
   \code{plotModalSplitBarChart} \tab now a synonym for \code{\link{plot_mainmode_barchart}}\cr
+  \code{plotAverageTravelWait} \tab now a synonym for \code{\link{plot_travelwaittime_mean_barchart}}\cr
+  \code{plotModalDistanceDistribution} \tab now a synonym for \code{\link{plot_distcat_by_mainmode_barchart}}\cr
+  \code{plotTripDistanceByMode} \tab now a synonym for \code{\link{plot_distance_by_mainmode_barchart}}\cr
+  \code{plotTripCountByDepTime} \tab now a synonym for \code{\link{plot_trips_count_by_deptime_and_mainmode_linechart}}\cr
+  \code{plotActivityEndTimes} \tab not part of package(contained false logic)\cr
+  \code{plotArrivalTimesPerTripPurpose} \tab now a synonym for \code{\link{plot_arrtime_by_act}}\cr
+  \code{plotDepartureTimesPerTripPurpose} \tab now a synonym for \code{\link{plot_deptime_by_act}}\cr
+  \strong{Spatial functions}:\cr
+  \code{plotTripTypesPieChart} \tab now a synonym for \code{\link{plot_spatialtype_by_shape_piechart}}\cr
+  \code{plotMapWithFilteredTrips} \tab not part of package, you can filter before drawing a map\cr
+  \code{plotMapWithTrips} \tab now a synonym for \code{\link{plot_map_trips}}\cr
+  \code{plotMapWithTripsType} \tab now a synonym for \code{\link{plot_map_trips_by_spatialcat}}\cr
+  \code{plotTripDistancedByType} \tab now a synonym for \code{\link{plot_distance_by_spatialcat_barchart}}\cr
+  \strong{Comparing functions}:\cr
+  \code{plotModalShiftBar} \tab now a synonym for \code{\link{plot_compare_mainmode_barchart}}\cr
+  \code{plotModalShiftSankey} \tab now a synonym for \code{\link{plot_compare_mainmode_sankey}}\cr
+  \code{compareAverageTravelWait} \tab now a synonym for \code{\link{plot_compare_travelwaittime_by_mainmode_barchart}}\cr
+  \code{compareTripTypesBarChart} \tab now a synonym for \code{\link{plot_compare_count_by_spatialcat_barchart}}\cr
+  \code{compareModalDistanceDistribution} \tab now a synonym for \code{\link{plot_compare_distcat_by_mainmode_barchart}}\cr
+  \code{compareBasePolicyOutput} \tab is not used in new package version, and is prepared to be completely removed from package
+  If you would like to keep it in new package, write at \strong{soboliev@campus.tu-berlin.de}
+  \code{compareBasePolicyShapeOutput} \tab is not used in new package version, and is prepared to be completely removed from package
+  If you would like to keep it in new package, write at \strong{soboliev@campus.tu-berlin.de}
+  \strong{Processing functions}:\cr
+  \code{appendDistanceCategory} \tab now a synonym for \code{\link{process_append_distcat}}\cr
+  \code{filterByRegion} \tab now a synonym for \code{\link{process_filter_by_shape}}\cr
+  \code{deriveODMatrix} \tab now a synonym for \code{\link{process_get_od_matrix}}\cr
+  \code{getCrsFromConfig} \tab now a synonym for \code{\link{process_get_crs_from_config}}\cr
+  \code{transformToSf} \tab now a synonym for \code{\link{process_convert_table_to_sf}}\cr
+  \strong{Reading functions}:\cr
   \code{readTripsTable} \tab now a synonym for \code{\link{read_output_trips}}\cr
+  \code{readConfig} \tab now a synonym for \code{\link{read_config}}\cr
 }
 }
 

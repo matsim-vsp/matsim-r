@@ -38,9 +38,41 @@ dashboard_file <- "/dashboard-1-trips.yaml"
 #' @aliases plotModalSplitPieChart
 #' @section Details:
 #' \tabular{rl}{
+#'   \strong{Plotting functions}:\cr
 #'   \code{plotModalSplitPieChart} \tab now a synonym for \code{\link{plot_mainmode_piechart}}\cr
 #'   \code{plotModalSplitBarChart} \tab now a synonym for \code{\link{plot_mainmode_barchart}}\cr
+#'   \code{plotAverageTravelWait} \tab now a synonym for \code{\link{plot_travelwaittime_mean_barchart}}\cr
+#'   \code{plotModalDistanceDistribution} \tab now a synonym for \code{\link{plot_distcat_by_mainmode_barchart}}\cr
+#'   \code{plotTripDistanceByMode} \tab now a synonym for \code{\link{plot_distance_by_mainmode_barchart}}\cr
+#'   \code{plotTripCountByDepTime} \tab now a synonym for \code{\link{plot_trips_count_by_deptime_and_mainmode_linechart}}\cr
+#'   \code{plotActivityEndTimes} \tab not part of package(contained false logic)\cr
+#'   \code{plotArrivalTimesPerTripPurpose} \tab now a synonym for \code{\link{plot_arrtime_by_act}}\cr
+#'   \code{plotDepartureTimesPerTripPurpose} \tab now a synonym for \code{\link{plot_deptime_by_act}}\cr
+#'   \strong{Spatial functions}:\cr
+#'   \code{plotTripTypesPieChart} \tab now a synonym for \code{\link{plot_spatialtype_by_shape_piechart}}\cr
+#'   \code{plotMapWithFilteredTrips} \tab not part of package, you can filter before drawing a map\cr
+#'   \code{plotMapWithTrips} \tab now a synonym for \code{\link{plot_map_trips}}\cr
+#'   \code{plotMapWithTripsType} \tab now a synonym for \code{\link{plot_map_trips_by_spatialcat}}\cr
+#'   \code{plotTripDistancedByType} \tab now a synonym for \code{\link{plot_distance_by_spatialcat_barchart}}\cr
+#'   \strong{Comparing functions}:\cr
+#'   \code{plotModalShiftBar} \tab now a synonym for \code{\link{plot_compare_mainmode_barchart}}\cr
+#'   \code{plotModalShiftSankey} \tab now a synonym for \code{\link{plot_compare_mainmode_sankey}}\cr
+#'   \code{compareAverageTravelWait} \tab now a synonym for \code{\link{plot_compare_travelwaittime_by_mainmode_barchart}}\cr
+#'   \code{compareTripTypesBarChart} \tab now a synonym for \code{\link{plot_compare_count_by_spatialcat_barchart}}\cr
+#'   \code{compareModalDistanceDistribution} \tab now a synonym for \code{\link{plot_compare_distcat_by_mainmode_barchart}}\cr
+#'   \code{compareBasePolicyOutput} \tab is not used in new package version, and is prepared to be completely removed from package
+#'   If you would like to keep it in new package, write at \strong{soboliev@campus.tu-berlin.de}
+#'   \code{compareBasePolicyShapeOutput} \tab is not used in new package version, and is prepared to be completely removed from package
+#'   If you would like to keep it in new package, write at \strong{soboliev@campus.tu-berlin.de}
+#'   \strong{Processing functions}:\cr
+#'   \code{appendDistanceCategory} \tab now a synonym for \code{\link{process_append_distcat}}\cr
+#'   \code{filterByRegion} \tab now a synonym for \code{\link{process_filter_by_shape}}\cr
+#'   \code{deriveODMatrix} \tab now a synonym for \code{\link{process_get_od_matrix}}\cr
+#'   \code{getCrsFromConfig} \tab now a synonym for \code{\link{process_get_crs_from_config}}\cr
+#'   \code{transformToSf} \tab now a synonym for \code{\link{process_convert_table_to_sf}}\cr
+#'   \strong{Reading functions}:\cr
 #'   \code{readTripsTable} \tab now a synonym for \code{\link{read_output_trips}}\cr
+#'   \code{readConfig} \tab now a synonym for \code{\link{read_config}}\cr
 #' }
 #'
 plotModalSplitPieChart <- function(tripsTable,
@@ -2461,71 +2493,7 @@ plot_travelwaittime_mean_barchart <- function(trips_table,
 
 
 
-#' Bar Chart comparing two runs with main_mode on x-axis and average travel/wait time on y-axis
-#'
-#' Takes two data frames (from \link{readTripsTable()}),
-#' to plot a comparison bar chart of travel and wait times.
-#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
-#'
-#'
-#' @param tripsTable1 tibble of trips_output (from readTripsTable())
-#' @param tripsTable2 tibble of trips_output (from readTripsTable())
-#' @param unite.modes vector of character strings,
-#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
-#' using the function (\link{process_rename_mainmodes})
-#' @param united.name character string, specifies the name of the united mode
-#'
-#' @return Bar chart plot comparing average time spent on travel/wait of two runs
-#'
-#' @export
-plot_compare_travelwaittime_by_mainmode <- function(trips_table1,trips_table2,
-                                                    unite.modes = character(0),
-                                                    united.name = "united",
-                                                    time_format = "minute") {
 
-  #TODO:
-  # . Document and add title to show what means positive/negative value
-  # . think about comparing processing functions they can appear in future often
-
-
-  # renaming/uniting of modes
-  trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
-                                           unite.modes = unite.modes,
-                                           united.name = united.name)
-
-  trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
-                                           unite.modes = unite.modes,
-                                           united.name = united.name)
-
-  #processing
-  avg_time1 = process_get_travelwaittime_by_mainmode(trips_table1,time_format = time_format)
-
-
-
-  avg_time2 = process_get_travelwaittime_by_mainmode(trips_table2,time_format = time_format)
-
-
-  avg_time = full_join(avg_time1, avg_time2, by = "main_mode") %>%
-    replace_na(list(trav_time_avg.x = 0,wait_time_avg.x = 0,trav_time_avg.y = 0,wait_time_avg.y = 0))
-
-
-
-  avg_time  = avg_time %>% mutate(trav_time_avg = trav_time_avg.x - trav_time_avg.y,
-                                  wait_time_avg =wait_time_avg.x - wait_time_avg.y )%>%
-    select(-wait_time_avg.x,-wait_time_avg.y, -trav_time_avg.x,-trav_time_avg.y)
-
-
-
-  #plotting
-  fig = plot_ly(data = avg_time,x = ~main_mode,y = ~trav_time_avg,type = 'bar',name = "AVG Time Travelling")
-  fig = fig %>% add_trace(y = ~wait_time_avg,name = "AVG Time Waiting")
-  fig = fig %>% layout(yaxis = list(title = paste0("Time spent (in ",time_format,"s)")),barmode = "group")
-
-
-  fig
-  return(fig)
-
-}
 
 #' Bar Chart with distance traveled on x-axis and number of trips on y-axis
 #'
@@ -2706,7 +2674,7 @@ plot_spatialtype_by_shape_piechart <- function(trips_table, shape_table, crs) {
 #' @return Bar Chart plot of distance traveled by spatial type
 #'
 #' @export
-plot_distance_by_spatialcat <- function(trips_table, shape_table, crs, euclidian = FALSE) {
+plot_distance_by_spatialcat_barchart <- function(trips_table, shape_table, crs, euclidian = FALSE) {
 
   #processing
 
@@ -2716,6 +2684,45 @@ plot_distance_by_spatialcat <- function(trips_table, shape_table, crs, euclidian
   #For plotting
   fig = plot_ly(data = travelled,x = ~spatial_category,y = ~travelled,type = 'bar',name = "Distance travelled by trip Type")
   fig = fig %>% layout(yaxis = list(title = "Distance travelled (in kms)"),barmode = "group")
+  fig
+  return(fig)
+}
+#' Line plot with departure time  on x-axis and number of trips on y-axis
+#'
+#' Takes data frame trips_output (from \link{readTripsTable()}),
+#' to create a line plot of the number of trips for a specific departure time by main_mode
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
+#'
+#'
+#' @param tripsTable tibble of trips_output (from readTripsTable())
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
+#' @return Line plot of trips count by departure time per mode
+#'
+#' @export
+plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
+                                                               unite.columns = character(0),
+                                                               united.name = "united") {
+
+
+  # If some columns should be united
+  trips_table <- process_rename_mainmodes(trips_table = trips_table,
+                                          unite.columns = unite.columns,
+                                          united.name = united.name)
+
+
+  #processing
+  tripsTable = tripsTable %>%
+    mutate(dep_time = hour(dep_time)) %>%
+    count(dep_time,main_mode)
+
+
+  #plotting
+  fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
+  fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group")
+
   fig
   return(fig)
 }
@@ -2882,45 +2889,7 @@ plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
 }
 
 
-#' Line plot with departure time  on x-axis and number of trips on y-axis
-#'
-#' Takes data frame trips_output (from \link{readTripsTable()}),
-#' to create a line plot of the number of trips for a specific departure time by main_mode
-#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
-#'
-#'
-#' @param tripsTable tibble of trips_output (from readTripsTable())
-#' @param unite.modes vector of character strings,
-#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
-#' using the function (\link{process_rename_mainmodes})
-#' @param united.name character string, specifies the name of the united mode
-#' @return Line plot of trips count by departure time per mode
-#'
-#' @export
-plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
-                                                               unite.columns = character(0),
-                                                               united.name = "united") {
 
-
-  # If some columns should be united
-  trips_table <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
-                                          united.name = united.name)
-
-
-  #processing
-  tripsTable = tripsTable %>%
-    mutate(dep_time = hour(dep_time)) %>%
-    count(dep_time,main_mode)
-
-
-  #plotting
-  fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
-  fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group")
-
-  fig
-  return(fig)
-}
 #' Plot bar chart of changes in modal split
 #'
 #' Takes two data frames (from \link{readTripsTable()}), calculates the
@@ -3135,7 +3104,7 @@ plot_compare_travelwaittime_by_mainmode_barchart <- function(trips_table1,trips_
 #' @return Bar Chart plot of average time spent on travel/wait
 #'
 #' @export
-plot_compare_count_by_spatialcat <- function(trips_table1,trips_table2, shape_table ,crs,dump.output.to = matsimDumpOutputDirectory) {
+plot_compare_count_by_spatialcat_barchart <- function(trips_table1,trips_table2, shape_table ,crs,dump.output.to = matsimDumpOutputDirectory) {
 
   spatial_table1 <- process_append_spatialcat(trips_table = trips_table1,
                                               shape_table = shape_table,
@@ -3153,6 +3122,72 @@ plot_compare_count_by_spatialcat <- function(trips_table1,trips_table2, shape_ta
 
 
   return(plotly::ggplotly(plt))
+
+}
+
+#' Bar Chart comparing two runs with main_mode on x-axis and average travel/wait time on y-axis
+#'
+#' Takes two data frames (from \link{readTripsTable()}),
+#' to plot a comparison bar chart of travel and wait times.
+#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
+#'
+#'
+#' @param tripsTable1 tibble of trips_output (from readTripsTable())
+#' @param tripsTable2 tibble of trips_output (from readTripsTable())
+#' @param unite.modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
+#' using the function (\link{process_rename_mainmodes})
+#' @param united.name character string, specifies the name of the united mode
+#'
+#' @return Bar chart plot comparing average time spent on travel/wait of two runs
+#'
+#' @export
+plot_compare_travelwaittime_by_mainmode <- function(trips_table1,trips_table2,
+                                                    unite.modes = character(0),
+                                                    united.name = "united",
+                                                    time_format = "minute") {
+
+  #TODO:
+  # . Document and add title to show what means positive/negative value
+  # . think about comparing processing functions they can appear in future often
+
+
+  # renaming/uniting of modes
+  trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
+                                           unite.modes = unite.modes,
+                                           united.name = united.name)
+
+  trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
+                                           unite.modes = unite.modes,
+                                           united.name = united.name)
+
+  #processing
+  avg_time1 = process_get_travelwaittime_by_mainmode(trips_table1,time_format = time_format)
+
+
+
+  avg_time2 = process_get_travelwaittime_by_mainmode(trips_table2,time_format = time_format)
+
+
+  avg_time = full_join(avg_time1, avg_time2, by = "main_mode") %>%
+    replace_na(list(trav_time_avg.x = 0,wait_time_avg.x = 0,trav_time_avg.y = 0,wait_time_avg.y = 0))
+
+
+
+  avg_time  = avg_time %>% mutate(trav_time_avg = trav_time_avg.x - trav_time_avg.y,
+                                  wait_time_avg =wait_time_avg.x - wait_time_avg.y )%>%
+    select(-wait_time_avg.x,-wait_time_avg.y, -trav_time_avg.x,-trav_time_avg.y)
+
+
+
+  #plotting
+  fig = plot_ly(data = avg_time,x = ~main_mode,y = ~trav_time_avg,type = 'bar',name = "AVG Time Travelling")
+  fig = fig %>% add_trace(y = ~wait_time_avg,name = "AVG Time Waiting")
+  fig = fig %>% layout(yaxis = list(title = paste0("Time spent (in ",time_format,"s)")),barmode = "group")
+
+
+  fig
+  return(fig)
 
 }
 
