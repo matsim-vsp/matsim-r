@@ -3587,7 +3587,7 @@ process_get_mainmode_distribution<-function(trips_table,percentage = FALSE){
 
   return(trips_table_count)
 }
-
+#' @export
 process_get_travdistance_distribution<-function(trips_table,euclidean = FALSE){
 
   trips_table = trips_table %>%
@@ -3615,6 +3615,15 @@ process_get_travelwaittime_by_mainmode<-function(trips_table,
 }
 
 
+#' Adds additional \strong{dist_cat} column representing category of distance traveled based on \strong{distances_array} parameter.
+#'
+#' Categorize column of distances based on \strong{distances_array}, each dist_cat receives relational segment from array.\cr
+#' For example trip distance traveled is 1500, and distances array is (1000,2000), then this category is "1000-2000".
+#'
+#' @param trips_table tibble of trips_output (from \link{read_output_trips})
+#'
+#' @param distances_array numeric vector, represents segments for distance categories ordered (in meters)
+#'
 #' @export
 process_append_distcat <- function(trips_table,distances_array = c(1000,2000,5000,10000,20000,50000,100000)){
 
@@ -3639,6 +3648,20 @@ process_append_distcat <- function(trips_table,distances_array = c(1000,2000,500
   return(result_table)
 }
 
+#' Converts time column specified in \strong{time_column} to numeric representation of minutes, hours or seconds
+#'
+#' Default output_trips table time columns(\strong{dep_time}, \strong{trav_time}, \strong{wait_time}) are in 'hms' format,
+#' that isn't convenient for use in some cases. To convert this type to numeric with different, specify \strong{time_column} to be converted,
+#' and \strong{time_format} which will represent time(takes "hour", "minute", "second")
+#'
+#' @param trips_table tibble of trips_output (from \link{read_output_trips})
+#'
+#' @param time_format char, defines time format to be used(takes "hour", "minute", "second")
+#'
+#' @param time_column char, name of the column from table to be converted(takes \strong{dep_time}, \strong{trav_time}, \strong{wait_time})
+#'
+#' @return tibble, containing column with specified time_format
+#'
 #' @export
 process_convert_time <- function(trips_table,time_format = "hour",time_column = "dep_time"){
 
@@ -3652,35 +3675,35 @@ process_convert_time <- function(trips_table,time_format = "hour",time_column = 
   }else if(time_format == "hour"){
     trips_table[[time_column]] = trips_table[[time_column]]/3600
     return(trips_table)
+  }else if(time_format == "second"){
+    return(trips_table)
   }
 
+  warning("time_format is unknown returned time is in seconds. Otherwise try minute, hour, second")
   return(trips_table)
 }
 
 ######Spatial######
 
 
-#' XXXX trips_table but shapeTable - fix naming
 #' XXXX finish when code revision is done
 #' Filters trips_table(from ,\link{readTripsTable}) depending by location using a shapefile
 #'
 #' Uses trips_table and an sf object (can be created using the function st_read()),
 #' transforms both objects to match a mutual coordinate system (crs)
-#' and filters the trips from trips_table depending on *.inshape flags:
-#' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
-#' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
-#' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
-#' if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
+#' and filters the trips from trips_table depending on spatial_type flags:\cr
+#' if spatial_type="inside" return table that contains trips inside given shape\cr
+#' if spatial_type="originating" return table that contains trips which starts in shape and ends out of the shape\cr
+#' if spatial_type="destinating" return table that contains trips which ends in shape and starts out of the shape\cr
+#' if spatial_type="outside" return table that contains trips which starts and ends our of the given shape
 #'
 #' @param trips_table tibble of trips_output (from readTripsTable())
 #'
-#' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#' @param shape_table sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
 #'
 #' @param crs numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file
 #'
-#' @param start.inshape bool, defines trips to conclude (see Description)
-#'
-#' @param end.inshape bool, defines trips to conclude (see Description)
+#' @param spatial_type bool, defines trips to conclude (see Description)
 #'
 #' @return tibble, with filtered trips depending on shapeTable and special flags (see Description)
 #'
@@ -3749,18 +3772,18 @@ process_filter_by_shape <- function(trips_table,
 
 #' Appending spatial category as additional column to output_trips tibble
 #' XXXX
-#' Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
-#' Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
+#' Takes trips_table and shape_table(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
+#' Please be aware that this \link{process_filter_by_shape} currently only works, when one geometry is loaded.)
 #' transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
 #' and adds to the output_trips from table spatial category depending on postition related to shape file:
-#' if start.inshape = TRUE & end.inshape = TRUE return table that contains trips \strong{inside} of the given shape
-#' if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which \strong{originating} in the shape
-#' if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which \strong{destinating} in the shape
-#' if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which \strong{outside} of the given shape
+#' category representing trips \strong{inside} of the given shape
+#' category representing trips which \strong{originating} in the shape
+#' category representing trips which \strong{destinating} in the shape
+#' category representing trips which \strong{outside} of the given shape
 #'
 #' @param trips_table tibble of trips_output (from readTripsTable())
 #'
-#' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#' @param shape_table sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
 #'
 #' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
 #'
@@ -3875,8 +3898,8 @@ process_get_crs_from_config <- function(config_path) {
 #' @return tibble of origin/destination matrix
 #'
 #' @export
-process_get_od_matrix<- function(tripsTable,
-                                 shapePath,
+process_get_od_matrix<- function(trips_table,
+                                 shape_path,
                                  crs,
                                  dump.output.to = matsimDumpOutputDirectory,
                                  simwrapper = FALSE,
@@ -3887,20 +3910,20 @@ process_get_od_matrix<- function(tripsTable,
   options(warn = -1)
 
   #if tripstable given as folder/file
-  if(sum(class(tripsTable) %in% c("tbl_df","tbl","data.frame"))<1){
-    tripsTable <- readTripsTable(tripsTable)
+  if(sum(class(trips_table) %in% c("tbl_df","tbl","data.frame"))<1){
+    tripsTable <- readTripsTable(trips_table)
   }
 
-  sfTable <- transformToSf(tripsTable,crs,geometry.type = st_point())
+  sfTable <- transformToSf(trips_table,crs,geometry.type = st_point())
 
-  shape = st_read(shapePath)
+  shape = st_read(shape_path)
 
   if (st_crs(shape) == NA) {
     st_crs(shape) <- crs
   }
   shape = st_transform(shape,crs = crs)
 
-  sf_table <- transformToSf(tripsTable, crs = crs, geometry.type = st_point())
+  sf_table <- transformToSf(trips_table, crs = crs, geometry.type = st_point())
 
   sf_start = sfTable %>% select(trip_id,start_wkt)
   st_geometry(sfTable) = "end_wkt"
@@ -3973,20 +3996,20 @@ process_get_od_matrix<- function(tripsTable,
 
 #' Transforms the data frame trips_output (from \links{readTripsTable}) from tibble to sf (table with geometry features)
 #'
-#' Transforms the data frame trips_output (from \links{readTripsTable}) into an sf object using start_x, end_x, start_y, end_y as geometry features.
-#' If geometry.type = st_multipoint() or geometry.type = st_linestring() it adds one geometry column (wkt format),
-#' if geometry.type = st_point() it adds the geometry columns start_wkt and end_wkt.
-#' Added column/columns are projected to given CRS (coordinate reference system).
+#' Transforms the data frame trips_output (from \links{readTripsTable}) into an sf object using start_x, end_x, start_y, end_y as geometry features.\cr
+#' If geometry.type = st_multipoint() or geometry.type = st_linestring() it adds one geometry column (wkt format),\cr
+#' if geometry.type = st_point() it adds the geometry columns start_wkt and end_wkt.\cr
+#' Added column/columns are projected to given CRS (coordinate reference system).\cr
 #' The columns start_x, end_x, start_y, end_y are deleted from the resulting data frame.
 #'
 #' @param table tibble trips_output (from readTripsTable())
 #'
 #' @param crs numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file
 #'
-#' @param geometry.type type of sf transformation, default is st_multipoint(), geometry.type can be:
-#' !!!st_point()- resulting table contains two geometry columns: start_wkt and end_wkt, representing start and end points as POINTS!!!  or
-#' !!!st_multipoint()- resulting table contains one geometry column, representing start and end points as MULTIPOINT!!! or
-#' !!!st_linestring() - resulting table contains one geometry column, representing  the line between start and end points as LINESTRING!!!
+#' @param geometry.type type of sf transformation, default is st_multipoint(), geometry.type can be:\cr
+#' !!!st_point()- resulting table contains two geometry columns: start_wkt and end_wkt, representing start and end points as POINTS!!!  or\cr
+#' !!!st_multipoint()- resulting table contains one geometry column, representing start and end points as MULTIPOINT!!! or\cr
+#' !!!st_linestring() - resulting table contains one geometry column, representing  the line between start and end points as LINESTRING!!!\cr
 #'
 #' @return sf object (data frame with geometries depending on geometry.type)
 #'

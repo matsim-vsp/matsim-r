@@ -2,8 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{process_filter_by_shape}
 \alias{process_filter_by_shape}
-\title{XXXX trips_table but shapeTable - fix naming
-XXXX finish when code revision is done
+\title{XXXX finish when code revision is done
 Filters trips_table(from ,\link{readTripsTable}) depending by location using a shapefile}
 \usage{
 process_filter_by_shape(trips_table, shape_table, crs, spatial_type = "inside")
@@ -11,13 +10,11 @@ process_filter_by_shape(trips_table, shape_table, crs, spatial_type = "inside")
 \arguments{
 \item{trips_table}{tibble of trips_output (from readTripsTable())}
 
+\item{shape_table}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
+
 \item{crs}{numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file}
 
-\item{shapeTable}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
-
-\item{start.inshape}{bool, defines trips to conclude (see Description)}
-
-\item{end.inshape}{bool, defines trips to conclude (see Description)}
+\item{spatial_type}{bool, defines trips to conclude (see Description)}
 }
 \value{
 tibble, with filtered trips depending on shapeTable and special flags (see Description)
@@ -25,9 +22,9 @@ tibble, with filtered trips depending on shapeTable and special flags (see Descr
 \description{
 Uses trips_table and an sf object (can be created using the function st_read()),
 transforms both objects to match a mutual coordinate system (crs)
-and filters the trips from trips_table depending on *.inshape flags:
-if start.inshape = TRUE & end.inshape = TRUE return table that contains trips inside given shape
-if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which starts in shape and ends out of the shape
-if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which ends in shape and starts out of the shape
-if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which starts and ends our of the given shape
+and filters the trips from trips_table depending on spatial_type flags:\cr
+if spatial_type="inside" return table that contains trips inside given shape\cr
+if spatial_type="originating" return table that contains trips which starts in shape and ends out of the shape\cr
+if spatial_type="destinating" return table that contains trips which ends in shape and starts out of the shape\cr
+if spatial_type="outside" return table that contains trips which starts and ends our of the given shape
 }

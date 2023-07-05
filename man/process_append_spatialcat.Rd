@@ -4,23 +4,23 @@
 \alias{process_append_spatialcat}
 \title{Appending spatial category as additional column to output_trips tibble
 XXXX
-Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
-Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
+Takes trips_table and shape_table(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
+Please be aware that this \link{process_filter_by_shape} currently only works, when one geometry is loaded.)
 transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
 and adds to the output_trips from table spatial category depending on postition related to shape file:
-if start.inshape = TRUE & end.inshape = TRUE return table that contains trips \strong{inside} of the given shape
-if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which \strong{originating} in the shape
-if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which \strong{destinating} in the shape
-if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which \strong{outside} of the given shape}
+category representing trips \strong{inside} of the given shape
+category representing trips which \strong{originating} in the shape
+category representing trips which \strong{destinating} in the shape
+category representing trips which \strong{outside} of the given shape}
 \usage{
 process_append_spatialcat(trips_table, shape_table, crs)
 }
 \arguments{
 \item{trips_table}{tibble of trips_output (from readTripsTable())}
 
-\item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
+\item{shape_table}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
 
-\item{shapeTable}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
+\item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
 }
 \value{
 tibble, with additional spatial column related to given shape
@@ -28,12 +28,12 @@ tibble, with additional spatial column related to given shape
 \description{
 Appending spatial category as additional column to output_trips tibble
 XXXX
-Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
-Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
+Takes trips_table and shape_table(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
+Please be aware that this \link{process_filter_by_shape} currently only works, when one geometry is loaded.)
 transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
 and adds to the output_trips from table spatial category depending on postition related to shape file:
-if start.inshape = TRUE & end.inshape = TRUE return table that contains trips \strong{inside} of the given shape
-if start.inshape = TRUE & end.inshape = FALSE return table that contains trips which \strong{originating} in the shape
-if start.inshape = FALSE & end.inshape = TRUE return table that contains trips which \strong{destinating} in the shape
-if start.inshape = FALSE & end.inshape = FALSE return table that contains trips which \strong{outside} of the given shape
+category representing trips \strong{inside} of the given shape
+category representing trips which \strong{originating} in the shape
+category representing trips which \strong{destinating} in the shape
+category representing trips which \strong{outside} of the given shape
 }
