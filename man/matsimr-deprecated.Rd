@@ -459,7 +459,6 @@ to get which type of table was generated, if it is needed
 
 XXX - tab needs to be added to category rows
 \tabular{rl}{
-  \strong{Plotting functions}:\tab
   \code{plotModalSplitPieChart} \tab now a synonym for \code{\link{plot_mainmode_piechart}}
   \code{plotModalSplitBarChart} \tab now a synonym for \code{\link{plot_mainmode_barchart}}
   \code{plotAverageTravelWait} \tab now a synonym for \code{\link{plot_travelwaittime_mean_barchart}}
@@ -469,13 +468,11 @@ XXX - tab needs to be added to category rows
   \code{plotActivityEndTimes} \tab not part of package(contained false logic)
   \code{plotArrivalTimesPerTripPurpose} \tab now a synonym for \code{\link{plot_arrtime_by_act}}
   \code{plotDepartureTimesPerTripPurpose} \tab now a synonym for \code{\link{plot_deptime_by_act}}
-  \strong{Spatial functions}:\tab
   \code{plotTripTypesPieChart} \tab now a synonym for \code{\link{plot_spatialtype_by_shape_piechart}}
   \code{plotMapWithFilteredTrips} \tab not part of package, you can filter before drawing a map
   \code{plotMapWithTrips} \tab now a synonym for \code{\link{plot_map_trips}}
   \code{plotMapWithTripsType} \tab now a synonym for \code{\link{plot_map_trips_by_spatialcat}}
   \code{plotTripDistancedByType} \tab now a synonym for \code{\link{plot_distance_by_spatialcat_barchart}}
-  \strong{Comparing functions}:\tab
   \code{plotModalShiftBar} \tab now a synonym for \code{\link{plot_compare_mainmode_barchart}}
   \code{plotModalShiftSankey} \tab now a synonym for \code{\link{plot_compare_mainmode_sankey}}
   \code{compareAverageTravelWait} \tab now a synonym for \code{\link{plot_compare_travelwaittime_by_mainmode_barchart}}
@@ -485,13 +482,11 @@ XXX - tab needs to be added to category rows
   If you would like to keep it in new package, write at \strong{soboliev@campus.tu-berlin.de}
   \code{compareBasePolicyShapeOutput} \tab is not used in new package version, and is prepared to be completely removed from package
   If you would like to keep it in new package, write at \strong{soboliev@campus.tu-berlin.de}
-  \strong{Processing functions}:\tab
   \code{appendDistanceCategory} \tab now a synonym for \code{\link{process_append_distcat}}
   \code{filterByRegion} \tab now a synonym for \code{\link{process_filter_by_shape}}
   \code{deriveODMatrix} \tab now a synonym for \code{\link{process_get_od_matrix}}
   \code{getCrsFromConfig} \tab now a synonym for \code{\link{process_get_crs_from_config}}
   \code{transformToSf} \tab now a synonym for \code{\link{process_convert_table_to_sf}}
-  \strong{Reading functions}:\tab
   \code{readTripsTable} \tab now a synonym for \code{\link{read_output_trips}}
   \code{readConfig} \tab now a synonym for \code{\link{read_config}}
 }
