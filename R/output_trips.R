@@ -37,8 +37,6 @@ dashboard_file <- "/dashboard-1-trips.yaml"
 #' @export  plotModalSplitPieChart
 #' @aliases plotModalSplitPieChart
 #' @section Details:
-#' XXX - tab needs to be added to category rows
-#' \tabular{rl}{
 #'   \code{plotModalSplitPieChart} \tab now a synonym for \code{\link{plot_mainmode_piechart}}
 #'   \code{plotModalSplitBarChart} \tab now a synonym for \code{\link{plot_mainmode_barchart}}
 #'   \code{plotAverageTravelWait} \tab now a synonym for \code{\link{plot_travelwaittime_mean_barchart}}
@@ -69,7 +67,6 @@ dashboard_file <- "/dashboard-1-trips.yaml"
 #'   \code{transformToSf} \tab now a synonym for \code{\link{process_convert_table_to_sf}}
 #'   \code{readTripsTable} \tab now a synonym for \code{\link{read_output_trips}}
 #'   \code{readConfig} \tab now a synonym for \code{\link{read_config}}
-#' }
 #'
 plotModalSplitPieChart <- function(tripsTable,
                                    unite.columns = character(0), united.name = "united",
