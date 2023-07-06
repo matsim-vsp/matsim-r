@@ -471,21 +471,21 @@ to get which type of table was generated, if it is needed
   \code{plotMapWithTrips}now a synonym for \code{\link{plot_map_trips}}\cr
   \code{plotMapWithTripsType} now a synonym for \code{\link{plot_map_trips_by_spatialcat}}\cr
   \code{plotTripDistancedByType} now a synonym for \code{\link{plot_distance_by_spatialcat_barchart}}\cr
-  \code{plotModalShiftBar} now a synonym for \code{\link{plot_compare_mainmode_barchart}}
-  \code{plotModalShiftSankey} now a synonym for \code{\link{plot_compare_mainmode_sankey}}
-  \code{compareAverageTravelWait} now a synonym for \code{\link{plot_compare_travelwaittime_by_mainmode_barchart}}
-  \code{compareTripTypesBarChart}now a synonym for \code{\link{plot_compare_count_by_spatialcat_barchart}}
-  \code{compareModalDistanceDistribution}  now a synonym for \code{\link{plot_compare_distcat_by_mainmode_barchart}}
+  \code{plotModalShiftBar} now a synonym for \code{\link{plot_compare_mainmode_barchart}}\cr
+  \code{plotModalShiftSankey} now a synonym for \code{\link{plot_compare_mainmode_sankey}}\cr
+  \code{compareAverageTravelWait} now a synonym for \code{\link{plot_compare_travelwaittime_by_mainmode_barchart}}\cr
+  \code{compareTripTypesBarChart}now a synonym for \code{\link{plot_compare_count_by_spatialcat_barchart}}\cr
+  \code{compareModalDistanceDistribution}  now a synonym for \code{\link{plot_compare_distcat_by_mainmode_barchart}}\cr
   \code{compareBasePolicyOutput} is not used in new package version, and is prepared to be completely removed from package
-  If you would like to keep it in new package, write at \strong{soboliev@campus.tu-berlin.de}
+  If you would like to keep it in new package, write at \strong{soboliev@campus.tu-berlin.de}\cr
   \code{compareBasePolicyShapeOutput} is not used in new package version, and is prepared to be completely removed from package
-  If you would like to keep it in new package, write at \strong{soboliev@campus.tu-berlin.de}
-  \code{appendDistanceCategory}now a synonym for \code{\link{process_append_distcat}}
-  \code{filterByRegion} now a synonym for \code{\link{process_filter_by_shape}}
-  \code{deriveODMatrix} now a synonym for \code{\link{process_get_od_matrix}}
-  \code{getCrsFromConfig}now a synonym for \code{\link{process_get_crs_from_config}}
-  \code{transformToSf} now a synonym for \code{\link{process_convert_table_to_sf}}
-  \code{readTripsTable}now a synonym for \code{\link{read_output_trips}}
-  \code{readConfig} now a synonym for \code{\link{read_config}}
+  If you would like to keep it in new package, write at \strong{soboliev@campus.tu-berlin.de}\cr
+  \code{appendDistanceCategory}now a synonym for \code{\link{process_append_distcat}}\cr
+  \code{filterByRegion} now a synonym for \code{\link{process_filter_by_shape}}\cr
+  \code{deriveODMatrix} now a synonym for \code{\link{process_get_od_matrix}}\cr
+  \code{getCrsFromConfig}now a synonym for \code{\link{process_get_crs_from_config}}\cr
+  \code{transformToSf} now a synonym for \code{\link{process_convert_table_to_sf}}\cr
+  \code{readTripsTable}now a synonym for \code{\link{read_output_trips}}\cr
+  \code{readConfig} now a synonym for \code{\link{read_config}}\cr
 }
 
