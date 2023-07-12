@@ -3737,25 +3737,24 @@ process_convert_time <- function(trips_table,time_format = "hour",time_column = 
 
 
 #' XXXX finish when code revision is done
-#' Filters trips_table(from ,\link{read_output_trips}) depending by location using a shapefile
+#' Filters data frame (from \link{read_output_trips}) by location using a shapefile
 #'
-#' Uses trips_table and an sf object (can be created using the function st_read()),
+#' Uses output_trips and an sf object (can be created using the function st_read()),
 #' transforms both objects to match a mutual coordinate system (crs)
-#' and filters the trips from trips_table depending on spatial_type flags:\cr
-#' if spatial_type="inside" return table that contains trips inside given shape\cr
-#' if spatial_type="originating" return table that contains trips which starts in shape and ends out of the shape\cr
-#' if spatial_type="destinating" return table that contains trips which ends in shape and starts out of the shape\cr
-#' if spatial_type="outside" return table that contains trips which starts and ends our of the given shape
+#' and filters the trips from output_trips depending on their spatial type flags:\cr
+#' if spatial_type="inside" returns a table that contains trips inside given shape\cr
+#' if spatial_type="originating" returns a table that contains trips which start inside  the shape and end outside of the shape\cr
+#' if spatial_type="destinating" returns a table that contains trips which end inside shape and start outside of the shape\cr
+#' if spatial_type="outside" returns a table that contains trips which start and end outside of the given shape
 #'
 #' @param trips_table tibble of output_trips (from read_output_trips())
 #'
-#' @param shape_table sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#' @param shapeTable sf object(data.frame with geometries), can be created using st_read()
+#' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system
+#'  of the trip coordinates, can be found in network file from output directory of MATSim simulation
+#' @param spatial_type bool, defines trips to conclude (see description)
 #'
-#' @param crs numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file
-#'
-#' @param spatial_type bool, defines trips to conclude (see Description)
-#'
-#' @return tibble, with filtered trips depending on shapeTable and special flags (see Description)
+#' @return tibble, with filtered trips depending on shapeTable and spatial types (see description)
 #'
 #' @export
 process_filter_by_shape <- function(trips_table,
@@ -3820,24 +3819,24 @@ process_filter_by_shape <- function(trips_table,
   return(trips_table[cont_union, ])
 }
 
-#' Appending spatial category as additional column to output_trips tibble
-#' XXXX
-#' Takes trips_table and shape_table(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
+#' Appends an additional column with the trip type to output_trips
+#'
+#' Using a shape_file of the project area an additional column is created, categorizing all trips into the following categories.
+#' inside: trips that start and end inside the given shape
+#' originating: trips that start inside the shape and end outside of the shape
+#' destinating: trips that end inside the shape and start outside of the shape
+#' outside: trips that start and end outside of the shape
+#'
+#'XXXX Can this be deleted? Is this relevant here?
 #' Please be aware that this \link{process_filter_by_shape} currently only works, when one geometry is loaded.)
-#' transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
-#' and adds to the output_trips from table spatial category depending on postition related to shape file:
-#' category representing trips \strong{inside} of the given shape
-#' category representing trips which \strong{originating} in the shape
-#' category representing trips which \strong{destinating} in the shape
-#' category representing trips which \strong{outside} of the given shape
 #'
 #' @param trips_table tibble of output_trips (from read_output_trips())
 #'
-#' @param shape_table sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#' @param shapeTable sf object(data.frame with geometries), can be created using st_read()
+#' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system
+#'  of the trip coordinates, can be found in network file from output directory of MATSim simulation
 #'
-#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
-#'
-#' @return tibble, with additional spatial column related to given shape
+#' @return tibble, with additional column containing the trip type
 #'
 #' @export
 process_append_spatialcat <- function(trips_table,
@@ -3888,13 +3887,12 @@ process_append_spatialcat <- function(trips_table,
   return(trips_table)
 }
 
-#' Reads the coordinate reference system from an MATSim output directory
-#' (output_config.xml)
+#' Reads the coordinate reference system from a MATSim output directory (output_config.xml)
 #'
 #' @param config_path specifies path to configuration file
 #'
 #'
-#' @return code of coordinate reference system
+#' @return EPSG code of coordinate reference system
 #'
 #' @export
 process_get_crs_from_config <- function(config_path) {
@@ -4044,7 +4042,7 @@ process_get_od_matrix<- function(trips_table,
 
 
 
-#' Transforms the data frame output_trips (from \links{read_output_trips}) from tibble to sf (table with geometry features)
+#' Transforms output_trips from tibble to sf (table with geometry features)
 #'
 #' Transforms the data frame output_trips (from \links{read_output_trips}) into an sf object using start_x, end_x, start_y, end_y as geometry features.\cr
 #' If geometry.type = st_multipoint() or geometry.type = st_linestring() it adds one geometry column (wkt format),\cr
