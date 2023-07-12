@@ -37,3 +37,4 @@ kelheim/
 test/
 dashboard_test/
 .sentinel*
+inst/doc

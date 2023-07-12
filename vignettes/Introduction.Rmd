@@ -1,0 +1,19 @@
+---
+title: "Introduction for Matsim R Library"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction for Matsim R Library}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(matsim)
+```
