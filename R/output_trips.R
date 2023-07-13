@@ -2855,10 +2855,10 @@ plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
 
   #Get category count difference
 
-  table_with_сounts1 = distribution1 %>% count(main_mode,dist_cat)
-  table_with_сounts2 = distribution2 %>% count(main_mode,dist_cat)
+  table_with_counts1 = distribution1 %>% count(main_mode,dist_cat)
+  table_with_counts2 = distribution2 %>% count(main_mode,dist_cat)
 
-  joined <- full_join(table_with_сounts1, table_with_сounts2, by = c("main_mode", "dist_cat"))
+  joined <- full_join(table_with_counts1, table_with_counts2, by = c("main_mode", "dist_cat"))
 
   result <- joined %>%
     replace_na( list(n.x = 0, n.y = 0) ) %>%
@@ -3669,7 +3669,7 @@ process_get_travelwaittime_by_mainmode<-function(trips_table,
 #' Categorizes each trip into a distance bin based on traveled distance.
 #' E.g. distance traveled is 1500, distances array is (1000,2000), then the category is "1000-2000".
 #'
-#' @param trips_table tibble of output_trips (from \link{read_output_trips})#'
+#' @param trips_table tibble of output_trips (from \link{read_output_trips})
 #' @param distances_array numeric vector, represents segments for distance categories ordered (in meters),
 #' standard value: c(1000,2000,5000,10000,20000,50000,100000)
 #'
