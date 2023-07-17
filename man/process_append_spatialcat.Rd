@@ -16,7 +16,7 @@ category representing trips which \strong{outside} of the given shape}
 process_append_spatialcat(trips_table, shape_table, crs)
 }
 \arguments{
-\item{trips_table}{tibble of trips_output (from readTripsTable())}
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips()})}
 
 \item{shape_table}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
 

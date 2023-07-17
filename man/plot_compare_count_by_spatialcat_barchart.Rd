@@ -2,38 +2,31 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_compare_count_by_spatialcat_barchart}
 \alias{plot_compare_count_by_spatialcat_barchart}
-\title{Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
-XXXX
-Takes Table trips_output (from readTripsTable()),
-to plot bar chart with with values that represent
-time spent on traveling/waiting
-Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')}
+\title{Plot Comparison of Count by Spatial Category (Bar Chart)}
 \usage{
 plot_compare_count_by_spatialcat_barchart(
   trips_table1,
   trips_table2,
   shape_table,
-  crs,
-  dump.output.to = matsimDumpOutputDirectory
+  crs
 )
 }
 \arguments{
-\item{tripsTable1}{tible of trips_output (from readTripsTable())}
+\item{trips_table1}{tible of trips_output (from \link{read_output_trips()})}
 
-\item{tripsTable2}{tible of trips_output (from readTripsTable())}
+\item{trips_table2}{tible of trips_output (from \link{read_output_trips()})}
 
-\item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
+\item{shape_table}{A spatial shapefile or spatial polygons dataframe representing the spatial categories.}
 
-\item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart}
+\item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates,
+can be found in network file from output directory of MATSim simulation}
 }
 \value{
-Bar Chart plot of average time spent on travel/wait
+A plotly object representing the bar chart of the comparison of count by spatial category.
 }
 \description{
-Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
-XXXX
-Takes Table trips_output (from readTripsTable()),
-to plot bar chart with with values that represent
-time spent on traveling/waiting
-Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+The \code{plot_compare_count_by_spatialcat_barchart}
+function generates a bar chart to compare the count of trips between two trips_table
+tibbles across different spatial categories.
+It provides insights into the distribution of trips across spatial categories for each table.
 }

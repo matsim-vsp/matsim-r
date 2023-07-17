@@ -4,7 +4,7 @@
 \alias{plot_distance_by_spatialcat_barchart}
 \title{Bar Chart with tripType on x-axis and travelled distance on y-axis
 XXXX
-Takes Table trips_output (from readTripsTable()),
+Takes Table trips_output (from \link{read_output_trips()}),
 to plot bar chart with with values that represent
 travelled distance of each tripType related to the shapeTable}
 \usage{
@@ -16,11 +16,13 @@ plot_distance_by_spatialcat_barchart(
 )
 }
 \arguments{
+\item{trips_table}{tible of trips_output (from \link{read_output_trips()})}
+
+\item{shape_table}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
+
 \item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
 
-\item{tripsTable}{tible of trips_output (from readTripsTable())}
-
-\item{shapeTable}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
+\item{euclidean}{Logical value indicating whether to calculate the average as euclidean distance or as travel distance. Default is FALSE, which calculates the average traveled distance.}
 }
 \value{
 Bar Chart plot of distance traveled by spatial type
@@ -28,7 +30,7 @@ Bar Chart plot of distance traveled by spatial type
 \description{
 Bar Chart with tripType on x-axis and travelled distance on y-axis
 XXXX
-Takes Table trips_output (from readTripsTable()),
+Takes Table trips_output (from \link{read_output_trips()}),
 to plot bar chart with with values that represent
 travelled distance of each tripType related to the shapeTable
 }
