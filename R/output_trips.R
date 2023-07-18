@@ -2594,13 +2594,13 @@ plot_distance_by_mainmode_barchart <- function(trips_table,
 #'
 #' @export
 plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
-                                                               unite.columns = character(0),
+                                                               unite.modes = character(0),
                                                                united.name = "united") {
 
 
   # If some columns should be united
   trips_table <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
+                                          unite.modes = unite.modes,
                                           united.name = united.name)
 
 
@@ -2678,46 +2678,6 @@ plot_distance_by_spatialcat_barchart <- function(trips_table, shape_table, crs, 
   fig
   return(fig)
 }
-#' Line plot with departure time on x-axis and number of trips on y-axis
-#'
-#' Takes the data frame output_trips (from \link{read_output_trips()}),
-#' to create a line plot of the number of trips for a specific departure time by main_mode
-#' Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
-#'
-#'
-#' @param tripsTable tibble of output_trips (from read_output_trips())
-#' @param unite.modes vector of character strings,
-#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
-#' using the function (\link{process_rename_mainmodes})
-#' @param united.name character string, specifies the name of the united mode
-#' @return Line plot of trips count by departure time per mode
-#'
-#' @export
-plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
-                                                               unite.columns = character(0),
-                                                               united.name = "united") {
-
-
-  # If some columns should be united
-  trips_table <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
-                                          united.name = united.name)
-
-
-  #processing
-  tripsTable = tripsTable %>%
-    mutate(dep_time = hour(dep_time)) %>%
-    count(dep_time,main_mode)
-
-
-  #plotting
-  fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
-  fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group")
-
-  fig
-  return(fig)
-}
-
 
 #' Line chart of the arrival time by destination activity
 #' XXXX function still needs to be updated?
