@@ -2861,11 +2861,11 @@ plot_compare_mainmode_barchart <- function(trips_table1, trips_table2,
                                            unite.modes = character(0),
                                            united.name = "united") {
   # renaming/uniting of modes
-  trips_table1 <- process_rename_mainmodes(trips_table = trips_table,
+  trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
                                            unite.modes = unite.modes,
                                            united.name = united.name)
 
-  trips_table2 <- process_rename_mainmodes(trips_table = trips_table,
+  trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
                                            unite.modes = unite.modes,
                                            united.name = united.name)
 
