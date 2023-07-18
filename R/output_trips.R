@@ -2382,7 +2382,7 @@ plot_mainmode_piechart <- function(trips_table,
   # processing
   # calculates the mode share and saves it as a tibble
   trips_table_count<-process_get_mainmode_distribution(trips_table,
-                                                       percentage= percentage)
+                                                       percentage= FALSE)
 
 
   # plotting
@@ -2660,6 +2660,7 @@ plot_spatialtype_by_shape_piechart <- function(trips_table, shape_table, crs) {
 }
 
 #' Bar Chart with tripType on x-axis and travelled distance on y-axis
+#'
 #' XXXX
 #' Takes Table trips_output (from \link{read_output_trips()}),
 #' to plot bar chart with with values that represent
@@ -3637,7 +3638,7 @@ process_rename_category<-function(trips_table,
 #' Alternatively, when the percentage parameter is set to TRUE, the function normalizes the counts to represent the percentage distribution of each main mode within the dataset.
 #'
 #' @param trips_table tible of output_trips (from \link{\code{read_output_trips}})
-#' @param percenate boolean, by default FALSE, sets if output should be given in percentage
+#' @param percentage boolean, by default FALSE, sets if output should be given in percentage
 #'
 #' @return tibble that provides the distribution of main modes in the input trips_table.
 #'
@@ -3771,7 +3772,7 @@ process_convert_time <- function(trips_table,time_format = "hour",time_column = 
 
 
 #' XXXX finish when code revision is done
-#' Filters trips_table(from ,\link{readTripsTable}) depending by location using a shapefile
+#' Filters trips_table(from ,\link{read_output_trips()}) depending by location using a shapefile
 #'
 #' Uses trips_table and an sf object (can be created using the function st_read()),
 #' transforms both objects to match a mutual coordinate system (crs)
@@ -3855,15 +3856,15 @@ process_filter_by_shape <- function(trips_table,
 }
 
 #' Appending spatial category as additional column to output_trips tibble
-#' XXXX
+#'
 #' Takes trips_table and shape_table(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
 #' Please be aware that this \link{process_filter_by_shape} currently only works, when one geometry is loaded.)
 #' transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
-#' and adds to the output_trips from table spatial category depending on postition related to shape file:
-#' category representing trips \strong{inside} of the given shape
-#' category representing trips which \strong{originating} in the shape
-#' category representing trips which \strong{destinating} in the shape
-#' category representing trips which \strong{outside} of the given shape
+#' and adds to the output_trips from table spatial category depending on postition related to shape file:\cr
+#' category representing trips \strong{inside} of the given shape\cr
+#' category representing trips which \strong{originating} in the shape\cr
+#' category representing trips which \strong{destinating} in the shape\cr
+#' category representing trips which \strong{outside} of the given shape\cr
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips()})
 #'

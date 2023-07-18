@@ -9,7 +9,7 @@ process_get_mainmode_distribution(trips_table, percentage = FALSE)
 \arguments{
 \item{trips_table}{tible of output_trips (from \link{\code{read_output_trips}})}
 
-\item{percenate}{boolean, by default FALSE, sets if output should be given in percentage}
+\item{percentage}{boolean, by default FALSE, sets if output should be given in percentage}
 }
 \value{
 tibble that provides the distribution of main modes in the input trips_table.

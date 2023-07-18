@@ -2,16 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{process_append_spatialcat}
 \alias{process_append_spatialcat}
-\title{Appending spatial category as additional column to output_trips tibble
-XXXX
-Takes trips_table and shape_table(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
-Please be aware that this \link{process_filter_by_shape} currently only works, when one geometry is loaded.)
-transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
-and adds to the output_trips from table spatial category depending on postition related to shape file:
-category representing trips \strong{inside} of the given shape
-category representing trips which \strong{originating} in the shape
-category representing trips which \strong{destinating} in the shape
-category representing trips which \strong{outside} of the given shape}
+\title{Appending spatial category as additional column to output_trips tibble}
 \usage{
 process_append_spatialcat(trips_table, shape_table, crs)
 }
@@ -26,14 +17,12 @@ process_append_spatialcat(trips_table, shape_table, crs)
 tibble, with additional spatial column related to given shape
 }
 \description{
-Appending spatial category as additional column to output_trips tibble
-XXXX
 Takes trips_table and shape_table(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
 Please be aware that this \link{process_filter_by_shape} currently only works, when one geometry is loaded.)
 transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
-and adds to the output_trips from table spatial category depending on postition related to shape file:
-category representing trips \strong{inside} of the given shape
-category representing trips which \strong{originating} in the shape
-category representing trips which \strong{destinating} in the shape
-category representing trips which \strong{outside} of the given shape
+and adds to the output_trips from table spatial category depending on postition related to shape file:\cr
+category representing trips \strong{inside} of the given shape\cr
+category representing trips which \strong{originating} in the shape\cr
+category representing trips which \strong{destinating} in the shape\cr
+category representing trips which \strong{outside} of the given shape\cr
 }

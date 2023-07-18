@@ -2,11 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_distance_by_spatialcat_barchart}
 \alias{plot_distance_by_spatialcat_barchart}
-\title{Bar Chart with tripType on x-axis and travelled distance on y-axis
-XXXX
-Takes Table trips_output (from \link{read_output_trips()}),
-to plot bar chart with with values that represent
-travelled distance of each tripType related to the shapeTable}
+\title{Bar Chart with tripType on x-axis and travelled distance on y-axis}
 \usage{
 plot_distance_by_spatialcat_barchart(
   trips_table,
@@ -28,7 +24,6 @@ plot_distance_by_spatialcat_barchart(
 Bar Chart plot of distance traveled by spatial type
 }
 \description{
-Bar Chart with tripType on x-axis and travelled distance on y-axis
 XXXX
 Takes Table trips_output (from \link{read_output_trips()}),
 to plot bar chart with with values that represent
