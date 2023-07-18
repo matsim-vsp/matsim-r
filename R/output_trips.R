@@ -2675,7 +2675,7 @@ plot_spatialtype_by_shape_piechart <- function(trips_table, shape_table, crs) {
 #' @return Bar Chart plot of distance traveled by spatial type
 #'
 #' @export
-plot_distance_by_spatialcat_barchart <- function(trips_table, shape_table, crs, euclidian = FALSE) {
+plot_distance_by_spatialcat_barchart <- function(trips_table, shape_table, crs, euclidean = FALSE) {
 
   #processing
 
@@ -3668,7 +3668,7 @@ process_get_travdistance_distribution<-function(trips_table,euclidean = FALSE){
 
   trips_table = trips_table %>%
     group_by(main_mode) %>%
-    summarize(avg_dist = if_else(euclidian,mean(euclidean_distance),mean(traveled_distance)))
+    summarize(avg_dist = if_else(euclidean,mean(euclidean_distance),mean(traveled_distance)))
 
   return(trips_table)
 }

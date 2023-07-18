@@ -8,7 +8,7 @@ plot_distance_by_spatialcat_barchart(
   trips_table,
   shape_table,
   crs,
-  euclidian = FALSE
+  euclidean = FALSE
 )
 }
 \arguments{
