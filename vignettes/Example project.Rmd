@@ -72,6 +72,32 @@ We are going to plot a bar chart:
 The resulting bar chart looks like this:
 
 ![Leipzig modal split](../inst/extdata/Leipzig_modal_split.png)
+#### Spatial filter
+
+In a next step we want to spatially filter our data. So far we have been looking at all the trips in the simulation, now we want to focus on those that touch our project area.
+
+To do this we can use the function process_filter_by_shape() and the shape file we've already loaded. The parameter crs is the coordinate system number and the spatial_type describes the way the trips interact with the project area. The four options are inside, outside, originating and destinating. In this case we will look at the originating trips.
+
+
+```{r, eval = FALSE}
+trips_originating <- process_filter_by_shape(output_trips, leipzig_shp, crs = 25832, spatial_type = "originating" )
+```
+
+Using plot_mainmode_barchart() once more on the 507 originating trips, results in the following chart:
+
+![Leipzig modal split - trips originating in project area](../inst/extdata/Leipzig_modalsplit_originating.png)
+
+#### Comparison plots
+
+In a next step we will compare the modal split of this base model with the modal split of a scenario. To do this we need to load the output_trips file from a scenario, e.g. this one. https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/leipzig/projects/namav/drt-outskirts/ XXXX NICE LINK XXXX
+
+```{r, eval = FALSE}
+
+output_trips_scenario <- read_output_trips(trips_file_scenario_path, n_max = 5000)
+
+trips_scenario_originating <- process_filter_by_shape(output_trips_scenario, leipzig_shp, crs = 25832, spatial_type = "originating")
+
+```
 
 ## R Markdown
 
