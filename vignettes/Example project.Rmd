@@ -43,9 +43,12 @@ library(matsim)
 
 The data we'll use in this example project is the result of a Leipzig run which you can find under the following link. XXX MAKE LINK NICE XXX https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/leipzig/projects/namav/base-case/
 
+The shape file can be found here:
+https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/leipzig/leipzig-v1.1/input/shp/
+
 If you want to follow along, download a copy of the folder.
 
-To start we will load the output_trips.csv.gz file. It is a zipped file but that is okay, the functions can handle that.
+To start we will load the output_trips.csv.gz file. It is a zipped file but that is okay, the functions can handle that. We will also load a shape file.
 ```{r,eval=FALSE}
 
  trips_file_path <- "paste_file_path_here"
@@ -56,8 +59,19 @@ To start we will load the output_trips.csv.gz file. It is a zipped file but that
 
 #### Plot a modal split
 
+There are two functions to calculate and plot modal splits: plot_mainmode_piechart() and plot_mainmode_piechart(). As the name suggests the first one plots the modal split as a pie chart and the second one as a bar chart. To do this, they use the processing function process_get_mainmode_distribution() and plot the resulting table. The processing function can also be used on its own to just get the raw numbers.
 
+We are going to plot a bar chart:
 
+```{r,eval=FALSE}
+
+ plot_mainmode_barchart(output_trips)
+
+```
+
+The resulting bar chart looks like this:
+
+![Leipzig modal split](../inst/extdata/Leipzig_modal_split.png)
 
 ## R Markdown
 
