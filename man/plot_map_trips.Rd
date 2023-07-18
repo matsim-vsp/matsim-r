@@ -2,22 +2,23 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_map_trips}
 \alias{plot_map_trips}
-\title{Plots start and end coordinates of the given trips table on an osm map
-XXXX}
+\title{Plots start and end coordinates of the given trips table on an osm map}
 \usage{
 plot_map_trips(trips_table, crs, optimized = FALSE, shape_table = NULL)
 }
 \arguments{
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips()})}
+
 \item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates, can be found in network file from output directory of MATSim simulation}
 
 \item{optimized}{bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot}
 
-\item{table}{tibble of trips_output (from readTripsTable())}
+\item{shape_table}{A spatial shapefile or spatial polygons dataframe representing the spatial categories.
+By default NULL, means there are no specific shape map on the backgroung.}
 }
 \value{
-plot with trips
+leaflet/ggplot plot with trips start-, end- points
 }
 \description{
 Plots start and end coordinates of the given trips table on an osm map
-XXXX
 }

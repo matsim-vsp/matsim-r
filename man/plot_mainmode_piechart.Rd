@@ -6,19 +6,18 @@
 \usage{
 plot_mainmode_piechart(
   trips_table,
-  unite.modes = character(0),
-  united.name = "united",
-  dump.output.to = matsimDumpOutputDirectory
+  unite_modes = character(0),
+  united_name = "united"
 )
 }
 \arguments{
 \item{trips_table}{tibble of trips_output (from \link{readTripsTable})}
 
-\item{unite.modes}{vector of character strings,
+\item{unite_modes}{vector of character strings,
 changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 using the function (\link{process_rename_mainmodes})}
 
-\item{united.name}{character string, specifies the name of the united mode}
+\item{united_name}{character string, specifies the name of the united mode}
 }
 \value{
 pie chart plot of transport mode distribution, values given in percent
@@ -29,5 +28,5 @@ to plot a pie chart of the modal split using the column main_mode
 }
 \details{
 The function automatically detects the modes plots a pie chart.
-Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
+Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 }

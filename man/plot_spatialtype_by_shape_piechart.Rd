@@ -8,11 +8,11 @@ XXXX}
 plot_spatialtype_by_shape_piechart(trips_table, shape_table, crs)
 }
 \arguments{
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips()})}
+
+\item{shape_table}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
+
 \item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
-
-\item{table}{tibble of trips_output (from readTripsTable())}
-
-\item{shapeTable}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
 }
 \value{
 plot with percentage of each type of trips

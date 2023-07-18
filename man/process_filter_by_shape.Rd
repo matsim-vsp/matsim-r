@@ -8,7 +8,7 @@ Filters trips_table(from ,\link{readTripsTable}) depending by location using a s
 process_filter_by_shape(trips_table, shape_table, crs, spatial_type = "inside")
 }
 \arguments{
-\item{trips_table}{tibble of trips_output (from readTripsTable())}
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips()})}
 
 \item{shape_table}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
 

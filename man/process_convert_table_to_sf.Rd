@@ -7,7 +7,7 @@
 process_convert_table_to_sf(table, crs, geometry.type = st_multipoint())
 }
 \arguments{
-\item{table}{tibble trips_output (from readTripsTable())}
+\item{table}{tibble trips_output (from \link{read_output_trips()})}
 
 \item{crs}{numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file}
 
