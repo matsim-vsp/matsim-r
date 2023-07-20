@@ -16,7 +16,7 @@ process_get_od_matrix(
 )
 }
 \arguments{
-\item{trips_table}{tibble of trips_output (from \link{readTripsTable})}
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
 
 \item{shape_path}{string, full path to the shapefile (.shp) (shape files are made up of several files with the same name and the folder also needs to include a .dbf file)}
 

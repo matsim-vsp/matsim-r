@@ -7,7 +7,7 @@
 process_get_mainmode_distribution(trips_table, percentage = FALSE)
 }
 \arguments{
-\item{trips_table}{tible of output_trips (from \link{\code{read_output_trips}})}
+\item{trips_table}{tible of output_trips (from \link{read_output_trips})}
 
 \item{percentage}{boolean, by default FALSE, sets if output should be given in percentage}
 }

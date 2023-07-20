@@ -2356,13 +2356,13 @@ read_output_trips <- function(input_path = ".", n_max = Inf) {
 
 #' Plot the distribution of modes as a pie chart
 #'
-#' Uses the dataframe trips_output (from \link{readTripsTable}),
+#' Uses the dataframe trips_output (from \link{read_output_trips}),
 #' to plot a pie chart of the modal split using the column main_mode
 #'
 #' The function automatically detects the modes plots a pie chart.
 #' Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 #'
-#' @param trips_table tibble of trips_output (from \link{readTripsTable})
+#' @param trips_table tibble of trips_output (from \link{read_output_trips})
 #' @param unite_modes vector of character strings,
 #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 #' using the function (\link{process_rename_mainmodes})
@@ -2441,12 +2441,12 @@ plot_mainmode_barchart <- function(trips_table,
 
 #' Plot travel and wait time for each mode as a bar chart
 #'
-#' Takes the data frame trips_output (from \links{readTripsTable()}),
+#' Takes the data frame trips_output (from \link{readTripsTable()}),
 #' to plot a bar chart of travel and wait times.
 #' Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 #'
 #'
-#' @param trips_table tibble of trips_output (from \links{readTripsTable()})
+#' @param trips_table tibble of trips_output (from \link{readTripsTable()})
 #' @param unite_modes vector of character strings,
 #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 #' using the function (\link{process_rename_mainmodes})
@@ -3637,7 +3637,7 @@ process_rename_category<-function(trips_table,
 #' By default, the function counts the occurrences of each main mode in the trips_table tibble and returns the counts for each unique main mode. \cr
 #' Alternatively, when the percentage parameter is set to TRUE, the function normalizes the counts to represent the percentage distribution of each main mode within the dataset.
 #'
-#' @param trips_table tible of output_trips (from \link{\code{read_output_trips}})
+#' @param trips_table tible of output_trips (from \link{read_output_trips})
 #' @param percentage boolean, by default FALSE, sets if output should be given in percentage
 #'
 #' @return tibble that provides the distribution of main modes in the input trips_table.
@@ -3966,7 +3966,7 @@ process_get_crs_from_config <- function(config_path) {
 #' or for simwrapper (origin and destination as columns)
 #'
 #'
-#' @param trips_table tibble of trips_output (from \link{readTripsTable})
+#' @param trips_table tibble of trips_output (from \link{read_output_trips})
 #'
 #' @param shape_path string, full path to the shapefile (.shp) (shape files are made up of several files with the same name and the folder also needs to include a .dbf file)
 #'
@@ -4079,9 +4079,9 @@ process_get_od_matrix<- function(trips_table,
 
 
 
-#' Transforms the data frame trips_output (from \links{readTripsTable}) from tibble to sf (table with geometry features)
+#' Transforms the data frame trips_output (from \link{read_output_trips}) from tibble to sf (table with geometry features)
 #'
-#' Transforms the data frame trips_output (from \links{readTripsTable}) into an sf object using start_x, end_x, start_y, end_y as geometry features.\cr
+#' Transforms the data frame trips_output (from \link{read_output_trips}) into an sf object using start_x, end_x, start_y, end_y as geometry features.\cr
 #' If geometry.type = st_multipoint() or geometry.type = st_linestring() it adds one geometry column (wkt format),\cr
 #' if geometry.type = st_point() it adds the geometry columns start_wkt and end_wkt.\cr
 #' Added column/columns are projected to given CRS (coordinate reference system).\cr

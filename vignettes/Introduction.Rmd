@@ -1,5 +1,5 @@
 ---
-title: "Introduction to MATSim R Library"
+title: "Introduction to MATSim R Library: analyzing transport simulations"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction to MATSim R Library: analyzing transport simulations}
@@ -82,10 +82,10 @@ XXXX IS THE EXAMPLE CORRECT? - filter by shape?? XXXX
 
 ```{r processing, warning=FALSE,eval=FALSE}
 # Filter the trips data to include only weekday trips
-#weekday_trips <- process_filter_by_shape(trips_data)
+weekday_trips <- process_filter_by_shape(trips_data)
 
 # Calculate the average trip duration
-#average_duration <- process_calculate_average_duration(weekday_trips)
+average_duration <- process_get_travelwaittime_by_mainmode(weekday_trips)
 ```
 
 Feel free to explore the different processing functions available in the package to suit your specific analysis requirements.
@@ -96,8 +96,8 @@ Visualizing your simulation data is crucial for gaining insights and effectively
 
 
 ```{r plotting, eval = FALSE}
-# Create a scatter plot of trip distance against trip duration
-#plot_scatter(trips_data, x = "distance", y = "duration")
+# Create a scatter plot of trip distance among different main modes
+plot_distance_by_mainmode_barchart(trips_data, x = "distance", y = "duration")
 ```
 
 You can customize the plot appearance and explore other plot types, such as line plots, bar charts, and spatial maps, using the various plotting functions provided by MATSim R.
@@ -110,6 +110,6 @@ You can customize the plot appearance and explore other plot types, such as line
 
 #### Conclusion
 
-In this vignette, we introduced you to the MATSim R package, designed specifically for analyzing MATSim outputs. We hope that you'll have a great experience using this library and we are glad to receive feedback at **some mail/github ** XXXX ADD CONTACT XXXX
+In this vignette, we introduced you to the MATSim R package, designed specifically for analyzing MATSim outputs. We hope that you'll have a great experience using this library and we are glad to receive feedback at **https://github.com/matsim-vsp/matsim-r/tree/master** or at mail **soboliev@vsp.tu-berlin.de**
 
-For more details and specific usage examples, refer to the package documentation and other vignettes available({list of vignettes}). Happy analyzing with MATSim R!
+For more details and specific usage examples, refer to the package documentation and other vignettes available. Happy analyzing with MATSim R!
