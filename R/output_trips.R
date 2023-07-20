@@ -2585,45 +2585,6 @@ plot_distance_by_mainmode_barchart <- function(trips_table,
 }
 
 
-#' Line plot with departure time  on x-axis and number of trips on y-axis
-#'
-#' Takes data frame trips_output (from \link{read_output_trips()}),
-#' to create a line plot of the number of trips for a specific departure time by main_mode
-#' Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
-#'
-#'
-#' @param tripsTable tibble of trips_output (from \link{read_output_trips()})
-#' @param unite_modes vector of character strings,
-#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
-#' using the function (\link{process_rename_mainmodes})
-#' @param united_name character string, specifies the name of the united mode
-#' @return Line plot of trips count by departure time per mode
-#'
-#' @export
-plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
-                                                               unite.columns = character(0),
-                                                               united_name = "united") {
-
-
-  # If some columns should be united
-  trips_table <- process_rename_mainmodes(trips_table = trips_table,
-                                          unite.columns = unite.columns,
-                                          united_name = united_name)
-
-
-  #processing
-  trips_table = trips_table %>%
-    mutate(dep_time = hour(dep_time)) %>%
-    count(dep_time,main_mode)
-
-  #plotting
-  fig = plot_ly(trips_table,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
-  fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group")
-
-  fig
-  return(fig)
-}
-
 #' Plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
 #' XXXX
 #'
@@ -2715,13 +2676,13 @@ plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
 
 
   #processing
-  tripsTable = tripsTable %>%
+  trips_table = trips_table %>%
     mutate(dep_time = hour(dep_time)) %>%
     count(dep_time,main_mode)
 
 
   #plotting
-  fig = plot_ly(tripsTable,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
+  fig = plot_ly(trips_table,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
   fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group")
 
   fig
