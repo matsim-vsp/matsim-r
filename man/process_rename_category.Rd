@@ -2,7 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{process_rename_category}
 \alias{process_rename_category}
-\title{XXXX}
+\title{Replace Matching Categories of any column with United Name in Tibble}
 \usage{
 process_rename_category(
   trips_table,
@@ -11,6 +11,22 @@ process_rename_category(
   column = "main_mode"
 )
 }
+\arguments{
+\item{trips_table}{tible of output_trips (from \link{\code{read_output_trips}})}
+
+\item{unite_template}{vector of character string, representing pattern to match categories}
+
+\item{united_name}{character string, to represent new category for all occurrences matched unite_modes}
+
+\item{column}{tibble column name, which will be used in occurrences renaming}
+}
+\value{
+modified trips table tibble
+}
 \description{
-XXXX
+The \code{process_rename_category} function takes a tibble, trips_table,
+as input and replaces all occurrences of categories
+that match a given template with another name provided in united_name.
+The function provides the flexibility to specify multiple category templates
+to be united into a single name.
 }

@@ -6,26 +6,30 @@
 \usage{
 plot_distcat_by_mainmode_barchart(
   trips_table,
-  unite.modes = character(0),
-  united.name = "united",
+  unite_modes = character(0),
+  united_name = "united",
   dist_column = "dist_cat",
   distances_array = c(1000, 2000, 5000, 10000, 20000, 50000, 1e+05)
 )
 }
 \arguments{
-\item{trips_table}{tibble of output_trips (from read_output_trips())}
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips()})}
 
-\item{unite.modes}{vector of character strings,
+\item{unite_modes}{vector of character strings,
 changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 using the function (\link{process_rename_mainmodes})}
 
-\item{united.name}{character string, specifies the name of the united mode}
+\item{united_name}{character string, specifies the name of the united mode}
+
+\item{dist_column}{A character string specifying the column name in the trips_table tibble that contains the distance categories.}
+
+\item{distances_array}{A numeric vector defining the distance thresholds for creating distance categories.}
 }
 \value{
-Bar Chart plot of count of trips among distance travelled
+Plotly bar Chart of count of trips among distance travelled
 }
 \description{
-Takes the data frame output_trips (from \link{read_output_trips()}) and categorizes the traveled distances into pre-defined bins
+Takes the data frame trips_output (from \link{read_output_trips()}) and categorizes the traveled distances into pre-defined bins
 to plot a histogram of the traveled distances. (Bins: 1000,2000,5000,10000,20000,50000,100000 (m))
-Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
+Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 }

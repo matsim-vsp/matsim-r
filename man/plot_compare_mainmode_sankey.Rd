@@ -7,29 +7,29 @@
 plot_compare_mainmode_sankey(
   trips_table1,
   trips_table2,
-  show.onlyChanges = FALSE,
-  unite.modes = character(0),
-  united.name = "united"
+  show_onlychanges = FALSE,
+  unite_modes = character(0),
+  united_name = "united"
 )
 }
 \arguments{
-\item{show.onlyChanges}{boolean, if it is set to TRUE the sankey diagram only shows the mode shift}
+\item{trips_table1}{tibble of trips_output (from read_output_trips())}
 
-\item{unite.modes}{vector of character strings,
+\item{trips_table2}{tibble of trips_output (from read_output_trips())}
+
+\item{show_onlychanges}{boolean, if it is set to TRUE the sankey diagram only shows the mode shift}
+
+\item{unite_modes}{vector of character strings,
 changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 using the function (\link{process_rename_mainmodes})}
 
-\item{united.name}{character string, specifies the name of the united mode}
-
-\item{tripsTable1}{tibble of output_trips (from read_output_trips())}
-
-\item{tripsTable2}{tibble of output_trips (from read_output_trips())}
+\item{united_name}{character string, specifies the name of the united mode}
 }
 \value{
 Alluvial diagram that represents changes in transport mode distribution
 }
 \description{
-Takes two data frames (from \link{read_output_trips()}), compares the mode choice for each agent and summarizes the results, showing the modal shift.
-Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
+Takes two data frames (from \link{read_output_trips()}) and compares the mode choice for each agent and summarizes the results, showing the modal shift.
+Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 The parameter show.onlyChanges allows the visualization of only the mode shift (excluding the trips that do not change mode). Standard value is FALSE.
 }

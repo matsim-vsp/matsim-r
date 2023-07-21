@@ -2,18 +2,18 @@
 % Please edit documentation in R/output_trips.R
 \name{process_get_travdistance_distribution}
 \alias{process_get_travdistance_distribution}
-\title{Calculates the average distance for each mode}
+\title{Get Travel Distance Distribution by Main Mode}
 \usage{
 process_get_travdistance_distribution(trips_table, euclidean = FALSE)
 }
 \arguments{
-\item{trips_table}{tibble of output_trips (from read_output_trips())}
+\item{trips_table}{A tibble of output_trips (from \link{\code{read_output_trips}})}
 
-\item{euclidean}{boolean, specifies if euclidean or traveled distance should be used}
+\item{euclidean}{Logical value indicating whether to calculate the average as euclidean distance or as travel distance. Default is FALSE, which calculates the average traveled distance.}
 }
 \value{
-a tibble of main modes and their average distance
+A tibble containing the main_mode column representing unique main modes and the avg_dist column representing the average travel distance for each main mode.
 }
 \description{
-Calculates the average distance for each mode
+The \code{process_get_travdistance_distribution} function calculates the distribution of travel distances based on main modes in a given trips_table tibble. It provides insights into the average distance traveled for each main mode.
 }

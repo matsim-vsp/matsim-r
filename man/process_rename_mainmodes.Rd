@@ -2,26 +2,28 @@
 % Please edit documentation in R/output_trips.R
 \name{process_rename_mainmodes}
 \alias{process_rename_mainmodes}
-\title{Renames modes in the column main_mode}
+\title{Replace Matching Categories of main_mode with United Name in Tibble}
 \usage{
 process_rename_mainmodes(
   trips_table,
-  unite.modes = character(0),
-  united.name = "united"
+  unite_modes = character(0),
+  united_name = "united"
 )
 }
 \arguments{
-\item{trips_table}{tibble of output_trips (from read_output_trips())}
+\item{trips_table}{tible of output_trips (from \link{\code{read_output_trips}})}
 
-\item{unite.modes}{vector of character strings,
-changes names of chosen modes in the column main_mode to a new chosen name}
+\item{unite_modes}{vector of character string, representing pattern to match categories}
 
-\item{united.name}{character string, specifies the name of the united mode}
+\item{united_name}{character string, to represent new category for all occurrences matched unite_modes}
 }
 \value{
-trips_table with adjused mode names
+tibble with new main_mode representation
 }
 \description{
-Changes the name of modes in the column main_mode to a new name called united.name.
-E.g. "drtNorth" and "drtSouth" can be renamed to "drt" allowing them to be analyzed together.
+The process_rename_mainmodes function takes a tibble, trips_table,
+as input and replaces all occurrences in column main_mode of categories
+that match a given template with another name provided in united_name.
+The function provides the flexibility to specify multiple category templates
+to be united into a single name.
 }

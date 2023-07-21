@@ -2,11 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_arrtime_by_act}
 \alias{plot_arrtime_by_act}
-\title{Line chart of the arrival time by destination activity
-XXXX function still needs to be updated?
-Takes the data frame output_trips (from \link{read_output_trips()}),
-to create a line plot of the with the arrival times on the x-axis and the count for each destination activity on the y-axis
-Using the parameter unite.activities, specific activities can be renamed into one with the name specified with united.name (by default 'united')}
+\title{Plot Arrival Time by Activity}
 \usage{
 plot_arrtime_by_act(
   trips_table,
@@ -15,23 +11,18 @@ plot_arrtime_by_act(
 )
 }
 \arguments{
-\item{trips_table}{tibble of output_trips (from read_output_trips())}
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips()})}
 
-\item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
+\item{unite_activities}{vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united_name = "united" that matches PATTERNS given in unite.columns}
 
-\item{united.name}{character string, if columns were united, you can specify name for the resulting column in plot}
-
-\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored}
-
-\item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
+\item{united_name}{character string, if columns were united, you can specify name for the resulting column in plot}
 }
 \value{
-\strong{plot_arrtime_by_act} - Line plot with arrival time x-axis and number end activities on y-axis
+A plotly object representing the line plot of arrival time by activity.
 }
 \description{
-Line chart of the arrival time by destination activity
-XXXX function still needs to be updated?
-Takes the data frame output_trips (from \link{read_output_trips()}),
-to create a line plot of the with the arrival times on the x-axis and the count for each destination activity on the y-axis
-Using the parameter unite.activities, specific activities can be renamed into one with the name specified with united.name (by default 'united')
+\strong{plot_arrtime_by_act} - Takes Table trips_output (from \link{read_output_trips}()),
+to make line plot with with values that represent
+count of destination activities for a specific arrival time
+Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united_name(by default 'united')
 }

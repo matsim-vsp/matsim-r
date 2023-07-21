@@ -2,11 +2,15 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_map_trips_by_spatialcat}
 \alias{plot_map_trips_by_spatialcat}
-\title{Plots all trips categorized by trip type (inside, outside, origin and destinating) on a map}
+\title{Plots every type of trips(inside, outside, origin and destinating) on map}
 \usage{
 plot_map_trips_by_spatialcat(trips_table, shape_table, crs, optimized = FALSE)
 }
 \arguments{
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips()})}
+
+\item{shape_table}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
+
 \item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system
 of the trip coordinates, can be found in network file from output directory of MATSim simulation}
 
@@ -20,5 +24,5 @@ of the trip coordinates, can be found in network file from output directory of M
 plot that contains every trip with defined trip type
 }
 \description{
-Plots all trips categorized by trip type (inside, outside, origin and destinating) on a map
+Plots every type of trips(inside, outside, origin and destinating) on map
 }

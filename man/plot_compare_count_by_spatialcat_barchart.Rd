@@ -2,30 +2,31 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_compare_count_by_spatialcat_barchart}
 \alias{plot_compare_count_by_spatialcat_barchart}
-\title{Comparison bar chart with trip type on x-axis and count on y-axis}
+\title{Plot Comparison of Count by Spatial Category (Bar Chart)}
 \usage{
 plot_compare_count_by_spatialcat_barchart(
   trips_table1,
   trips_table2,
   shape_table,
-  crs,
-  dump.output.to = matsimDumpOutputDirectory
+  crs
 )
 }
 \arguments{
-\item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system
-of the trip coordinates, can be found in network file from output directory of MATSim simulation}
+\item{trips_table1}{tible of trips_output (from \link{read_output_trips()})}
 
-\item{tripsTable1}{tibble of output_trips (from read_output_trips())}
+\item{trips_table2}{tible of trips_output (from \link{read_output_trips()})}
 
-\item{tripsTable2}{tibble of output_trips (from read_output_trips())}
+\item{shape_table}{A spatial shapefile or spatial polygons dataframe representing the spatial categories.}
 
-\item{shapeTable}{sf object(data.frame with geometries), can be created using st_read()}
+\item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates,
+can be found in network file from output directory of MATSim simulation}
 }
 \value{
-Bar chart comparing number of each trip type for two runs
+A plotly object representing the bar chart of the comparison of count by spatial category.
 }
 \description{
-Takes two data frames (from \link{read_output_trips()}) to plot a bar chart comparing the number of each trip type (originating, destinating, inside, outside).
-The shape file is used to categorize the trips.
+The \code{plot_compare_count_by_spatialcat_barchart}
+function generates a bar chart to compare the count of trips between two trips_table
+tibbles across different spatial categories.
+It provides insights into the distribution of trips across spatial categories for each table.
 }

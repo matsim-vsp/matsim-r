@@ -2,18 +2,23 @@
 % Please edit documentation in R/output_trips.R
 \name{process_get_mainmode_distribution}
 \alias{process_get_mainmode_distribution}
-\title{Calculates the count or percentage for each mode}
+\title{Calculates main mode distribution}
 \usage{
 process_get_mainmode_distribution(trips_table, percentage = FALSE)
 }
 \arguments{
-\item{trips_table}{tibble of output_trips (from read_output_trips())}
+\item{trips_table}{tible of output_trips (from \link{read_output_trips})}
 
-\item{percentage}{boolean, standard value FALSE (calculates the count)}
+\item{percentage}{boolean, by default FALSE, sets if output should be given in percentage}
 }
 \value{
-tibble including the count or percentage
+tibble that provides the distribution of main modes in the input trips_table.
 }
 \description{
-Calculates the count or percentage for each mode in the column main_mode
+The process_get_mainmode_distribution function calculates the distribution of main modes in a given trips_table.\cr
+It provides insights into the frequency or percentage of each main mode within the dataset.
+}
+\details{
+By default, the function counts the occurrences of each main mode in the trips_table tibble and returns the counts for each unique main mode. \cr
+Alternatively, when the percentage parameter is set to TRUE, the function normalizes the counts to represent the percentage distribution of each main mode within the dataset.
 }

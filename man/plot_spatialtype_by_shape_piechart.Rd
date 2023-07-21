@@ -2,22 +2,22 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_spatialtype_by_shape_piechart}
 \alias{plot_spatialtype_by_shape_piechart}
-\title{XXXX THE FUNCTION NAME IS NOT DESCRIPTIVE ENOUGH - what could we use instead of by shape? plot_trips_by_spatialtype?}
+\title{Plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
+XXXX}
 \usage{
 plot_spatialtype_by_shape_piechart(trips_table, shape_table, crs)
 }
 \arguments{
-\item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system
-of the trip coordinates, can be found in network file from output directory of MATSim simulation}
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips()})}
 
-\item{table}{tibble of output_trips (from \link{read_output_trips()})}
+\item{shape_table}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
 
-\item{shapeTable}{sf object(data.frame with geometries), can be created using st_read()}
+\item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
 }
 \value{
-plot with percentage of each type of trip
+plot with percentage of each type of trips
 }
 \description{
-Plots distribution of trip types (inside, outside, origin and destinating) as a pie chart based on the data frame
-output_trips (from \link{read_output_trips()})
+Plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
+XXXX
 }

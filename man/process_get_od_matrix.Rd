@@ -16,6 +16,10 @@ process_get_od_matrix(
 )
 }
 \arguments{
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
+
+\item{shape_path}{string, full path to the shapefile (.shp) (shape files are made up of several files with the same name and the folder also needs to include a .dbf file)}
+
 \item{crs}{numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file}
 
 \item{dump.output.to}{string, path to a folder to save the .csv file}
@@ -25,10 +29,6 @@ process_get_od_matrix(
 \item{colnames}{string, column names can be specified (i.e. to fit the shape file), if not they are numbered}
 
 \item{outer}{boolean, determines if flows outside of the shapefile are used, standard value is FALSE}
-
-\item{tripsTable}{tibble of output_trips (from \link{read_output_trips})}
-
-\item{shapePath}{string, full path to the shapefile (.shp) (shape files are made up of several files with the same name and the folder also needs to include a .dbf file)}
 }
 \value{
 tibble of origin/destination matrix

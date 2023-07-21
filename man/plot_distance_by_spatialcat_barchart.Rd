@@ -2,28 +2,29 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_distance_by_spatialcat_barchart}
 \alias{plot_distance_by_spatialcat_barchart}
-\title{Bar chart with trip type on x-axis and traveled distance on y-axis}
+\title{Bar Chart with tripType on x-axis and travelled distance on y-axis}
 \usage{
 plot_distance_by_spatialcat_barchart(
   trips_table,
   shape_table,
   crs,
-  euclidian = FALSE
+  euclidean = FALSE
 )
 }
 \arguments{
-\item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system
-of the trip coordinates, can be found in network file from output directory of MATSim simulation}
+\item{trips_table}{tible of trips_output (from \link{read_output_trips()})}
 
-\item{tripsTable}{tibble of output_trips (from read_output_trips())}
+\item{shape_table}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
 
-\item{shapeTable}{sf object(data.frame with geometries), can be created using st_read()}
+\item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
+
+\item{euclidean}{Logical value indicating whether to calculate the average as euclidean distance or as travel distance. Default is FALSE, which calculates the average traveled distance.}
 }
 \value{
-Bar chart plot of the distance traveled by trip type
+Bar Chart plot of distance traveled by spatial type
 }
 \description{
-Takes the data frame output_trips (from \link{read_output_trips()})
-to plot a bar chart of the traveled distance of each trip type (originating, destinating, inside, outside)
-as identified with a shape file of the project area.
+Takes Table trips_output (from \link{read_output_trips()}),
+to plot bar chart with with values that represent
+travelled distance of each tripType related to the shapeTable
 }

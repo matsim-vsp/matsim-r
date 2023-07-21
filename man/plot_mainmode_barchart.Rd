@@ -6,30 +6,31 @@
 \usage{
 plot_mainmode_barchart(
   trips_table,
-  unite.modes = character(0),
-  united.name = "united",
-  dump.output.to = matsimDumpOutputDirectory,
+  unite_modes = character(0),
+  united_name = "united",
   percentage = FALSE
 )
 }
 \arguments{
-\item{trips_table}{tibble of output_trips (from \link{read_output_trips})}
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips()})}
 
-\item{unite.modes}{vector of character strings,
+\item{unite_modes}{vector of character strings,
 changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 using the function (\link{process_rename_mainmodes})}
 
-\item{united.name}{character string, specifies the name of the united mode}
+\item{united_name}{character string, specifies the name of the united mode}
+
+\item{percentage}{boolean, by default FALSE, sets if output is given in percentage}
 }
 \value{
 Bar Chart plot of transport mode distribution, values given in percents
 }
 \description{
-Takes the data frame output_trips (from \link{read_output_trips})
+Takes the data frame trips_output (from \link{read_output_trips()})
 to plot a bar chart of the modal split using the column main_mode.
 }
 \details{
 The modal shares are given in percentages.
 
-Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
+Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 }

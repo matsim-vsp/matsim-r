@@ -175,19 +175,19 @@ read_network <- function(filename) {
 
 #' Load MATSim network into memory
 #'
-#' Loads a MATSim XML network file, creating a nodes tibble and a links tibble.
+#' \strong{loadNetwork} - Loads a MATSim XML network file, creating a nodes tibble and a links tibble.
 #' Any node and link attribute records in the network are stored as
-#' additional columns in the respective node and link tibbles.
-#'
+#' additional columns in the respective node and link tibbles.\cr
 #' The links table is automatically joined with the nodes table so that
 #' node x/y coordinates (and any other node attributes) are available on the
 #' links table without additional processing.
 #'
+#' @rdname matsimr-deprecated
+#'
 #' @param filename File to load. Can be XML or gzipped XML
 #'
-#' @return "nodes" and "links" tibbles in a list object.
+#' @return \strong{loadNetwork} - "nodes" and "links" tibbles in a list object.
 #'
-#' @export
 loadNetwork <- function(filename) {
   .Deprecated("read_network")
   cat(filename, ": ")
