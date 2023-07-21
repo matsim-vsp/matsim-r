@@ -1,8 +1,8 @@
 ---
-title: "Example project: Leipzig"
+title: "Example project"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Example project: Leipzig}
+  %\VignetteIndexEntry{Example project}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
