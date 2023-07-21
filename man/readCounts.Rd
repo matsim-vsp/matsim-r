@@ -10,8 +10,8 @@ readCounts(file)
 \item{file}{File to load. Must be an .xml file}
 }
 \value{
-tibble containing with MATSim Link id as "loc_id" as key
+tibble with MATSim link id ("loc_id") as key
 }
 \description{
-Loads a MATSim Counts XML-File as tibble into memory
+Loads a MATSim Counts XML-file as tibble into memory
 }

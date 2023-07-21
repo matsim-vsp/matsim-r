@@ -25,11 +25,11 @@ A ggplot Scatterplotplot, which can be adjusted, if needed.
 }
 \description{
 Takes a tibble from mergeCountsAndLinks.
-A scatterplot with counts on the x axis and matsim dtv on the y axis is created and colored
+A scatterplot with counts on the x axis and MATSim dtv on the y axis is created and colored
 by the road type.
-Lower and upper Limits define the section which is considered as an 'exact' estimation. Limits
+Lower and upper limits define the section which is considered an 'exact' estimation. Limits
 are defined by custom formulas.
 }
 \details{
-The function calls the matsim-r function processDtvEstimationQuality which is handeling the limits.
+The function calls the matsim-r function processDtvEstimationQuality which is handling the limits.
 }

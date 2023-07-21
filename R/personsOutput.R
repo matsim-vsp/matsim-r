@@ -55,7 +55,12 @@ readPersonsTable <- function(input_path = ".",  n_max = Inf) {
 
   return(persons_output_table)
 }
-
+#' Boxplot of Score Differences
+#'
+#' The \code{boxplotScoreDifferences} function generates a boxplot to compare the score differences between two sets of data
+#' represented by personTibble_base and personTibble_policy tibbles.
+#' It provides insights into the distribution of score differences between the two sets of data.
+#'
 #' @param personTibble_base persons tibble of the base case, can be loaded with readPersonsTable.
 #' @param personTibble_policy persons tibble of the policy case, can be loaded with readPersonsTable.
 #'
@@ -63,6 +68,7 @@ readPersonsTable <- function(input_path = ".",  n_max = Inf) {
 #'
 #' @export
 boxplotScoreDifferences <- function(personTibble_base, personTibble_policy){
+
   joined <- inner_join(personTibble_base, personTibble_policy, by = "person", suffix = c("_base", "_policy")) %>%
     select(person,
            executed_score_base,

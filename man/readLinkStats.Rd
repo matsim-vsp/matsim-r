@@ -2,7 +2,7 @@
 % Please edit documentation in R/counts.R
 \name{readLinkStats}
 \alias{readLinkStats}
-\title{Load linkstats as tibble into memory}
+\title{Load a MATSim linkstats file into memory}
 \usage{
 readLinkStats(runId, file, sampleSize = 0.25)
 }
@@ -17,9 +17,9 @@ readLinkStats(runId, file, sampleSize = 0.25)
 Tibble with link stats for each qsim mode
 }
 \description{
-Reads Linkstats as .tsv created from LinkStats.class
-as dataframe into memory.
-Counts can be provided in any time bins.
+Loads a linkstats tsv file created from the LinkStats class
+as a dataframe into memory.
+Counts can be provided in any time bin.
 Counts can be provided for any qsim mode. The argument networkModes is used to
 select and filter the columns.
 }

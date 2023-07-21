@@ -2,7 +2,7 @@
 % Please edit documentation in R/simwrapper.R
 \name{prepareComparisonSimwrapperDashboardFromTable}
 \alias{prepareComparisonSimwrapperDashboardFromTable}
-\title{Creates comparison dashboard for the 2 given tables or folder with data}
+\title{Creates comparison dashboard for the two given tables or folders with data}
 \usage{
 prepareComparisonSimwrapperDashboardFromTable(
   table1,
@@ -16,14 +16,14 @@ prepareComparisonSimwrapperDashboardFromTable(
 
 \item{table2}{trips_output tibble from readTripsTable()}
 
-\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard and all plots using functions:
+\item{dump.output.to}{output folder, yaml files and plots from the following functions are saved there:
 plotModalSplitBarChart(),plotModalSplitPieChart(),plotModalShift().}
 
-\item{append}{specifies if the ouput folder should be erased before creating}
+\item{append}{specifies if the output folder should be erased before creating, default = FALSE}
 }
 \value{
-generates folder with content for simwrapper out of trips table
+generates folder with content for simwrapper from a trips table
 }
 \description{
-Creates comparison dashboard for the 2 given tables or folder with data
+Creates comparison dashboard for the two given tables or folders with data
 }
