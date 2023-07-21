@@ -13,7 +13,7 @@ plot_distcat_by_mainmode_barchart(
 )
 }
 \arguments{
-\item{trips_table}{tibble of trips_output (from readTripsTable())}
+\item{trips_table}{tibble of output_trips (from read_output_trips())}
 
 \item{unite.modes}{vector of character strings,
 changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
@@ -25,7 +25,7 @@ using the function (\link{process_rename_mainmodes})}
 Bar Chart plot of count of trips among distance travelled
 }
 \description{
-Takes the data frame trips_output (from \link{readTripsTable()}) and categorizes the traveled distances into pre-defined bins
+Takes the data frame output_trips (from \link{read_output_trips()}) and categorizes the traveled distances into pre-defined bins
 to plot a histogram of the traveled distances. (Bins: 1000,2000,5000,10000,20000,50000,100000 (m))
 Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 }

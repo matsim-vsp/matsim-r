@@ -2,38 +2,29 @@
 % Please edit documentation in R/output_trips.R
 \name{process_append_spatialcat}
 \alias{process_append_spatialcat}
-\title{Appending spatial category as additional column to output_trips tibble
-XXXX
-Takes trips_table and shape_table(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
-Please be aware that this \link{process_filter_by_shape} currently only works, when one geometry is loaded.)
-transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
-and adds to the output_trips from table spatial category depending on postition related to shape file:
-category representing trips \strong{inside} of the given shape
-category representing trips which \strong{originating} in the shape
-category representing trips which \strong{destinating} in the shape
-category representing trips which \strong{outside} of the given shape}
+\title{Appends an additional column with the trip type to output_trips}
 \usage{
 process_append_spatialcat(trips_table, shape_table, crs)
 }
 \arguments{
-\item{trips_table}{tibble of trips_output (from readTripsTable())}
+\item{trips_table}{tibble of output_trips (from read_output_trips())}
 
-\item{shape_table}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
+\item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system
+of the trip coordinates, can be found in network file from output directory of MATSim simulation}
 
-\item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
+\item{shapeTable}{sf object(data.frame with geometries), can be created using st_read()}
 }
 \value{
-tibble, with additional spatial column related to given shape
+tibble, with additional column containing the trip type
 }
 \description{
-Appending spatial category as additional column to output_trips tibble
-XXXX
-Takes trips_table and shape_table(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
+Using a shape_file of the project area an additional column is created, categorizing all trips into the following categories.
+inside: trips that start and end inside the given shape
+originating: trips that start inside the shape and end outside of the shape
+destinating: trips that end inside the shape and start outside of the shape
+outside: trips that start and end outside of the shape
+}
+\details{
+XXXX Can this be deleted? Is this relevant here?
 Please be aware that this \link{process_filter_by_shape} currently only works, when one geometry is loaded.)
-transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
-and adds to the output_trips from table spatial category depending on postition related to shape file:
-category representing trips \strong{inside} of the given shape
-category representing trips which \strong{originating} in the shape
-category representing trips which \strong{destinating} in the shape
-category representing trips which \strong{outside} of the given shape
 }

@@ -2,19 +2,18 @@
 % Please edit documentation in R/output_trips.R
 \name{read_output_trips}
 \alias{read_output_trips}
-\title{Load MATSIM output_trips table into memory}
+\title{Load MATSim output_trips table into memory}
 \usage{
 read_output_trips(input_path = ".", n_max = Inf)
 }
 \arguments{
-\item{input_path}{character string, path to the MATSim output directory or http link to the file.}
+\item{input_path}{character string, path to the MATSim output directory or http link to the file}
 
 \item{n_max}{optional, integer, maximum number of lines to read, standard value is Inf}
 }
 \value{
-tibble of trips_output
+tibble of output_trips
 }
 \description{
-Loads a MATSim CSV output_trips from file or archive,
-creating a tibble with columns as in csv file
+Loads MATSim output_trips.csv from file or archive creating a tibble
 }

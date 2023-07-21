@@ -12,7 +12,7 @@ plot_travelwaittime_mean_barchart(
 )
 }
 \arguments{
-\item{trips_table}{tibble of trips_output (from \links{readTripsTable()})}
+\item{trips_table}{tibble of output_trips (from \links{read_output_trips()})}
 
 \item{unite.modes}{vector of character strings,
 changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
@@ -24,7 +24,7 @@ using the function (\link{process_rename_mainmodes})}
 Bar Chart plot of average time spent on travel/wait
 }
 \description{
-Takes the data frame trips_output (from \links{readTripsTable()}),
+Takes the data frame output_trips (from \links{read_output_trips()}),
 to plot a bar chart of travel and wait times.
 Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 }

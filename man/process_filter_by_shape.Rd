@@ -3,28 +3,29 @@
 \name{process_filter_by_shape}
 \alias{process_filter_by_shape}
 \title{XXXX finish when code revision is done
-Filters trips_table(from ,\link{readTripsTable}) depending by location using a shapefile}
+Filters data frame (from \link{read_output_trips}) by location using a shapefile}
 \usage{
 process_filter_by_shape(trips_table, shape_table, crs, spatial_type = "inside")
 }
 \arguments{
-\item{trips_table}{tibble of trips_output (from readTripsTable())}
+\item{trips_table}{tibble of output_trips (from read_output_trips())}
 
-\item{shape_table}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
+\item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system
+of the trip coordinates, can be found in network file from output directory of MATSim simulation}
 
-\item{crs}{numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file}
+\item{spatial_type}{bool, defines trips to conclude (see description)}
 
-\item{spatial_type}{bool, defines trips to conclude (see Description)}
+\item{shapeTable}{sf object(data.frame with geometries), can be created using st_read()}
 }
 \value{
-tibble, with filtered trips depending on shapeTable and special flags (see Description)
+tibble, with filtered trips depending on shapeTable and spatial types (see description)
 }
 \description{
-Uses trips_table and an sf object (can be created using the function st_read()),
+Uses output_trips and an sf object (can be created using the function st_read()),
 transforms both objects to match a mutual coordinate system (crs)
-and filters the trips from trips_table depending on spatial_type flags:\cr
-if spatial_type="inside" return table that contains trips inside given shape\cr
-if spatial_type="originating" return table that contains trips which starts in shape and ends out of the shape\cr
-if spatial_type="destinating" return table that contains trips which ends in shape and starts out of the shape\cr
-if spatial_type="outside" return table that contains trips which starts and ends our of the given shape
+and filters the trips from output_trips depending on their spatial type flags:\cr
+if spatial_type="inside" returns a table that contains trips inside given shape\cr
+if spatial_type="originating" returns a table that contains trips which start inside  the shape and end outside of the shape\cr
+if spatial_type="destinating" returns a table that contains trips which end inside shape and start outside of the shape\cr
+if spatial_type="outside" returns a table that contains trips which start and end outside of the given shape
 }

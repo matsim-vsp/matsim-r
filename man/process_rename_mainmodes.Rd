@@ -2,7 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{process_rename_mainmodes}
 \alias{process_rename_mainmodes}
-\title{XXXX}
+\title{Renames modes in the column main_mode}
 \usage{
 process_rename_mainmodes(
   trips_table,
@@ -10,6 +10,18 @@ process_rename_mainmodes(
   united.name = "united"
 )
 }
+\arguments{
+\item{trips_table}{tibble of output_trips (from read_output_trips())}
+
+\item{unite.modes}{vector of character strings,
+changes names of chosen modes in the column main_mode to a new chosen name}
+
+\item{united.name}{character string, specifies the name of the united mode}
+}
+\value{
+trips_table with adjused mode names
+}
 \description{
-XXXX
+Changes the name of modes in the column main_mode to a new name called united.name.
+E.g. "drtNorth" and "drtSouth" can be renamed to "drt" allowing them to be analyzed together.
 }

@@ -2,7 +2,11 @@
 % Please edit documentation in R/output_trips.R
 \name{process_convert_time}
 \alias{process_convert_time}
-\title{Converts time column specified in \strong{time_column} to numeric representation of minutes, hours or seconds}
+\title{Converts time column specified in \strong{time_column} to numeric representation of minutes, hours or seconds
+XXXX here minute, hour and second don't have an s?
+Default output_trips table time columns(\strong{dep_time}, \strong{trav_time}, \strong{wait_time}) are in 'hms' format.
+To convert this type to numeric, specify \strong{time_column} to be converted,
+and the unit \strong{time_format}. Acceptable units are "hour", "minute" and "second".}
 \usage{
 process_convert_time(
   trips_table,
@@ -11,17 +15,19 @@ process_convert_time(
 )
 }
 \arguments{
-\item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
+\item{trips_table}{tibble of output_trips (from \link{read_output_trips})}
 
-\item{time_format}{char, defines time format to be used(takes "hour", "minute", "second")}
+\item{time_format}{char, defines time unit to be used ("hour", "minute", "second")}
 
-\item{time_column}{char, name of the column from table to be converted(takes \strong{dep_time}, \strong{trav_time}, \strong{wait_time})}
+\item{time_column}{char, name of the column from table to be converted (\strong{dep_time}, \strong{trav_time}, \strong{wait_time})}
 }
 \value{
 tibble, containing column with specified time_format
 }
 \description{
-Default output_trips table time columns(\strong{dep_time}, \strong{trav_time}, \strong{wait_time}) are in 'hms' format,
-that isn't convenient for use in some cases. To convert this type to numeric with different, specify \strong{time_column} to be converted,
-and \strong{time_format} which will represent time(takes "hour", "minute", "second")
+Converts time column specified in \strong{time_column} to numeric representation of minutes, hours or seconds
+XXXX here minute, hour and second don't have an s?
+Default output_trips table time columns(\strong{dep_time}, \strong{trav_time}, \strong{wait_time}) are in 'hms' format.
+To convert this type to numeric, specify \strong{time_column} to be converted,
+and the unit \strong{time_format}. Acceptable units are "hour", "minute" and "second".
 }

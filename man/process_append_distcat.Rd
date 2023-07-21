@@ -2,7 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{process_append_distcat}
 \alias{process_append_distcat}
-\title{Adds additional \strong{dist_cat} column representing category of distance traveled based on \strong{distances_array} parameter.}
+\title{Adds additional \strong{dist_cat} column based on the \strong{distances_array} parameter}
 \usage{
 process_append_distcat(
   trips_table,
@@ -10,11 +10,15 @@ process_append_distcat(
 )
 }
 \arguments{
-\item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
+\item{trips_table}{tibble of output_trips (from \link{read_output_trips})}
 
-\item{distances_array}{numeric vector, represents segments for distance categories ordered (in meters)}
+\item{distances_array}{numeric vector, represents segments for distance categories ordered (in meters),
+standard value: c(1000,2000,5000,10000,20000,50000,100000)}
+}
+\value{
+trips table with added the added column dist_cat
 }
 \description{
-Categorize column of distances based on \strong{distances_array}, each dist_cat receives relational segment from array.\cr
-For example trip distance traveled is 1500, and distances array is (1000,2000), then this category is "1000-2000".
+Categorizes each trip into a distance bin based on traveled distance.
+E.g. distance traveled is 1500, distances array is (1000,2000), then the category is "1000-2000".
 }

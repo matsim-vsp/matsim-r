@@ -2,7 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_compare_travelwaittime_by_mainmode_barchart}
 \alias{plot_compare_travelwaittime_by_mainmode_barchart}
-\title{Bar Chart with main_mode on x-axis and average travel/wait time on y-axis}
+\title{Comparison bar chart with main_mode on x-axis and average travel/wait time on y-axis}
 \usage{
 plot_compare_travelwaittime_by_mainmode_barchart(
   trips_table1,
@@ -19,15 +19,14 @@ using the function (\link{process_rename_mainmodes})}
 
 \item{united.name}{character string, specifies the name of the united mode}
 
-\item{tripsTable1}{tibble of trips_output (from readTripsTable())}
+\item{tripsTable1}{tibble of output_trips (from read_output_trips())}
 
-\item{tripsTable2}{tibble of trips_output (from readTripsTable())}
+\item{tripsTable2}{tibble of output_trips (from read_output_trips())}
 }
 \value{
-Bar Chart plot of average time spent on travel/wait
+Bar chart plot of average travel/wait time
 }
 \description{
-Takes the data frame trips_output (from \link{readTripsTable()}),
-to plot a bar chart of the traveling/waiting time
+Takes two data frames (from \link{read_output_trips()}) to plot a bar chart of the travel/wait time for each mode.
 Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 }

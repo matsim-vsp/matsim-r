@@ -2,12 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_compare_count_by_spatialcat_barchart}
 \alias{plot_compare_count_by_spatialcat_barchart}
-\title{Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
-XXXX
-Takes Table trips_output (from readTripsTable()),
-to plot bar chart with with values that represent
-time spent on traveling/waiting
-Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')}
+\title{Comparison bar chart with trip type on x-axis and count on y-axis}
 \usage{
 plot_compare_count_by_spatialcat_barchart(
   trips_table1,
@@ -18,22 +13,19 @@ plot_compare_count_by_spatialcat_barchart(
 )
 }
 \arguments{
-\item{tripsTable1}{tible of trips_output (from readTripsTable())}
+\item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system
+of the trip coordinates, can be found in network file from output directory of MATSim simulation}
 
-\item{tripsTable2}{tible of trips_output (from readTripsTable())}
+\item{tripsTable1}{tibble of output_trips (from read_output_trips())}
 
-\item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
+\item{tripsTable2}{tibble of output_trips (from read_output_trips())}
 
-\item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart}
+\item{shapeTable}{sf object(data.frame with geometries), can be created using st_read()}
 }
 \value{
-Bar Chart plot of average time spent on travel/wait
+Bar chart comparing number of each trip type for two runs
 }
 \description{
-Bar Chart with main_mode on x-axis and average travel/wait time on y-axis
-XXXX
-Takes Table trips_output (from readTripsTable()),
-to plot bar chart with with values that represent
-time spent on traveling/waiting
-Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
+Takes two data frames (from \link{read_output_trips()}) to plot a bar chart comparing the number of each trip type (originating, destinating, inside, outside).
+The shape file is used to categorize the trips.
 }

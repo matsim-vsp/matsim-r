@@ -12,7 +12,7 @@ plot_mainmode_piechart(
 )
 }
 \arguments{
-\item{trips_table}{tibble of trips_output (from \link{readTripsTable})}
+\item{trips_table}{tibble of output_trips (from \link{read_output_trips})}
 
 \item{unite.modes}{vector of character strings,
 changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
@@ -24,7 +24,7 @@ using the function (\link{process_rename_mainmodes})}
 pie chart plot of transport mode distribution, values given in percent
 }
 \description{
-Uses the dataframe trips_output (from \link{readTripsTable}),
+Uses the data frame output_trips (from \link{read_output_trips}),
 to plot a pie chart of the modal split using the column main_mode
 }
 \details{

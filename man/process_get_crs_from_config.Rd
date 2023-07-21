@@ -2,8 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{process_get_crs_from_config}
 \alias{process_get_crs_from_config}
-\title{Reads the coordinate reference system from an MATSim output directory
-(output_config.xml)}
+\title{Reads the coordinate reference system from a MATSim output directory (output_config.xml)}
 \usage{
 process_get_crs_from_config(config_path)
 }
@@ -11,9 +10,8 @@ process_get_crs_from_config(config_path)
 \item{config_path}{specifies path to configuration file}
 }
 \value{
-code of coordinate reference system
+EPSG code of coordinate reference system
 }
 \description{
-Reads the coordinate reference system from an MATSim output directory
-(output_config.xml)
+Reads the coordinate reference system from a MATSim output directory (output_config.xml)
 }

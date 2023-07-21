@@ -218,7 +218,7 @@ plot_deptime_by_act(
 )
 }
 \arguments{
-\item{tripsTable}{tibble of trips_output (from readTripsTable())}
+\item{tripsTable}{tibble of output_trips (from read_output_trips())}
 
 \item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
 
@@ -276,7 +276,7 @@ plot_deptime_by_act(
 
 \strong{plotModalSplitBarChart} - Bar Chart plot of transport mode distribution, values given in percents
 
-\strong{readTripsTable} - tibble of trips_output
+\strong{readTripsTable} - tibble of output_trips
 
 \strong{plotAverageTravelWait} - Bar Chart plot of average time spent on travel/wait
 
@@ -330,11 +330,11 @@ tibble of output_trips with distance category column
 These functions are provided for compatibility with older version of
 the matsimr package.  They may eventually be completely
 removed.\cr\cr
-\strong{plotModalSplitPieChart} - Takes Table trips_output (from readTripsTable()),
+\strong{plotModalSplitPieChart} - Takes Table output_trips (from read_output_trips()),
 to plot pie chart with with values that represent
 percentage of using transport modes from trips
 
-\strong{plotModalSplitBarChart} - Takes Table trips_output (from readTripsTable()),
+\strong{plotModalSplitBarChart} - Takes Table output_trips (from readTripsTable()),
 to plot bar chart with with values that represent
 percentage of using transport modes from trips
 

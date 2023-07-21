@@ -26,7 +26,7 @@ process_get_od_matrix(
 
 \item{outer}{boolean, determines if flows outside of the shapefile are used, standard value is FALSE}
 
-\item{tripsTable}{tibble of trips_output (from \link{readTripsTable})}
+\item{tripsTable}{tibble of output_trips (from \link{read_output_trips})}
 
 \item{shapePath}{string, full path to the shapefile (.shp) (shape files are made up of several files with the same name and the folder also needs to include a .dbf file)}
 }

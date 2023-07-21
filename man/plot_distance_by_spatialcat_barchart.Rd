@@ -2,11 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_distance_by_spatialcat_barchart}
 \alias{plot_distance_by_spatialcat_barchart}
-\title{Bar Chart with tripType on x-axis and travelled distance on y-axis
-XXXX
-Takes Table trips_output (from readTripsTable()),
-to plot bar chart with with values that represent
-travelled distance of each tripType related to the shapeTable}
+\title{Bar chart with trip type on x-axis and traveled distance on y-axis}
 \usage{
 plot_distance_by_spatialcat_barchart(
   trips_table,
@@ -16,19 +12,18 @@ plot_distance_by_spatialcat_barchart(
 )
 }
 \arguments{
-\item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
+\item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system
+of the trip coordinates, can be found in network file from output directory of MATSim simulation}
 
-\item{tripsTable}{tible of trips_output (from readTripsTable())}
+\item{tripsTable}{tibble of output_trips (from read_output_trips())}
 
-\item{shapeTable}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
+\item{shapeTable}{sf object(data.frame with geometries), can be created using st_read()}
 }
 \value{
-Bar Chart plot of distance traveled by spatial type
+Bar chart plot of the distance traveled by trip type
 }
 \description{
-Bar Chart with tripType on x-axis and travelled distance on y-axis
-XXXX
-Takes Table trips_output (from readTripsTable()),
-to plot bar chart with with values that represent
-travelled distance of each tripType related to the shapeTable
+Takes the data frame output_trips (from \link{read_output_trips()})
+to plot a bar chart of the traveled distance of each trip type (originating, destinating, inside, outside)
+as identified with a shape file of the project area.
 }

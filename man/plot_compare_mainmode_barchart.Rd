@@ -18,15 +18,15 @@ using the function (\link{process_rename_mainmodes})}
 
 \item{united.name}{character string, specifies the name of the united mode}
 
-\item{tripsTable1}{tibble of trips_output (from readTripsTable())}
+\item{tripsTable1}{tibble of output_trips (from read_output_trips())}
 
-\item{tripsTable2}{tibble of trips_output (from readTripsTable())}
+\item{tripsTable2}{tibble of output_trips (from read_output_trips())}
 }
 \value{
 plots bar chart of changes in modal split
 }
 \description{
-Takes two data frames (from \link{readTripsTable()}), calculates the
+Takes two data frames (from \link{read_output_trips()}), calculates the
 changes in mode shares and plots them as a bar chart
 Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 }

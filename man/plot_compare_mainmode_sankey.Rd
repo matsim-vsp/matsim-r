@@ -21,15 +21,15 @@ using the function (\link{process_rename_mainmodes})}
 
 \item{united.name}{character string, specifies the name of the united mode}
 
-\item{tripsTable1}{tibble of trips_output (from readTripsTable())}
+\item{tripsTable1}{tibble of output_trips (from read_output_trips())}
 
-\item{tripsTable2}{tibble of trips_output (from readTripsTable())}
+\item{tripsTable2}{tibble of output_trips (from read_output_trips())}
 }
 \value{
 Alluvial diagram that represents changes in transport mode distribution
 }
 \description{
-Takes two data frames (from \link{readTripsTable()}) and compares the mode choice for each agent and summarizes the results, showing the modal shift.
+Takes two data frames (from \link{read_output_trips()}), compares the mode choice for each agent and summarizes the results, showing the modal shift.
 Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 The parameter show.onlyChanges allows the visualization of only the mode shift (excluding the trips that do not change mode). Standard value is FALSE.
 }

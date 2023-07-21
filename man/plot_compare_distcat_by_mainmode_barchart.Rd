@@ -3,7 +3,7 @@
 \name{plot_compare_distcat_by_mainmode_barchart}
 \alias{plot_compare_distcat_by_mainmode_barchart}
 \title{Bar chart comparing distance traveled on x-axis and number of trips on y-axis for two different runs
-Takes two data frames (from \link{readTripsTable()}), categorizes the traveled distances into pre-defined bins
+Takes two data frames (from \link{read_output_trips()}), categorizes the traveled distances into pre-defined bins
 and plots the difference in number of trips for each bin. (Bins: 1000,2000,5000,10000,20000,50000,100000 (m))
 Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')}
 \usage{
@@ -23,16 +23,16 @@ using the function (\link{process_rename_mainmodes})}
 
 \item{united.name}{character string, specifies the name of the united mode}
 
-\item{tripsTable1}{tibble of trips_output (from readTripsTable()), number of trips of this table will be extracted from number of trips of tripsTable1}
+\item{tripsTable1}{tibble of output_trips (from read_output_trips()), number of trips of this table will be extracted from number of trips of tripsTable1}
 
-\item{tripsTable2}{tibble of trips_output (from readTripsTable()), from number of trips of this table number of trips of tripsTable1 will be extracted}
+\item{tripsTable2}{tibble of output_trips (from read_output_trips()), from number of trips of this table number of trips of tripsTable1 will be extracted}
 }
 \value{
 Bar Chart plot of count of trips among distance travelled
 }
 \description{
 Bar chart comparing distance traveled on x-axis and number of trips on y-axis for two different runs
-Takes two data frames (from \link{readTripsTable()}), categorizes the traveled distances into pre-defined bins
+Takes two data frames (from \link{read_output_trips()}), categorizes the traveled distances into pre-defined bins
 and plots the difference in number of trips for each bin. (Bins: 1000,2000,5000,10000,20000,50000,100000 (m))
 Using the parameter unite.modes, specific modes can be renamed into one with the name specified with united.name (by default 'united')
 }

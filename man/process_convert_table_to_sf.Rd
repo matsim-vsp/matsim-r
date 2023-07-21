@@ -2,12 +2,12 @@
 % Please edit documentation in R/output_trips.R
 \name{process_convert_table_to_sf}
 \alias{process_convert_table_to_sf}
-\title{Transforms the data frame trips_output (from \links{readTripsTable}) from tibble to sf (table with geometry features)}
+\title{Transforms output_trips from tibble to sf (table with geometry features)}
 \usage{
 process_convert_table_to_sf(table, crs, geometry.type = st_multipoint())
 }
 \arguments{
-\item{table}{tibble trips_output (from readTripsTable())}
+\item{table}{tibble output_trips (from read_output_trips())}
 
 \item{crs}{numeric, coordinate system in the form of the EPSG code or proj4string, can be found in the MATSim network file}
 
@@ -20,7 +20,7 @@ process_convert_table_to_sf(table, crs, geometry.type = st_multipoint())
 sf object (data frame with geometries depending on geometry.type)
 }
 \description{
-Transforms the data frame trips_output (from \links{readTripsTable}) into an sf object using start_x, end_x, start_y, end_y as geometry features.\cr
+Transforms the data frame output_trips (from \links{read_output_trips}) into an sf object using start_x, end_x, start_y, end_y as geometry features.\cr
 If geometry.type = st_multipoint() or geometry.type = st_linestring() it adds one geometry column (wkt format),\cr
 if geometry.type = st_point() it adds the geometry columns start_wkt and end_wkt.\cr
 Added column/columns are projected to given CRS (coordinate reference system).\cr
