@@ -3,12 +3,12 @@
 \name{process_filter_by_shape}
 \alias{process_filter_by_shape}
 \title{XXXX finish when code revision is done
-Filters trips_table(from ,\link{read_output_trips()}) depending by location using a shapefile}
+Filters trips_table(from ,\link{read_output_trips}) depending by location using a shapefile}
 \usage{
 process_filter_by_shape(trips_table, shape_table, crs, spatial_type = "inside")
 }
 \arguments{
-\item{trips_table}{tibble of trips_output (from \link{read_output_trips()})}
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
 
 \item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system
 of the trip coordinates, can be found in network file from output directory of MATSim simulation}

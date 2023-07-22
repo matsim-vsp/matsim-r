@@ -3,7 +3,7 @@
 \name{plot_compare_distcat_by_mainmode_barchart}
 \alias{plot_compare_distcat_by_mainmode_barchart}
 \title{Bar chart comparing distance traveled on x-axis and number of trips on y-axis for two different runs
-Takes two data frames (from \link{read_output_trips()}), categorizes the traveled distances into pre-defined bins
+Takes two data frames (from \link{read_output_trips}), categorizes the traveled distances into pre-defined bins
 and plots the difference in number of trips for each bin. (Bins: 1000,2000,5000,10000,20000,50000,100000 (m))
 Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')}
 \usage{
@@ -17,9 +17,9 @@ plot_compare_distcat_by_mainmode_barchart(
 )
 }
 \arguments{
-\item{trips_table1}{tibble of trips_output (from \link{read_output_trips()}), number of trips of this table will be extracted from number of trips of tripsTable1}
+\item{trips_table1}{tibble of trips_output (from \link{read_output_trips}), number of trips of this table will be extracted from number of trips of tripsTable1}
 
-\item{trips_table2}{tibble of trips_output (from \link{read_output_trips()}), from number of trips of this table number of trips of tripsTable1 will be extracted}
+\item{trips_table2}{tibble of trips_output (from \link{read_output_trips}), from number of trips of this table number of trips of tripsTable1 will be extracted}
 
 \item{unite_modes}{vector of character strings,
 changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
@@ -36,7 +36,7 @@ Bar Chart plot of count of trips among distance travelled
 }
 \description{
 Bar chart comparing distance traveled on x-axis and number of trips on y-axis for two different runs
-Takes two data frames (from \link{read_output_trips()}), categorizes the traveled distances into pre-defined bins
+Takes two data frames (from \link{read_output_trips}), categorizes the traveled distances into pre-defined bins
 and plots the difference in number of trips for each bin. (Bins: 1000,2000,5000,10000,20000,50000,100000 (m))
 Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 }

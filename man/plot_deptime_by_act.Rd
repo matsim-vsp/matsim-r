@@ -15,7 +15,7 @@ plot_deptime_by_act(
 
 \item{united_name}{character string, if columns were united, you can specify name for the resulting column in plot}
 
-\item{tripsTable}{tibble of trips_output (from \link{read_output_trips()})}
+\item{tripsTable}{tibble of trips_output (from \link{read_output_trips})}
 }
 \value{
 A plotly object representing the line plot of departure time by activity.

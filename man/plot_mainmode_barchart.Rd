@@ -12,7 +12,7 @@ plot_mainmode_barchart(
 )
 }
 \arguments{
-\item{trips_table}{tibble of trips_output (from \link{read_output_trips()})}
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
 
 \item{unite_modes}{vector of character strings,
 changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
@@ -26,7 +26,7 @@ using the function (\link{process_rename_mainmodes})}
 Bar Chart plot of transport mode distribution, values given in percents
 }
 \description{
-Takes the data frame trips_output (from \link{read_output_trips()})
+Takes the data frame trips_output (from \link{read_output_trips})
 to plot a bar chart of the modal split using the column main_mode.
 }
 \details{

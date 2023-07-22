@@ -12,7 +12,7 @@ plot_distance_by_spatialcat_barchart(
 )
 }
 \arguments{
-\item{trips_table}{tible of trips_output (from \link{read_output_trips()})}
+\item{trips_table}{tible of trips_output (from \link{read_output_trips})}
 
 \item{shape_table}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
 
@@ -24,7 +24,7 @@ plot_distance_by_spatialcat_barchart(
 Bar Chart plot of distance traveled by spatial type
 }
 \description{
-Takes Table trips_output (from \link{read_output_trips()}),
+Takes Table trips_output (from \link{read_output_trips}),
 to plot bar chart with with values that represent
 travelled distance of each tripType related to the shapeTable
 }

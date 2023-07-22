@@ -7,7 +7,7 @@
 plot_map_trips_by_spatialcat(trips_table, shape_table, crs, optimized = FALSE)
 }
 \arguments{
-\item{trips_table}{tibble of trips_output (from \link{read_output_trips()})}
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
 
 \item{shape_table}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
 

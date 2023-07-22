@@ -12,9 +12,9 @@ plot_compare_mainmode_barchart(
 )
 }
 \arguments{
-\item{trips_table1}{tibble of trips_output (from \link{read_output_trips()})}
+\item{trips_table1}{tibble of trips_output (from \link{read_output_trips})}
 
-\item{trips_table2}{tibble of trips_output (from \link{read_output_trips()})}
+\item{trips_table2}{tibble of trips_output (from \link{read_output_trips})}
 
 \item{unite_modes}{vector of character strings,
 changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
@@ -26,7 +26,7 @@ using the function (\link{process_rename_mainmodes})}
 plots bar chart of changes in modal split
 }
 \description{
-Takes two data frames (from \link{read_output_trips()}), calculates the
+Takes two data frames (from \link{read_output_trips}), calculates the
 changes in mode shares and plots them as a bar chart
 Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 }

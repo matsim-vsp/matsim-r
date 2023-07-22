@@ -7,7 +7,7 @@
 plot_map_trips(trips_table, crs, optimized = FALSE, shape_table = NULL)
 }
 \arguments{
-\item{trips_table}{tibble of trips_output (from \link{read_output_trips()})}
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
 
 \item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates, can be found in network file from output directory of MATSim simulation}
 

@@ -216,7 +216,7 @@ transformToSf(table, crs, geometry.type = st_multipoint())
 \arguments{
 \item{filename}{File to load. Can be XML or gzipped XML}
 
-\item{tripsTable}{table of output trips(from readTripsTable) or path to trips_output file}
+\item{tripsTable}{table of output trips(from \link{read_output_trips}) or path to trips_output file}
 
 \item{unite.columns}{vector of character string, changes name of all transport modes in the tibble copy to united_name = "united" that matches PATTERNS given in unite.columns}
 
@@ -230,9 +230,9 @@ transformToSf(table, crs, geometry.type = st_multipoint())
 
 \item{n_max}{integer, maximum number of lines to read within output_trips}
 
-\item{tripsTable1}{tibble of trips_output (from \link{read_output_trips()},f.e. base case)}
+\item{tripsTable1}{tibble of trips_output (from \link{read_output_trips},f.e. base case)}
 
-\item{tripsTable2}{tibble of trips_output (from \link{read_output_trips()},f.e. policy case)}
+\item{tripsTable2}{tibble of trips_output (from \link{read_output_trips},f.e. policy case)}
 
 \item{shapeTable}{sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)}
 
@@ -240,7 +240,7 @@ transformToSf(table, crs, geometry.type = st_multipoint())
 
 \item{show.onlyChanges}{boolean, if it is set to TRUE => sankey diagram only contains changes on axes}
 
-\item{table}{tibble of trips_output (from \link{read_output_trips()})}
+\item{table}{tibble of trips_output (from \link{read_output_trips})}
 
 \item{start.inshape}{bool, defines trips to conclude (see Description)}
 
@@ -335,63 +335,63 @@ links table without additional processing.
 These functions are provided for compatibility with older version of
 the matsimr package.  They may eventually be completely
 removed.\cr\cr
-\strong{plotModalSplitPieChart} - Takes Table trips_output (from \link{read_output_trips()}),
+\strong{plotModalSplitPieChart} - Takes Table trips_output (from \link{read_output_trips}),
 to plot pie chart with with values that represent
 percentage of using transport modes from trips
 
-\strong{plotModalSplitBarChart} - Takes Table trips_output (from \link{read_output_trips()}),
+\strong{plotModalSplitBarChart} - Takes Table trips_output (from \link{read_output_trips}),
 to plot bar chart with with values that represent
 percentage of using transport modes from trips
 
 \strong{readTripsTable} - Loads a MATSim output_trips file from file or archive path,
 creating a tibble
 
-\strong{plotAverageTravelWait} - Takes Table trips_output (from \link{read_output_trips()}),
+\strong{plotAverageTravelWait} - Takes Table trips_output (from \link{read_output_trips}),
 to plot bar chart with with values that represent
 time spent on traveling/waiting
 Using parameters unite.columns, specific columns could be given,
 to unite them in 1 mode with the name united_name(by default 'united')
 
-\strong{plotModalDistanceDistribution} - Takes Table trips_output (from \link{read_output_trips()}),
+\strong{plotModalDistanceDistribution} - Takes Table trips_output (from \link{read_output_trips}),
 to plot bar chart with with values that represent
 number of trips ~ distance travelled
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united_name(by default 'united')
 
-\strong{compareModalDistanceDistribution} - Takes 2 Tables trips_output (from \link{read_output_trips()}),
+\strong{compareModalDistanceDistribution} - Takes 2 Tables trips_output (from \link{read_output_trips}),
 to plot bar chart with with values that represent
 difference of number of trips between tripsTable2 and tripsTable1 ~ distance travelled
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united_name(by default 'united')
 
-\strong{plotTripDistanceByMode} - Takes Table trips_output (from \link{read_output_trips()}),
+\strong{plotTripDistanceByMode} - Takes Table trips_output (from \link{read_output_trips}),
 to plot bar chart with with values that represent
 average distance traveled ~ main mode used
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united_name(by default 'united')
 
-\strong{plotTripCountByDepTime} - Takes Table trips_output (from \link{read_output_trips()}),
+\strong{plotTripCountByDepTime} - Takes Table trips_output (from \link{read_output_trips}),
 to make line plot with with values that represent
 count of trips for a specific departure time by main_mode
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united_name(by default 'united')
 
-\strong{plotActivityEndTimes} - Takes Table trips_output (from \link{read_output_trips()}),
+\strong{plotActivityEndTimes} - Takes Table trips_output (from \link{read_output_trips}),
 to make line plot with with values that represent the
 number of activities ending at a specific time.
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united_name(by default 'united')
 
-\strong{plotArrivalTimesPerTripPurpose} - Takes Table trips_output (from \link{read_output_trips()}),
+\strong{plotArrivalTimesPerTripPurpose} - Takes Table trips_output (from \link{read_output_trips}),
 to make line plot with with values that represent
 count of destination activities for a specific arrival time
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united_name(by default 'united')
 
-\strong{plotDepartureTimesPerTripPurpose} - Takes Table trips_output (from \link{read_output_trips()}),
+\strong{plotDepartureTimesPerTripPurpose} - Takes Table trips_output (from \link{read_output_trips}),
 to make line plot with with values that represent
 count of destination activities for a specific arrival time
 Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united_name(by default 'united')
 
-\strong{plotTripDistancedByType} - Takes Table trips_output (from \link{read_output_trips()}),
+\strong{plotTripDistancedByType} - Takes Table trips_output (from \link{read_output_trips}),
 to plot bar chart with with values that represent
 travelled distance of each tripType related to the shapeTable
 
-\strong{plotModalShiftSankey} - Takes two trips_table (from readTripsTable), and collects
+\strong{plotModalShiftSankey} - Takes two trips_table (from \link{read_output_trips}), and collects
 changes between transport mode distribution of these tables
 to make alluvial diagram from this data\cr
 Function calculates number of each transport mode used in
@@ -400,7 +400,7 @@ distribution of transport mode has changed (f. e. what part of concrete trasport
 Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united_name is "united")
 Using parameter show.onlyChanges
 
-\strong{plotModalShiftBar} - Takes two trips_table (from readTripsTable), and collects
+\strong{plotModalShiftBar} - Takes two trips_table (from \link{read_output_trips}), and collects
 changes between transport mode distribution of these tables
 to make bar chart diagram with dodging positioning from this data\cr
 Function calculates number of each transport mode used in
@@ -435,7 +435,7 @@ baseFolder contains all base outputs, policyFolder contains all policy outputs.
 
 \strong{appendDistanceCategory} - adds to trips output tibble additional column that represent distance as category
 
-\strong{filterByRegion} - Filtering of trips_table(from readTripsTable) depending on how they located in given shape\cr
+\strong{filterByRegion} - Filtering of trips_table(from \link{read_output_trips}) depending on how they located in given shape\cr
 Takes trips_table and shapeTable(sf object from file representing geographical data, can be received by using function st_read(path_to_file).
 Please be aware that this filterByRegion currently only works, when one geometry is loaded.)
 transforms both objects to match mutual CRS(network.xml from MATSimOutputDirectory)
@@ -450,8 +450,8 @@ if start.inshape = FALSE & end.inshape = FALSE return table that contains trips 
 \strong{getCrsFromConfig} - Reads an coordinate reference system of MATSim output directory
 from output_config.xml
 
-\strong{transformToSf} - Transforms trips_table tibble (from readTripsTable) from tibble to sf (table with attribute features and geometry feature)\cr
-Takes trips_table (from readTripsTable) and transforms trips_table to sf object using start_x, end_x, start_y, end_y as a geometry features
+\strong{transformToSf} - Transforms trips_table tibble (from \link{read_output_trips}) from tibble to sf (table with attribute features and geometry feature)\cr
+Takes trips_table (from \link{read_output_trips}) and transforms trips_table to sf object using start_x, end_x, start_y, end_y as a geometry features
 deletes from resulting data.frame start_x, end_x, start_y, end_y.\cr
 And adds wkt column, if geometry.type = st_mulitpoint(), or geometry.type = st_linestring()\cr
 Or adds start_wkt and end_wkt, if geometry.type = st_point()\cr

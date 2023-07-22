@@ -29,7 +29,7 @@ using the function (\link{process_rename_mainmodes})}
 Alluvial diagram that represents changes in transport mode distribution
 }
 \description{
-Takes two data frames (from \link{read_output_trips()}) and compares the mode choice for each agent and summarizes the results, showing the modal shift.
+Takes two data frames (from \link{read_output_trips}) and compares the mode choice for each agent and summarizes the results, showing the modal shift.
 Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 The parameter show.onlyChanges allows the visualization of only the mode shift (excluding the trips that do not change mode). Standard value is FALSE.
 }
