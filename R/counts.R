@@ -1,5 +1,5 @@
 #'@import tidyverse
-#'@import scales
+#' @rawNamespace import(scales, except = c(discard, col_factor))
 #'@import xml2
 #'@import geomtextpath
 #'@import readr

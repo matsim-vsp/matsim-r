@@ -19,15 +19,15 @@
 #' @import ggalluvial
 #' @import ggrepel
 #' @import tidyverse
-#' @import tidyr
-#' @import ggplot2
+#' @rawNamespace import(tidyr, except = expand)
+#' @rawNamespace import(ggplot2, except = last_plot)
 #' @import yaml
 #' @import plotly
 #' @import leaflet
 #' @import forcats
 #' @import lubridate
 #' @import htmltools
-#' @import reshape
+#' @rawNamespace import(reshape, except = c(stamp,rename,expand))
 
 # NETWORK = "kelheim.output_network.xml"
 # NETWORK = "network.xml"
