@@ -69,7 +69,7 @@ We are going to plot a bar chart:
 
 The resulting bar chart looks like this:
 
-![Leipzig modal split](../inst/extdata/Leipzig_modal_split.png)
+![Leipzig modal split](./Leipzig_modal_split.png)
 
 #### Spatial filter
 
@@ -83,7 +83,7 @@ trips_originating <- process_filter_by_shape(output_trips, leipzig_shp, crs = 25
 
 Using `plot_mainmode_barchart()` on the 507 originating trips, results in the following chart:
 
-![Leipzig modal split - trips originating in project area](../inst/extdata/Leipzig_modalsplit_originating.png)
+![Leipzig modal split - trips originating in project area](./Leipzig_modalsplit_originating.png)
 
 
 #### Comparison plots
@@ -102,7 +102,7 @@ plot_compare_mainmode_barchart(trips_originating, trips_scenario_originating)
 ```
 
 The resulting plot looks like this:
-![Leipzig modal split comparison](../inst/extdata/Leipzig_modalsplit_comparison.png)
+![Leipzig modal split comparison](./Leipzig_modalsplit_comparison.png)
 
 
 #### Maps

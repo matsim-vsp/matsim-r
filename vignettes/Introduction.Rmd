@@ -25,7 +25,7 @@ Welcome to the MATSim R package! MATSim R is an R package designed for data proc
 
 The purpose of this package is to provide a comprehensive set of tools to efficiently analyze the output of MATSim runs. The package primarily processes output data stored in CSV and XML files, especially the so called "output_trips", "legs" and "persons" files. By adhering to this standardized naming convention, the package offers a streamlined functionality for reading, processing, plotting and YAML file creation for use in Simwrapper. XXXX LINK TO SIMWRAPPER GITHUB xxxx
 
-![Data flow and concept of matsim r package](../inst/extdata/dataflow.png)
+![Data flow and concept of matsim r package](./dataflow.png)
 
 The package is organized into four categories, each serving a specific purpose:
 
