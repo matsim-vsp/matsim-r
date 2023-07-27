@@ -2584,19 +2584,14 @@ plot_distance_by_mainmode_barchart <- function(trips_table,
 }
 
 
-#' Plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
-#' XXXX
-#'
+#' Plots distribution of every type of trip(inside, outside, origin and destinating) as a pie chart
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
+#' @param shape_Table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
+#' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates,
+#' can be found in network file from output directory of MATSim simulation
 #'
-#' @param shape_table sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
-#'
-#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
-#'
-#'
-#'
-#' @return plot with percentage of each type of trips
+#' @return Pie chart showing the percentage of each type of trip
 #'
 #' @export
 plot_spatialtype_by_shape_piechart <- function(trips_table, shape_table, crs) {
@@ -2627,7 +2622,7 @@ plot_spatialtype_by_shape_piechart <- function(trips_table, shape_table, crs) {
 #'
 #'
 #' @param trips_table tible of trips_output (from \link{read_output_trips})
-#' @param shape_table sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
+#' @param shape_Table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
 #' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
 #' @param euclidean Logical value indicating whether to calculate the average as euclidean distance or as travel distance. Default is FALSE, which calculates the average traveled distance.
 #'
@@ -3057,7 +3052,7 @@ plot_compare_travelwaittime_by_mainmode_barchart <- function(trips_table1,trips_
 #'
 #' @param trips_table1 tible of trips_output (from \link{read_output_trips})
 #' @param trips_table2 tible of trips_output (from \link{read_output_trips})
-#' @param shape_table A spatial shapefile or spatial polygons dataframe representing the spatial categories.
+#' @param shape_table A spatial shapefile or spatial polygons data frame used to create the spatial categories.
 #' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates,
 #' can be found in network file from output directory of MATSim simulation
 #'
@@ -3165,8 +3160,7 @@ plot_compare_travelwaittime_by_mainmode <- function(trips_table1,trips_table2,
 #'
 #' @param shape_table spatial
 #' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates, can be found in network file from output directory of MATSim simulation
-#' @param shape_table A spatial shapefile or spatial polygons dataframe representing the spatial categories.
-#' By default NULL, means there are no specific shape map on the backgroung.
+#' @param shape_table A spatial shapefile or spatial polygons data frame used as a background. By default NULL.
 #' @param optimized bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot
 #'
 #'
@@ -3315,7 +3309,7 @@ plot_map_trips <- function(trips_table, crs,optimized = FALSE,
 #' @param optimized bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot
 #'
 #' @param table tibble of output_trips (from read_output_trips())
-#' @param shapeTable sf object(data.frame with geometries), can be created using st_read()
+#' @param shape_Table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
 #' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system
 #'  of the trip coordinates, can be found in network file from output directory of MATSim simulation
 #' @param optimized bool, by default FALSE and gives interactive plot using leaflet, if TRUE creates image with ggplot
@@ -3556,10 +3550,10 @@ plot_map_trips_by_spatialcat <- function(trips_table, shape_table,
 #' The function provides the flexibility to specify multiple category templates
 #' to be united into a single name.
 #'
-#' @param trips_table tible of output_trips (from \link{\code{read_output_trips}})
-#' @param unite_modes vector of character string, representing pattern to match categories
-#' @param united_name character string, to represent new category for all occurrences matched unite_modes
-#'
+#' @param trips_table tibble of output_trips (from \link{\code{read_output_trips}})
+#' @param unite_modes vector of character strings,
+#' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt)
+#' @param united_name character string, specifies the name of the united mode
 #' @return tibble with new main_mode representation
 #'
 #' @export
@@ -3745,12 +3739,11 @@ process_convert_time <- function(trips_table,time_format = "hour",time_column = 
 ######Spatial######
 
 
-#' XXXX finish when code revision is done
 #' Filters trips_table(from ,\link{read_output_trips}) depending by location using a shapefile
 #'
 #' Uses output_trips and an sf object (can be created using the function st_read()),
 #' transforms both objects to match a mutual coordinate system (crs)
-#' and filters the trips from output_trips depending on their spatial type flags:\cr
+#' and filters the trips from output_trips depending on their spatial type:\cr
 #' if spatial_type="inside" returns a table that contains trips inside given shape\cr
 #' if spatial_type="originating" returns a table that contains trips which start inside  the shape and end outside of the shape\cr
 #' if spatial_type="destinating" returns a table that contains trips which end inside shape and start outside of the shape\cr
@@ -3758,7 +3751,7 @@ process_convert_time <- function(trips_table,time_format = "hour",time_column = 
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
 #'
-#' @param shapeTable sf object(data.frame with geometries), can be created using st_read()
+#' @param shape_Table sf object(data frame with geometries), can be created using st_read()
 #' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system
 #'  of the trip coordinates, can be found in network file from output directory of MATSim simulation
 #' @param spatial_type bool, defines trips to conclude (see description)
@@ -3841,7 +3834,7 @@ process_filter_by_shape <- function(trips_table,
 #'
 #' @param trips_table tibble of output_trips (from read_output_trips())
 #'
-#' @param shape_table sf object(data.frame with geometries), can be created using st_read()
+#' @param shape_Table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
 #' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system
 #'  of the trip coordinates, can be found in network file from output directory of MATSim simulation
 #'
