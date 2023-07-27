@@ -14,6 +14,141 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(matsim)
-```
+
+#### Overview
+
+All function names are built under specific naming template. How is it declared in introduction all functions, start with specific registered word (e.g. read, plot, process) that specifies needed subcategory of functions. Every next description of function described with following underscore and usually with specification of [data] (described below) to be read/plotted/processed. However every function category contains additional subcategory to specify function behaviour [clarification], so f.e. if you want to create compare plot it will be **plot_compare** and then specification of data, f.e. **plot_comare_mainmode_sankey()**. Also target data can be grouped or categorized by indication of specific category after special word "\_by\_" [category] if more categories appears they are splitted by word "\_and\_". The combination of [data] and [category] in the function names helps convey the specific purpose and context of each function, making it easier for users to understand what data and categories are involved in the visualization or processing task.
+
+#### Template
+
+So to conclude every function template looks similar to:
+
+**[function_type]\_{clarification}\_[data]\_{by}\_{category}\_{and}\_...\_{output_type}**
+
+**[function_type]**: Represents the type of the function, indicating its primary purpose or operation. For example, "plot" for plotting functions, "process" for data processing functions, "read" for functions that retrieve data in R environment, etc.
+
+- plot
+- read
+- process
+
+**{clarification}**: This part is optional and provides additional details or clarification about the function's purpose or behavior. It helps in distinguishing similar functions or indicating specific variations of the same function. For example, "compare" to indicate that the function performs comparison, "append" to indicate that the function appends data, etc.
+
+For plotting:
+
+- compare
+- map
+
+For processing:
+
+- get
+- rename 
+- append
+- filter
+- convert
+
+**[data]**: Refers to the type of data or information that the function is handling or manipulating. It represents the primary aspect of the data that the function is focused on. Examples include "arrtime" (arrival time), "distance" (distance traveled), "mainmode" (main transportation mode), etc. Can be read with function `str()`
+
+**{by}**: This part is optional and indicates that the data is segmented or grouped by a specific category or factor. It serves as a connector between the [data] and [category] components.
+
+**{category}**: Represents a specific category or grouping factor that is used to segment or categorize the data. It represents an additional aspect of the data that the function is focused on. Examples include "act" (activity), "spatialcat" (spatial category), "mainmode" (main transportation mode), etc.
+
+**{and}**: This part is optional and is used as a connector if there are multiple categories involved in the function's operation.
+
+**{output_type}**: Represents the type of output or result that the function generates. It indicates the format or form of the data returned by the function. Examples include "barchart," "piechart," "linechart," "table," etc.
+
+#### Examples
+
+- plot_arrtime_by_act
+    - plot: Indicates that this function is used for plotting data.
+    - arrtime: Refers to "Arrival Time," which is the key aspect being visualized.
+    - by_act: Indicates that the plot is segmented or grouped by "Activity."
+
+- plot_compare_count_by_spatialcat_barchart
+    - plot: Indicates that this function is used for plotting data.
+    - compare_count: Refers to comparing the count of trips.
+    - by_spatialcat: Indicates that the comparison is based on "Spatial Categories."
+    - barchart: Specifies the type of plot used for visualization.
+
+- plot_compare_distcat_by_mainmode_barchart
+    - plot: Indicates that this function is used for plotting data.
+    - compare_distcat: Refers to comparing the distribution of trips based on "Distance Categories."
+    - by_mainmode: Indicates that the comparison is based on different "Main Modes."
+    - barchart: Specifies the type of plot used for visualization.
+
+- plot_compare_mainmode_barchart
+    - plot: Indicates that this function is used for plotting data.
+    - compare_mainmode: Refers to comparing different "Main Modes."
+    - barchart: Specifies the type of plot used for visualization.
+
+- plot_compare_mainmode_sankey
+    - plot: Indicates that this function is used for plotting data.
+    - compare_mainmode: Refers to comparing different "Main Modes."
+    - sankey: Specifies the type of plot used for visualization, which is a "Sankey Diagram."
+
+- plot_compare_travelwaittime_by_mainmode
+    - plot: Indicates that this function is used for plotting data.
+    - compare_travelwaittime: Refers to comparing the "Travel Time" and "Wait Time."
+    - by_mainmode: Indicates that the comparison is based on different "Main Modes."
+
+- plot_compare_travelwaittime_by_mainmode_barchart
+    - plot: Indicates that this function is used for plotting data.
+    - compare_travelwaittime: Refers to comparing the "Travel Time" and "Wait Time."
+    - by_mainmode: Indicates that the comparison is based on different "Main Modes."
+    - barchart: Specifies the type of plot used for visualization.
+
+- plot_deptime_by_act
+    - plot: Indicates that this function is used for plotting data.
+    - deptime: Refers to "Departure Time," which is the key aspect being visualized.
+    - by_act: Indicates that the plot is segmented or grouped by "Activity."
+
+- plot_distance_by_mainmode_barchart
+    - plot: Indicates that this function is used for plotting data.
+    - distance: Refers to "Distance," which is the key aspect being visualized.
+    - by_mainmode: Indicates that the plot is segmented or grouped by different "Main Modes."
+    - barchart: Specifies the type of plot used for visualization.
+
+- plot_distance_by_spatialcat_barchart
+    - plot: Indicates that this function is used for plotting data.
+    - distance: Refers to "Distance," which is the key aspect being visualized.
+    - by_spatialcat: Indicates that the plot is segmented or grouped by "Spatial Categories."
+    - barchart: Specifies the type of plot used for visualization.
+
+- plot_distcat_by_mainmode_barchart
+    - plot: Indicates that this function is used for plotting data.
+    - distcat: Refers to "Distance Categories," which is the key aspect being visualized.
+    - by_mainmode: Indicates that the plot is segmented or grouped by different "Main Modes."
+    - barchart: Specifies the type of plot used for visualization.
+
+- plot_mainmode_barchart
+    - plot: Indicates that this function is used for plotting data.
+    - mainmode: Refers to "Main Modes," which is the key aspect being visualized.
+    - barchart: Specifies the type of plot used for visualization.
+
+- plot_mainmode_piechart
+    - plot: Indicates that this function is used for plotting data.
+    - mainmode: Refers to "Main Modes," which is the key aspect being visualized.
+    - piechart: Specifies the type of plot used for visualization, which is a "Pie Chart."
+
+- plot_map_trips
+    - plot: Indicates that this function is used for plotting data.
+    - map_trips: Refers to "Mapping of Trips," which is the key aspect being visualized.
+
+- process_append_distcat
+    - process: Indicates that this function is used for processing data.
+    - append_distcat: Refers to appending "Distance Categories" to the trips_table.
+
+- process_append_spatialcat
+    - process: Indicates that this function is used for processing data.
+    - append_spatialcat: Refers to appending "Spatial Categories" to the trips_table.
+
+- process_convert_table_to_sf
+    - process: Indicates that this function is used for processing data.
+    - convert_table_to_sf: Refers to converting the trips_table to a spatial data frame (sf).
+
+- process_convert_time
+    - process: Indicates that this function is used for processing data.
+    - convert_time: Refers to converting time data in the trips_table to a specified format.
+
+- process_filter_by_shape
+    - process: Indicates that this function is used for processing data.
+    - filter_by_shape: Refers to filtering trips in the trips_table based on a shape.

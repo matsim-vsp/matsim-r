@@ -3656,7 +3656,6 @@ process_get_travdistance_distribution<-function(trips_table,euclidean = FALSE){
 #' @return A tibble containing the main_mode column representing unique main modes, trav_time_avg column representing the average travel time for each main mode, and wait_time_avg column representing the average wait time for each main mode.
 #'
 #' @export
-
 process_get_travelwaittime_by_mainmode<-function(trips_table,
                                              time_format = "minute"){#also could be hours/seconds
 
