@@ -13,8 +13,7 @@ plot_map_trips(trips_table, crs, optimized = FALSE, shape_table = NULL)
 
 \item{optimized}{bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot}
 
-\item{shape_table}{A spatial shapefile or spatial polygons dataframe representing the spatial categories.
-By default NULL, means there are no specific shape map on the backgroung.}
+\item{shape_table}{A spatial shapefile or spatial polygons data frame used as a background. By default NULL.}
 }
 \value{
 leaflet/ggplot plot with trips start-, end- points

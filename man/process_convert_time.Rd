@@ -2,11 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{process_convert_time}
 \alias{process_convert_time}
-\title{Converts time column specified in \strong{time_column} to numeric representation of minutes, hours or seconds
-XXXX here minute, hour and second don't have an s?
-Default output_trips table time columns(\strong{dep_time}, \strong{trav_time}, \strong{wait_time}) are in 'hms' format.
-To convert this type to numeric, specify \strong{time_column} to be converted,
-and the unit \strong{time_format}. Acceptable units are "hour", "minute" and "second".}
+\title{Converts time column specified in \strong{time_column} to numeric representation of minutes, hours or seconds}
 \usage{
 process_convert_time(
   trips_table,
@@ -25,8 +21,6 @@ process_convert_time(
 tibble, containing column with specified time_format
 }
 \description{
-Converts time column specified in \strong{time_column} to numeric representation of minutes, hours or seconds
-XXXX here minute, hour and second don't have an s?
 Default output_trips table time columns(\strong{dep_time}, \strong{trav_time}, \strong{wait_time}) are in 'hms' format.
 To convert this type to numeric, specify \strong{time_column} to be converted,
 and the unit \strong{time_format}. Acceptable units are "hour", "minute" and "second".

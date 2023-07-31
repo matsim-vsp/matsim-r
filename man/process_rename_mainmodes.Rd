@@ -11,11 +11,12 @@ process_rename_mainmodes(
 )
 }
 \arguments{
-\item{trips_table}{tible of output_trips (from \link{\code{read_output_trips}})}
+\item{trips_table}{tibble of output_trips (from \link{\code{read_output_trips}})}
 
-\item{unite_modes}{vector of character string, representing pattern to match categories}
+\item{unite_modes}{vector of character strings,
+changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt)}
 
-\item{united_name}{character string, to represent new category for all occurrences matched unite_modes}
+\item{united_name}{character string, specifies the name of the united mode}
 }
 \value{
 tibble with new main_mode representation

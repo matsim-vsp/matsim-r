@@ -2,8 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{process_filter_by_shape}
 \alias{process_filter_by_shape}
-\title{XXXX finish when code revision is done
-Filters trips_table(from ,\link{read_output_trips}) depending by location using a shapefile}
+\title{Filters trips_table(from ,\link{read_output_trips}) depending by location using a shapefile}
 \usage{
 process_filter_by_shape(trips_table, shape_table, crs, spatial_type = "inside")
 }
@@ -15,7 +14,7 @@ of the trip coordinates, can be found in network file from output directory of M
 
 \item{spatial_type}{bool, defines trips to conclude (see description)}
 
-\item{shapeTable}{sf object(data.frame with geometries), can be created using st_read()}
+\item{shape_Table}{sf object(data frame with geometries), can be created using st_read()}
 }
 \value{
 tibble, with filtered trips depending on shapeTable and spatial types (see description)
@@ -23,7 +22,7 @@ tibble, with filtered trips depending on shapeTable and spatial types (see descr
 \description{
 Uses output_trips and an sf object (can be created using the function st_read()),
 transforms both objects to match a mutual coordinate system (crs)
-and filters the trips from output_trips depending on their spatial type flags:\cr
+and filters the trips from output_trips depending on their spatial type:\cr
 if spatial_type="inside" returns a table that contains trips inside given shape\cr
 if spatial_type="originating" returns a table that contains trips which start inside  the shape and end outside of the shape\cr
 if spatial_type="destinating" returns a table that contains trips which end inside shape and start outside of the shape\cr

@@ -18,7 +18,7 @@ of the trip coordinates, can be found in network file from output directory of M
 
 \item{table}{tibble of output_trips (from read_output_trips())}
 
-\item{shapeTable}{sf object(data.frame with geometries), can be created using st_read()}
+\item{shape_Table}{sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.}
 }
 \value{
 plot that contains every trip with defined trip type

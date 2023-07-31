@@ -16,7 +16,7 @@ plot_compare_count_by_spatialcat_barchart(
 
 \item{trips_table2}{tible of trips_output (from \link{read_output_trips})}
 
-\item{shape_table}{A spatial shapefile or spatial polygons dataframe representing the spatial categories.}
+\item{shape_table}{A spatial shapefile or spatial polygons data frame used to create the spatial categories.}
 
 \item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates,
 can be found in network file from output directory of MATSim simulation}
