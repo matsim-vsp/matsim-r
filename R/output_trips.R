@@ -3702,7 +3702,7 @@ process_append_distcat <- function(trips_table,distances_array = c(1000,2000,500
 }
 
 #' Converts time column specified in \strong{time_column} to numeric representation of minutes, hours or seconds
-#' XXXX here minute, hour and second don't have an s?
+#'
 #' Default output_trips table time columns(\strong{dep_time}, \strong{trav_time}, \strong{wait_time}) are in 'hms' format.
 #' To convert this type to numeric, specify \strong{time_column} to be converted,
 #' and the unit \strong{time_format}. Acceptable units are "hour", "minute" and "second".
