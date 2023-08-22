@@ -61,11 +61,6 @@
 
       <dl><dt>
           
-          <code><a href="boxplotScoreDifferences.html">boxplotScoreDifferences()</a></code> 
-        </dt>
-        <dd>Boxplot of Score Differences</dd>
-      </dl><dl><dt>
-          
           <code><a href="createCountScatterPlot.html">createCountScatterPlot()</a></code> 
         </dt>
         <dd>Creates a Via-Style scatterplot for each run</dd>
@@ -76,7 +71,7 @@
         <dd>Creates/adds XY hexagon definition of output trips to a summary dashboard</dd>
       </dl><dl><dt>
           
-          <code><a href="matsimr-deprecated.html">loadNetwork()</a></code> <code><a href="matsimr-deprecated.html">plotModalSplitPieChart()</a></code> <code><a href="matsimr-deprecated.html">plotModalSplitBarChart()</a></code> <code><a href="matsimr-deprecated.html">readTripsTable()</a></code> <code><a href="matsimr-deprecated.html">plotAverageTravelWait()</a></code> <code><a href="matsimr-deprecated.html">compareAverageTravelWait()</a></code> <code><a href="matsimr-deprecated.html">plotModalDistanceDistribution()</a></code> <code><a href="matsimr-deprecated.html">compareModalDistanceDistribution()</a></code> <code><a href="matsimr-deprecated.html">plotTripDistanceByMode()</a></code> <code><a href="matsimr-deprecated.html">plotTripCountByDepTime()</a></code> <code><a href="matsimr-deprecated.html">plotActivityEndTimes()</a></code> <code><a href="matsimr-deprecated.html">plotArrivalTimesPerTripPurpose()</a></code> <code><a href="matsimr-deprecated.html">plotDepartureTimesPerTripPurpose()</a></code> <code><a href="matsimr-deprecated.html">plotTripDistancedByType()</a></code> <code><a href="matsimr-deprecated.html">plotModalShiftSankey()</a></code> <code><a href="matsimr-deprecated.html">plotModalShiftBar()</a></code> <code><a href="matsimr-deprecated.html">plotMapWithFilteredTrips()</a></code> <code><a href="matsimr-deprecated.html">plotMapWithTrips()</a></code> <code><a href="matsimr-deprecated.html">plotTripTypesPieChart()</a></code> <code><a href="matsimr-deprecated.html">compareTripTypesBarChart()</a></code> <code><a href="matsimr-deprecated.html">plotMapWithTripsType()</a></code> <code><a href="matsimr-deprecated.html">compareBasePolicyOutput()</a></code> <code><a href="matsimr-deprecated.html">compareBasePolicyShapeOutput()</a></code> <code><a href="matsimr-deprecated.html">appendDistanceCategory()</a></code> <code><a href="matsimr-deprecated.html">filterByRegion()</a></code> <code><a href="matsimr-deprecated.html">deriveODMatrix()</a></code> <code><a href="matsimr-deprecated.html">getCrsFromConfig()</a></code> <code><a href="matsimr-deprecated.html">transformToSf()</a></code> 
+          <code><a href="matsimr-deprecated.html">loadNetwork()</a></code> <code><a href="matsimr-deprecated.html">readPersonsTable()</a></code> <code><a href="matsimr-deprecated.html">boxplotScoreDifferences()</a></code> <code><a href="matsimr-deprecated.html">plotModalSplitPieChart()</a></code> <code><a href="matsimr-deprecated.html">plotModalSplitBarChart()</a></code> <code><a href="matsimr-deprecated.html">readTripsTable()</a></code> <code><a href="matsimr-deprecated.html">plotAverageTravelWait()</a></code> <code><a href="matsimr-deprecated.html">compareAverageTravelWait()</a></code> <code><a href="matsimr-deprecated.html">plotModalDistanceDistribution()</a></code> <code><a href="matsimr-deprecated.html">compareModalDistanceDistribution()</a></code> <code><a href="matsimr-deprecated.html">plotTripDistanceByMode()</a></code> <code><a href="matsimr-deprecated.html">plotTripCountByDepTime()</a></code> <code><a href="matsimr-deprecated.html">plotActivityEndTimes()</a></code> <code><a href="matsimr-deprecated.html">plotArrivalTimesPerTripPurpose()</a></code> <code><a href="matsimr-deprecated.html">plotDepartureTimesPerTripPurpose()</a></code> <code><a href="matsimr-deprecated.html">plotTripDistancedByType()</a></code> <code><a href="matsimr-deprecated.html">plotModalShiftSankey()</a></code> <code><a href="matsimr-deprecated.html">plotModalShiftBar()</a></code> <code><a href="matsimr-deprecated.html">plotMapWithFilteredTrips()</a></code> <code><a href="matsimr-deprecated.html">plotMapWithTrips()</a></code> <code><a href="matsimr-deprecated.html">plotTripTypesPieChart()</a></code> <code><a href="matsimr-deprecated.html">compareTripTypesBarChart()</a></code> <code><a href="matsimr-deprecated.html">plotMapWithTripsType()</a></code> <code><a href="matsimr-deprecated.html">compareBasePolicyOutput()</a></code> <code><a href="matsimr-deprecated.html">compareBasePolicyShapeOutput()</a></code> <code><a href="matsimr-deprecated.html">appendDistanceCategory()</a></code> <code><a href="matsimr-deprecated.html">filterByRegion()</a></code> <code><a href="matsimr-deprecated.html">deriveODMatrix()</a></code> <code><a href="matsimr-deprecated.html">getCrsFromConfig()</a></code> <code><a href="matsimr-deprecated.html">transformToSf()</a></code> 
         </dt>
         <dd>Load MATSim network into memory</dd>
       </dl><dl><dt>
@@ -99,7 +94,7 @@
           <code><a href="plot_compare_distcat_by_mainmode_barchart.html">plot_compare_distcat_by_mainmode_barchart()</a></code> 
         </dt>
         <dd>Bar chart comparing distance traveled on x-axis and number of trips on y-axis for two different runs
-Takes two data frames (from read_output_trips()), categorizes the traveled distances into pre-defined bins
+Takes two data frames (from read_output_trips), categorizes the traveled distances into pre-defined bins
 and plots the difference in number of trips for each bin. (Bins: 1000,2000,5000,10000,20000,50000,100000 (m))
 Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')</dd>
       </dl><dl><dt>
@@ -112,6 +107,11 @@ Using the parameter unite_modes, specific modes can be renamed into one with the
           <code><a href="plot_compare_mainmode_sankey.html">plot_compare_mainmode_sankey()</a></code> 
         </dt>
         <dd>Plot alluvial/sankey diagram of transport mode changes</dd>
+      </dl><dl><dt>
+          
+          <code><a href="plot_compare_score_boxplot.html">plot_compare_score_boxplot()</a></code> 
+        </dt>
+        <dd>Boxplot of Score Differences</dd>
       </dl><dl><dt>
           
           <code><a href="plot_compare_travelwaittime_by_mainmode.html">plot_compare_travelwaittime_by_mainmode()</a></code> 
@@ -166,8 +166,7 @@ Using the parameter unite_modes, specific modes can be renamed into one with the
           
           <code><a href="plot_spatialtype_by_shape_piechart.html">plot_spatialtype_by_shape_piechart()</a></code> 
         </dt>
-        <dd>Plots distribution of every type of trips(inside, outside, origin and destinating) in Pie Chart
-XXXX</dd>
+        <dd>Plots distribution of every type of trip(inside, outside, origin and destinating) as a pie chart</dd>
       </dl><dl><dt>
           
           <code><a href="plot_travelwaittime_mean_barchart.html">plot_travelwaittime_mean_barchart()</a></code> 
@@ -222,17 +221,12 @@ XXXX</dd>
           
           <code><a href="process_convert_time.html">process_convert_time()</a></code> 
         </dt>
-        <dd>Converts time column specified in <strong>time_column</strong> to numeric representation of minutes, hours or seconds
-XXXX here minute, hour and second don't have an s?
-Default output_trips table time columns(<strong>dep_time</strong>, <strong>trav_time</strong>, <strong>wait_time</strong>) are in 'hms' format.
-To convert this type to numeric, specify <strong>time_column</strong> to be converted,
-and the unit <strong>time_format</strong>. Acceptable units are "hour", "minute" and "second".</dd>
+        <dd>Converts time column specified in <strong>time_column</strong> to numeric representation of minutes, hours or seconds</dd>
       </dl><dl><dt>
           
           <code><a href="process_filter_by_shape.html">process_filter_by_shape()</a></code> 
         </dt>
-        <dd>XXXX finish when code revision is done
-Filters trips_table(from ,read_output_trips()) depending by location using a shapefile</dd>
+        <dd>Filters trips_table(from ,read_output_trips) depending by location using a shapefile</dd>
       </dl><dl><dt>
           
           <code><a href="process_get_crs_from_config.html">process_get_crs_from_config()</a></code> 
@@ -281,11 +275,6 @@ or for simwrapper (origin and destination as columns)</dd>
         <dd>Load a MATSim linkstats file into memory</dd>
       </dl><dl><dt>
           
-          <code><a href="readPersonsTable.html">readPersonsTable()</a></code> 
-        </dt>
-        <dd>Load MATSim output_persons table into memory</dd>
-      </dl><dl><dt>
-          
           <code><a href="read_config.html">read_config()</a></code> 
         </dt>
         <dd>Load MATSIM config file into Memory</dd>
@@ -294,6 +283,11 @@ or for simwrapper (origin and destination as columns)</dd>
           <code><a href="read_network.html">read_network()</a></code> 
         </dt>
         <dd>Load MATSim network into memory</dd>
+      </dl><dl><dt>
+          
+          <code><a href="read_output_persons.html">read_output_persons()</a></code> 
+        </dt>
+        <dd>Load MATSim output_persons table into memory</dd>
       </dl><dl><dt>
           
           <code><a href="read_output_trips.html">read_output_trips()</a></code> 
