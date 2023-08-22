@@ -1,5 +1,5 @@
 #'@import tidyverse
-#'@import scales
+#' @rawNamespace import(scales, except = c(discard, col_factor))
 #'@import xml2
 #'@import geomtextpath
 #'@import readr
@@ -8,12 +8,12 @@
 #'
 #'@title Load a MATSim Counts file into memory
 #'
-#'@description Loads a MATSim Counts XML-File as tibble into memory
+#'@description Loads a MATSim Counts XML-file as tibble into memory
 #'
 #'
 #'@param file File to load. Must be an .xml file
 #'
-#'@return tibble containing with MATSim Link id as "loc_id" as key
+#'@return tibble with MATSim link id ("loc_id") as key
 #'
 #'@export
 readCounts <- function(file){
@@ -51,11 +51,11 @@ readCounts <- function(file){
   result
 }
 
-#' Load linkstats as tibble into memory
+#' Load a MATSim linkstats file into memory
 #'
-#' Reads Linkstats as .tsv created from LinkStats.class
-#' as dataframe into memory.
-#' Counts can be provided in any time bins.
+#' Loads a linkstats tsv file created from the LinkStats class
+#' as a dataframe into memory.
+#' Counts can be provided in any time bin.
 #' Counts can be provided for any qsim mode. The argument networkModes is used to
 #' select and filter the columns.
 #'
@@ -107,30 +107,30 @@ readLinkStats <- function(runId, file, sampleSize = 0.25){
 }
 
 
-#' Load Counts, a limited number of Linkstats and Network links as joined tibble into memory
+#' Join counts and linkstats to the network, creating a tibble into memory
 #'
-#'Function to join counts, network links and several matsim link stats. Data can be aggregated
-#'and filtered by time or network mode.
+#'Function to join counts, linkstats and network links. Data can be aggregated
+#'and filtered by time or mode.
 #'
 #'
 #'@param counts Tibble with counts data
 #'
 #'@param network Tibble with network nodes and links
 #'
-#'@param linkStats List with link stats tibbles
+#'@param linkStats List with linkstats tibbles
 #'
-#'@param networkModes a vector with network modes, which are needed for analysis
+#'@param networkModes Vector with network modes that will be analyzed, default is "car".
 #'
-#'@param aggr_to Determinates if data should be aggregated to hour values or DTV, can either be "day" or "hour"
+#'@param aggr_to Determines if data should be aggregated into hourly bins or as daily traffic volume, can either be "day" or "hour"
 #'
-#'@param earliest Lower limit to filter link stats by time, default is 0
+#'@param earliest Integer. Lower limit to filter link stats by time, default = 0.
 #'
-#'@param latest Upper limit to filter link stats by time, default is 86400 (midnight)
+#'@param latest Integer. Upper limit to filter link stats by time, default = 86400 (midnight).
 #'
-#'@return Long-format tibble with MATSim link id as key ("loc_id"), traffic volume from MATSim runs and link type
-#'
+#'@return Long-format tibble with MATSim link id as key ("loc_id"), traffic volumes from MATSim runs and link type
 #'
 #'@export
+
 mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("car"), aggr_to = c("day", "hour"), earliest = 0, latest = 86400){
 
   if(!is.list(linkStats)){
@@ -242,7 +242,7 @@ mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("ca
   join.long
 }
 
-#' Categorize DTV and calculate DTV distribution
+#' Categorize daily traffic volume (DTV) and calculate DTV for different link types.
 #'
 #' Takes a tibble from mergeCountsAndLinks. DTV is categorized into bins. Finally
 #' data is aggregated to calculate DTV distribution in each link type category,
@@ -252,13 +252,13 @@ mergeCountsAndLinks <- function(counts, network, linkStats, networkModes = c("ca
 #'
 #' @param joinedFrame A tibble from mergeCountsAndLinks
 #'
-#' @param from Lower limit for count bin
+#' @param from Integer. Lower limit for count bin, default = 0.
 #'
-#' @param to Upper limit for count bins
+#' @param to Integer. Upper limit for count bins, default = 40000.
 #'
-#' @param by Size of each count bin
+#' @param by Integer. Size of each count bin, default = 5000.
 #'
-#' @return A long-format tibble which contains share of DTV Categories
+#' @return A long-format tibble which contains share of DTV for link types
 #'
 #' @export
 processLinkStatsDtvDistribution <- function(joinedFrame, from = 0, to = 40000, by = 5000){
@@ -311,17 +311,16 @@ processLinkStatsDtvDistribution <- function(joinedFrame, from = 0, to = 40000, b
 #' Categorize DTV deviation and aggregate data
 #'
 #' Takes a tibble from mergeCountsAndLinks.
-#' Deviation between count volumes and Linkstats is calculated
-#' (e.g. deviation of 1.2 means 20 percent more DTV in MATSim than in counts) and
-#' categorized.
+#' Deviation between count volumes and Linkstats is calculated and
+#' categorized (i.e. deviation of 1.2 means 20 percent more DTV in MATSim than in counts).
 #' If parameter 'aggr' is set to TRUE, data will be aggregated for each run and link type.
 #' Can be used to visualize model quality by link type and to compare several runs.
 #'
-#' Estimation quality is determinated by the 'cut' function, limits for the label
-#' 'exact' can be adjusted by tuning the parameter 'll' and 'ul'
+#' Estimation quality is determined by the 'cut' function, limits for the label
+#' 'exact' can be adjusted by tuning the parameters 'll' (lower limit) and 'ul' (upper limit)
 #'
 #' @param joinedFrame A tibble from mergeCountsAndLinks
-#' @param aggr Boolean, if categorized data should returned aggregated
+#' @param aggr Boolean, if categorized data should returned aggregated, default is TRUE.
 #' @param ll Formula to calculate lower limit of the quality label 'exact', default = 0.8*x - 200
 #' @param ul Formula to calculate lower limit of the quality label 'exact', default = 1.2*x + 200
 #'
@@ -341,8 +340,8 @@ processDtvEstimationQuality <- function(joinedFrame, aggr = TRUE, ll =  ~ x *0.8
   join.1 <- joinedFrame %>%
     mutate(ll = ifelse(ll < 0, 0, ll),
            estimation = ifelse(volume < ll, "less",
-                            ifelse(volume > ul, "more",
-                                   "exact")),
+                               ifelse(volume > ul, "more",
+                                      "exact")),
            estimation = factor(estimation, levels = c("less", "exact", "more")))
 
   if(aggr){
@@ -361,12 +360,12 @@ processDtvEstimationQuality <- function(joinedFrame, aggr = TRUE, ll =  ~ x *0.8
 #' Creates a Via-Style scatterplot for each run
 #'
 #' Takes a tibble from mergeCountsAndLinks.
-#' A scatterplot with counts on the x axis and matsim dtv on the y axis is created and colored
+#' A scatterplot with counts on the x axis and MATSim dtv on the y axis is created and colored
 #' by the road type.
-#' Lower and upper Limits define the section which is considered as an 'exact' estimation. Limits
+#' Lower and upper limits define the section which is considered an 'exact' estimation. Limits
 #' are defined by custom formulas.
 #'
-#' The function calls the matsim-r function processDtvEstimationQuality which is handeling the limits.
+#' The function calls the matsim-r function processDtvEstimationQuality which is handling the limits.
 #'
 #' @param joinedFrame A tibble from mergeCountsAndLinks
 #' @param ll Formula to calculate lower limit of the quality label 'exact', default = 0.8*x - 200

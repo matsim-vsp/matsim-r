@@ -11,11 +11,11 @@ generateXYHexagonYaml(
 )
 }
 \arguments{
-\item{pathToOutputTrips}{specifies path to a data source of output_trips}
+\item{pathToOutputTrips}{file path to output_trips.csv file}
 
-\item{crs}{specifies an coordinate reference system of output_trips}
+\item{crs}{specifies the coordinate reference system of output_trips}
 
-\item{dump.output.to}{path to an folder with dashboard}
+\item{dump.output.to}{path to a folder with simwrapper dashboard}
 }
 \value{
 changed file

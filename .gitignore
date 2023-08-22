@@ -35,4 +35,6 @@ network.xml.gz
 analysis_berlin10/
 kelheim/
 test/
+dashboard_test/
 .sentinel*
+inst/doc

@@ -2,7 +2,7 @@
 % Please edit documentation in R/counts.R
 \name{mergeCountsAndLinks}
 \alias{mergeCountsAndLinks}
-\title{Load Counts, a limited number of Linkstats and Network links as joined tibble into memory}
+\title{Join counts and linkstats to the network, creating a tibble into memory}
 \usage{
 mergeCountsAndLinks(
   counts,
@@ -19,20 +19,20 @@ mergeCountsAndLinks(
 
 \item{network}{Tibble with network nodes and links}
 
-\item{linkStats}{List with link stats tibbles}
+\item{linkStats}{List with linkstats tibbles}
 
-\item{networkModes}{a vector with network modes, which are needed for analysis}
+\item{networkModes}{Vector with network modes that will be analyzed, default is "car".}
 
-\item{aggr_to}{Determinates if data should be aggregated to hour values or DTV, can either be "day" or "hour"}
+\item{aggr_to}{Determines if data should be aggregated into hourly bins or as daily traffic volume, can either be "day" or "hour"}
 
-\item{earliest}{Lower limit to filter link stats by time, default is 0}
+\item{earliest}{Integer. Lower limit to filter link stats by time, default = 0.}
 
-\item{latest}{Upper limit to filter link stats by time, default is 86400 (midnight)}
+\item{latest}{Integer. Upper limit to filter link stats by time, default = 86400 (midnight).}
 }
 \value{
-Long-format tibble with MATSim link id as key ("loc_id"), traffic volume from MATSim runs and link type
+Long-format tibble with MATSim link id as key ("loc_id"), traffic volumes from MATSim runs and link type
 }
 \description{
-Function to join counts, network links and several matsim link stats. Data can be aggregated
-and filtered by time or network mode.
+Function to join counts, linkstats and network links. Data can be aggregated
+and filtered by time or mode.
 }

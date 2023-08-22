@@ -1,7 +1,7 @@
 Package: matsim
 Type: Package
 Title: R library for interfacing with MATSim agent-based microsimulation model
-Version: 0.1.9
+Version: 0.2.0
 Authors@R: c(
   person("Billy", "Charlton", email = "charlton@vsp.tu-berlin.de", role=c("aut","cre")),
   person("Oleksandr", "Soboliev", role="aut"))
@@ -11,10 +11,10 @@ Description: MATSim support package for R
     of the Python matsim-tools package, and thus supports reading standard 
     MATSim networks and soon, plans and events as well. 
  .
-           Developed with support from the Technische Universität Berlin's
+              Developed with support from the Technische Universität Berlin's
     VSP Transport Planning and Transport Telematics department. 
  .
-           This project is under ongoing development and submissions are welcome!
+              This project is under ongoing development and submissions are welcome!
 License: GPL (>= 3)
 Encoding: UTF-8
 Imports: 
@@ -42,5 +42,8 @@ URL: https://github.com/matsim-vsp/matsim-r
 BugReports: https://github.com/matsim-vsp/matsim-r/issues
 RoxygenNote: 7.2.3
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+VignetteBuilder: knitr

@@ -29,4 +29,5 @@ docs: .sentinel-make-docs
 clean:
 > rm -rf docs
 > rm -rf man
+> rm .sentinel*
 .PHONY: clean
