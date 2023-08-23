@@ -79,21 +79,249 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/matsim-vsp/matsim-r" class="external-link">matsim</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: replacing previous import 'ggplot2::last_plot' by 'plotly::last_plot'</span></span>
-<span><span class="co">#&gt; when loading 'matsim'</span></span>
-<span><span class="co">#&gt; Warning: replacing previous import 'lubridate::stamp' by 'reshape::stamp' when</span></span>
-<span><span class="co">#&gt; loading 'matsim'</span></span>
-<span><span class="co">#&gt; Warning: replacing previous import 'plotly::rename' by 'reshape::rename' when</span></span>
-<span><span class="co">#&gt; loading 'matsim'</span></span>
-<span><span class="co">#&gt; Warning: replacing previous import 'purrr::discard' by 'scales::discard' when</span></span>
-<span><span class="co">#&gt; loading 'matsim'</span></span>
-<span><span class="co">#&gt; Warning: replacing previous import 'readr::col_factor' by 'scales::col_factor'</span></span>
-<span><span class="co">#&gt; when loading 'matsim'</span></span>
-<span><span class="co">#&gt; Warning: replacing previous import 'reshape::expand' by 'tidyr::expand' when</span></span>
-<span><span class="co">#&gt; loading 'matsim'</span></span></code></pre></div>
-  </main>
+<div class="section level4">
+<h4 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h4>
+<p>All function names are built using the same naming template.
+Functions start with a specific verb (e.g. read, plot, process) that
+describes their main usage. They are sorted into [function types]
+according to this usage.</p>
+<p>This, and all following naming elements are followed by an
+underscore. The second element is optional. It further specifies the
+type of action that is performed and can be used to distinguish similar
+functions. In the following guide this element is called
+[clarification]. An example for this element is [compare], which is used
+in all functions that compare two data sets.</p>
+<p>The next element specifies the data or the columns used. For example
+the column [mainmode] or the MATSim file [output_trips].</p>
+<p>If the data is going to be sorted or filtered it can be necessary to
+specify how. This is done using [by]. An example is the function
+[plot_arrtime_by_act]: it plots the column [arrtime], which contains the
+arrival time, by [act] or activity. Several of these can be connected
+using [and].</p>
+<p>The last element can be used to specify the output type. This is
+important for the plotting functions where it specifies the type of
+plot.</p>
+</div>
+<div class="section level4">
+<h4 id="template">Template<a class="anchor" aria-label="anchor" href="#template"></a>
+</h4>
+<p>So to summarize every naming template looks similar to:</p>
+<p><strong>[function_type]_{clarification}_[data]_{by}_{category}_{and}_…_{output_type}</strong></p>
+<p><strong>[function_type]</strong>: Describes the type of the function,
+indicating its primary purpose or operation. For example, “plot” to plot
+functions, “process” for data processing functions, “read” for functions
+that read data into the R environment.</p>
+<ul>
+<li>plot</li>
+<li>read</li>
+<li>process</li>
+</ul>
+<p><strong>{clarification}</strong>: This part is optional and provides
+additional details or clarification about the function’s purpose and
+behavior. It helps to distinguish similar functions and variations of
+the same function. For example, “compare” to indicate that the function
+performs a comparison, “append” to indicate that the function appends
+data, etc.</p>
+<p>For plotting functions:</p>
+<ul>
+<li>compare</li>
+<li>map</li>
+</ul>
+<p>For processing functions:</p>
+<ul>
+<li>get</li>
+<li>rename</li>
+<li>append</li>
+<li>filter</li>
+<li>convert</li>
+</ul>
+<p><strong>[data]</strong>: Refers to the file or column that the
+function is handling or manipulating. Examples include “arrtime”
+(arrival time), “distance” (distance traveled), “mainmode” (main
+transportation mode). Can be read with the function
+<code><a href="https://rdrr.io/r/utils/str.html" class="external-link">str()</a></code></p>
+<p><strong>{by}</strong>: This part is optional and indicates that the
+data is filtered or grouped by a specific category or factor. It serves
+as a connector between the [data] and [category] components.</p>
+<p><strong>{category}</strong>: Indicates a specific category or
+grouping factor that is used to filter or categorize the data. Examples
+include “act” (activity), “spatialcat” (spatial category), “mainmode”
+(main transportation mode).</p>
+<p><strong>{and}</strong>: This part is optional and is used as a
+connector if there are multiple categories involved in the function’s
+operation.</p>
+<p><strong>{output_type}</strong>: Indicates the type of output or
+result that the function generates. It indicates the format or form of
+the data returned by the function. Examples include “barchart,”
+“piechart,” “linechart,” “table”.</p>
+</div>
+<div class="section level4">
+<h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+</h4>
+<ul>
+<li>plot_arrtime_by_act
+<ul>
+<li>plot: Indicates that this function is used to plot data.</li>
+<li>arrtime: Refers to “Arrival Time,” which is the key aspect being
+visualized.</li>
+<li>by_act: Indicates that the plot is grouped by “Activity.”</li>
+</ul>
+</li>
+<li>plot_compare_count_by_spatialcat_barchart
+<ul>
+<li>plot: Indicates that this function is used to plot data.</li>
+<li>compare_count: Refers to comparing the count of trips.</li>
+<li>by_spatialcat: Indicates that the comparison is based on “Spatial
+Categories.”</li>
+<li>barchart: Specifies the type of plot used for visualization.</li>
+</ul>
+</li>
+<li>plot_compare_distcat_by_mainmode_barchart
+<ul>
+<li>plot: Indicates that this function is used to plot data.</li>
+<li>compare_distcat: Refers to comparing the distribution of trips based
+on “Distance Categories.”</li>
+<li>by_mainmode: Indicates that the comparison is based on different
+“Main Modes.”</li>
+<li>barchart: Specifies the type of plot used for visualization.</li>
+</ul>
+</li>
+<li>plot_compare_mainmode_barchart
+<ul>
+<li>plot: Indicates that this function is used to plot data.</li>
+<li>compare_mainmode: Refers to comparing different “Main Modes.”</li>
+<li>barchart: Specifies the type of plot used for visualization.</li>
+</ul>
+</li>
+<li>plot_compare_mainmode_sankey
+<ul>
+<li>plot: Indicates that this function is used to plot data.</li>
+<li>compare_mainmode: Refers to comparing different “Main Modes.”</li>
+<li>sankey: Specifies the type of plot used for visualization, which is
+a “Sankey Diagram.”</li>
+</ul>
+</li>
+<li>plot_compare_travelwaittime_by_mainmode
+<ul>
+<li>plot: Indicates that this function is used to plot data.</li>
+<li>compare_travelwaittime: Refers to comparing the “Travel Time” and
+“Wait Time.”</li>
+<li>by_mainmode: Indicates that the comparison is based on different
+“Main Modes.”</li>
+</ul>
+</li>
+<li>plot_compare_travelwaittime_by_mainmode_barchart
+<ul>
+<li>plot: Indicates that this function is used to plot data.</li>
+<li>compare_travelwaittime: Refers to comparing the “Travel Time” and
+“Wait Time.”</li>
+<li>by_mainmode: Indicates that the comparison is based on different
+“Main Modes.”</li>
+<li>barchart: Specifies the type of plot used for visualization.</li>
+</ul>
+</li>
+<li>plot_deptime_by_act
+<ul>
+<li>plot: Indicates that this function is used to plot data.</li>
+<li>deptime: Refers to “Departure Time,” which is the key aspect being
+visualized.</li>
+<li>by_act: Indicates that the plot is segmented or grouped by
+“Activity.”</li>
+</ul>
+</li>
+<li>plot_distance_by_mainmode_barchart
+<ul>
+<li>plot: Indicates that this function is used to plot data.</li>
+<li>distance: Refers to “Distance,” which is the key aspect being
+visualized.</li>
+<li>by_mainmode: Indicates that the plot is segmented or grouped by
+different “Main Modes.”</li>
+<li>barchart: Specifies the type of plot used for visualization.</li>
+</ul>
+</li>
+<li>plot_distance_by_spatialcat_barchart
+<ul>
+<li>plot: Indicates that this function is used to plot data.</li>
+<li>distance: Refers to “Distance,” which is the key aspect being
+visualized.</li>
+<li>by_spatialcat: Indicates that the plot is segmented or grouped by
+“Spatial Categories.”</li>
+<li>barchart: Specifies the type of plot used for visualization.</li>
+</ul>
+</li>
+<li>plot_distcat_by_mainmode_barchart
+<ul>
+<li>plot: Indicates that this function is used to plot data.</li>
+<li>distcat: Refers to “Distance Categories,” which is the key aspect
+being visualized.</li>
+<li>by_mainmode: Indicates that the plot is segmented or grouped by
+different “Main Modes.”</li>
+<li>barchart: Specifies the type of plot used for visualization.</li>
+</ul>
+</li>
+<li>plot_mainmode_barchart
+<ul>
+<li>plot: Indicates that this function is used to plot data.</li>
+<li>mainmode: Refers to “Main Modes,” which is the key aspect being
+visualized.</li>
+<li>barchart: Specifies the type of plot used for visualization.</li>
+</ul>
+</li>
+<li>plot_mainmode_piechart
+<ul>
+<li>plot: Indicates that this function is used to plot data.</li>
+<li>mainmode: Refers to “Main Modes,” which is the key aspect being
+visualized.</li>
+<li>piechart: Specifies the type of plot used for visualization.</li>
+</ul>
+</li>
+<li>plot_map_trips
+<ul>
+<li>plot: Indicates that this function is used to plot data.</li>
+<li>map_trips: Refers to “Mapping of Trips,” which is the key aspect
+being visualized.</li>
+</ul>
+</li>
+<li>process_append_distcat
+<ul>
+<li>process: Indicates that this function is used to process data.</li>
+<li>append_distcat: Refers to appending “Distance Categories” to the
+trips_table.</li>
+</ul>
+</li>
+<li>process_append_spatialcat
+<ul>
+<li>process: Indicates that this function is used to process data.</li>
+<li>append_spatialcat: Refers to appending “Spatial Categories” to the
+trips_table.</li>
+</ul>
+</li>
+<li>process_convert_table_to_sf
+<ul>
+<li>process: Indicates that this function is used to process data.</li>
+<li>convert_table_to_sf: Refers to converting the trips_table to a
+spatial data frame (sf).</li>
+</ul>
+</li>
+<li>process_convert_time
+<ul>
+<li>process: Indicates that this function is used to process data.</li>
+<li>convert_time: Refers to converting time data in the trips_table to a
+specified format.</li>
+</ul>
+</li>
+<li>process_filter_by_shape
+<ul>
+<li>process: Indicates that this function is used to process data.</li>
+<li>filter_by_shape: Refers to filtering trips in the trips_table based
+on a shape.</li>
+</ul>
+</li>
+</ul>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

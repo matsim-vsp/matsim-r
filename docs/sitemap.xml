@@ -58,6 +58,9 @@
     <loc>https://vsp.berlin/matsim-r/reference/plot_compare_mainmode_sankey.html</loc>
   </url>
   <url>
+    <loc>https://vsp.berlin/matsim-r/reference/plot_compare_score_boxplot.html</loc>
+  </url>
+  <url>
     <loc>https://vsp.berlin/matsim-r/reference/plot_compare_travelwaittime_by_mainmode.html</loc>
   </url>
   <url>
@@ -161,6 +164,9 @@
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/read_network.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/read_output_persons.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/read_output_trips.html</loc>
