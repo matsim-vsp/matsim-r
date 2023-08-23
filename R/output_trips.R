@@ -2671,13 +2671,14 @@ plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
 
   #processing
   trips_table = trips_table %>%
-    mutate(dep_time = hour(dep_time)) %>%
+    mutate(dep_time = as.numeric(sapply(strsplit(as.character(trips_table$dep_time),":"),"[[",1))) %>%
     count(dep_time,main_mode)
 
 
   #plotting
   fig = plot_ly(trips_table,x = ~dep_time,y = ~n,type = "scatter",mode = "line",linetype = ~main_mode)
-  fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group")
+  fig = fig %>% layout(yaxis = list(title = "Count of trips per departure Time"),barmode = "group",
+                       xaxis = list(title = "Time[h]"))
 
   fig
   return(fig)
@@ -2711,7 +2712,8 @@ plot_arrtime_by_act <- function(trips_table, unite_activities = character(0), un
 
 
   trips_table = trips_table %>%
-    mutate(arr_time = hour(hms(trips_table$dep_time)+hms(trips_table$trav_time))) %>%
+    mutate(arr_time = (seconds_to_period(trips_table$dep_time+trips_table$trav_time))) %>% # Seconds to period converts 24 hours to 0 and increases number of days
+    mutate(arr_time = ifelse(arr_time$day != 0,arr_time$hour+24*arr_time$day, arr_time$hour)) %>%
     mutate(end_activity_type = sapply(strsplit(end_activity_type,"_"),"[[",1)) %>%
     count(arr_time,end_activity_type)
 
@@ -2755,7 +2757,7 @@ plot_deptime_by_act <- function(trips_table, unite_activities = character(0), un
 
 
   trips_table = trips_table %>%
-    mutate(dep_time = hour(dep_time)) %>%
+    mutate(dep_time = as.numeric(sapply(strsplit(as.character(trips_table$dep_time),":"),"[[",1))) %>%
     mutate(end_activity_type = sapply(strsplit(end_activity_type,"_"),"[[",1)) %>%
     count(dep_time,end_activity_type)
 

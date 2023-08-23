@@ -4,8 +4,115 @@
 #'@import geomtextpath
 #'@import readr
 
-# ------
+##### Deprecated Functions ####
+
+#'@title Deprecated Function
 #'
+#'@description \strong{readCounts} - Loads a MATSim Counts XML-file as tibble into memory
+#'
+#' @rdname matsimr-deprecated
+#'
+#'@param file File to load. Must be an .xml file
+#'
+#'@return \strong{readCounts} - tibble with MATSim link id ("loc_id") as key
+#'
+#'@export
+readCounts <- function(file){
+
+  .Deprecated("read_counts")
+
+  message = paste("Read counts file from", file)
+  print(message)
+
+  counts.xml <- read_xml(file)
+
+  children <- xml_children(counts.xml)
+
+  result <- tibble("loc_id" = character(),
+                   "cs_id" = character(),
+                   "h" = numeric(),
+                   "val" = numeric())
+
+  for(c in children){
+
+    station <- xml_attrs(c)
+
+    volume <- xml_find_all(c, "volume") %>%
+      xml_attrs() %>%
+      purrr::map_df(~as.list(.)) %>%
+      type_convert()
+
+    length <- nrow(volume)
+
+    loc_col <- rep(station["loc_id"], length) %>% unname()
+    station_col <- rep(station["cs_id"], length) %>% unname()
+
+    counts.frame <- data.frame("cs_id" = station_col,"loc_id" = loc_col) %>% bind_cols(volume)
+    result = bind_rows(result, counts.frame)
+  }
+
+  result
+}
+
+
+#' Load a MATSim linkstats file into memory
+#'
+#' Loads a linkstats tsv file created from the LinkStats class
+#' as a dataframe into memory.
+#' Counts can be provided in any time bin.
+#' Counts can be provided for any qsim mode. The argument networkModes is used to
+#' select and filter the columns.
+#'
+#'
+#'@param file File to load. Must be an .csv or .tsv file with comma separator
+#'
+#'@param runId Id to tag columns with DTV
+#'
+#'@param sampleSize sample size of the MATSim scenario to scale DTV values
+#'
+#'@return Tibble with link stats for each qsim mode
+#'
+#'@export
+readLinkStats <- function(runId, file, sampleSize = 0.25){
+
+  if(str_detect(string = runId, pattern = "_")){
+    message <- "runId cannot contain '_'..."
+    warning(message)
+    return(NA)
+  }
+
+  message <- paste("Read in link stats from run", runId, ". Loading data from", file )
+  print(message)
+
+  linkstats <- readr::read_csv(file = file)
+
+  volumeModes <- linkstats %>%
+    select(starts_with("vol_")) %>%
+    colnames()
+
+  linkstats.1 <- linkstats %>%
+    mutate_at(volumeModes, function(x){ x * (1 / sampleSize)})
+
+  names = colnames(linkstats.1)
+  newNames = character()
+
+  for(name in names){
+
+    if(str_detect(name, pattern = "vol_")){
+      name = paste0(name, "_", runId)
+    }
+
+    newNames[length(newNames) + 1] = name
+  }
+
+  colnames(linkstats.1) = newNames
+
+  linkstats.1
+}
+
+
+#### Actual Function ####
+
 #'@title Load a MATSim Counts file into memory
 #'
 #'@description Loads a MATSim Counts XML-file as tibble into memory
@@ -16,7 +123,7 @@
 #'@return tibble with MATSim link id ("loc_id") as key
 #'
 #'@export
-readCounts <- function(file){
+read_counts <- function(file){
 
   message = paste("Read counts file from", file)
   print(message)
