@@ -4,12 +4,13 @@ Title: R library for interfacing with MATSim agent-based microsimulation model
 Version: 0.2.0
 Authors@R: c(
   person("Billy", "Charlton", email = "charlton@vsp.tu-berlin.de", role=c("aut","cre")),
-  person("Oleksandr", "Soboliev", role="aut"))
+  person("Oleksandr", "Soboliev", role="aut"),
+  person("Johanna", "Bänsch", role = "auth"))
+Maintainer: person("Billy", "Charlton", email = "charlton@vsp.tu-berlin.de")
 Description: MATSim support package for R
     MATSim <https://matsim.org> is an agent-based microsimulation package 
     for large-scale transport simulations. This package mimics the functionality 
-    of the Python matsim-tools package, and thus supports reading standard 
-    MATSim networks and soon, plans and events as well. 
+    of the Python matsim-tools package. 
  .
               Developed with support from the Technische Universität Berlin's
     VSP Transport Planning and Transport Telematics department. 
