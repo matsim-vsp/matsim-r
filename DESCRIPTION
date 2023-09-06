@@ -6,7 +6,6 @@ Authors@R: c(
   person("Billy", "Charlton", email = "charlton@vsp.tu-berlin.de", role=c("aut","cre")),
   person("Oleksandr", "Soboliev", role="aut"),
   person("Johanna", "Bänsch", role = "aut"))
-Maintainer: person("Billy", "Charlton", email = "charlton@vsp.tu-berlin.de")
 Description: MATSim support package for R
     MATSim <https://matsim.org> is an agent-based microsimulation package 
     for large-scale transport simulations. This package mimics the functionality 
