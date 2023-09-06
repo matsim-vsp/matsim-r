@@ -17,9 +17,9 @@ knitr::opts_chunk$set(
 
 #### Overview
 
-All function names are built using the same naming template. Functions start with a specific verb (e.g. read, plot, process) that describes their main usage. They are sorted into [function types] according to this usage.
+All function names are created following the same pattern. They start with a specific verb (e.g. read, plot, process) that describes their main function. They are sorted into [function types] according to this usage. This, and all following naming elements are followed by an underscore. 
 
-This, and all following naming elements are followed by an underscore. The second element is optional. It further specifies the type of action that is performed and can be used to distinguish similar functions. In the following guide this element is called [clarification]. An example for this element is [compare], which is used in all functions that compare two data sets.
+The second element is optional. It further specifies the type of action that is performed and can be used to distinguish similar functions. In the following guide this element is called [clarification]. An example for this element is [compare], which is used in all functions that compare two data sets.
 
 The next element specifies the data or the columns used. For example the column [mainmode] or the MATSim file [output_trips].
 
@@ -29,7 +29,7 @@ The last element can be used to specify the output type. This is important for t
 
 #### Template
 
-So to summarize every naming template looks similar to:
+So to summarize, every naming template looks similar to:
 
 **[function_type]\_{clarification}\_[data]\_{by}\_{category}\_{and}\_...\_{output_type}**
 
@@ -54,7 +54,7 @@ For processing functions:
 - filter
 - convert
 
-**[data]**: Refers to the file or column that the function is handling or manipulating. Examples include "arrtime" (arrival time), "distance" (distance traveled), "mainmode" (main transportation mode). Can be read with the function `str()`
+**[data]**: Refers to the file or column that the function is handling or manipulating. Examples include "arrtime" (arrival time), "distance" (distance traveled), "mainmode" (main transportation mode). Can be read with the function `str()`.
 
 **{by}**: This part is optional and indicates that the data is filtered or grouped by a specific category or factor. It serves as a connector between the [data] and [category] components.
 

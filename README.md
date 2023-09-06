@@ -18,10 +18,10 @@ You can install the package right now:
   - `install.packages("devtools")`
 
 - Then run: 
-  - `devtools::install_github("matsim-vsp/matsim-r")`
+  - `devtools::install_github("matsim-vsp/matsim-r", build_vignettes = TRUE)`
 
 To install the package from a specific branch use:
-`devtools::install_github("matsim-vsp/matsim-r",ref="{name of the branch}")`
+`devtools::install_github("matsim-vsp/matsim-r",ref="{name of the branch}", build_vignettes = TRUE)`
 
 ### Installing from .gz archive
 
@@ -40,3 +40,8 @@ Or, build yourself:
 - `devtools::document()` builds docs and NAMESPACE
 - `pkgdown::build_site()` builds the HTML docs
 
+## Vignettes
+
+The package includes several vignettes containing short guides and some examples. To access them make sure to build the vignettes during the installation process using `build_vignettes=TRUE`.
+
+`browseVignettes(package = "matsim")` will open a list of currently available vignettes.
