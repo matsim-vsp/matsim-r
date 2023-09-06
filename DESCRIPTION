@@ -5,14 +5,14 @@ Version: 0.2.0
 Authors@R: c(
   person("Billy", "Charlton", email = "charlton@vsp.tu-berlin.de", role=c("aut","cre")),
   person("Oleksandr", "Soboliev", role="aut"),
-  person("Johanna", "Bänsch", role = "auth"))
+  person("Johanna", "Bänsch", role = "aut"))
 Maintainer: person("Billy", "Charlton", email = "charlton@vsp.tu-berlin.de")
 Description: MATSim support package for R
     MATSim <https://matsim.org> is an agent-based microsimulation package 
     for large-scale transport simulations. This package mimics the functionality 
     of the Python matsim-tools package. 
  .
-              Developed with support from the Technische Universität Berlin's
+              Developed with support from the Tecbrowhnische Universität Berlin's
     VSP Transport Planning and Transport Telematics department. 
  .
               This project is under ongoing development and submissions are welcome!
