@@ -25,7 +25,7 @@ dashboard_file <- "/dashboard-1-trips.yaml"
 #' @name matsimr-deprecated
 #'
 #'
-#' @param tripsTable tible of trips_output (from \link{read_output_trips})
+#' @param tripsTable tibble of trips_output (from \link{read_output_trips})
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united_name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
@@ -165,7 +165,7 @@ plotModalSplitPieChart <- function(tripsTable,
 #' @rdname matsimr-deprecated
 #'
 #'
-#' @param tripsTable tible of trips_output (from \link{read_output_trips})
+#' @param tripsTable tibble of trips_output (from \link{read_output_trips})
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united_name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
@@ -294,7 +294,7 @@ readTripsTable <-function(input_path = ".", n_max = Inf) {
 #'
 #' @rdname matsimr-deprecated
 #'
-#' @param tripsTable tible of trips_output (from \link{read_output_trips})
+#' @param tripsTable tibble of trips_output (from \link{read_output_trips})
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united_name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
@@ -406,7 +406,7 @@ compareAverageTravelWait <- function(tripsTable1,tripsTable2, unite.columns = ch
 #'
 #' @name plotModalDistanceDistribution
 #'
-#' @param tripsTable tible of trips_output (from \link{read_output_trips})
+#' @param tripsTable tibble of trips_output (from \link{read_output_trips})
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united_name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
@@ -499,8 +499,8 @@ plotModalDistanceDistribution <- function(tripsTable, unite.columns = character(
 #'
 #' @rdname matsimr-deprecated
 #'
-#' @param tripsTable1 tible of trips_output (from \link{read_output_trips}), number of trips of this table will be extracted from number of trips of tripsTable1
-#' @param tripsTable2 tible of trips_output (from \link{read_output_trips}), from number of trips of this table number of trips of tripsTable1 will be extracted
+#' @param tripsTable1 tibble of trips_output (from \link{read_output_trips}), number of trips of this table will be extracted from number of trips of tripsTable1
+#' @param tripsTable2 tibble of trips_output (from \link{read_output_trips}), from number of trips of this table number of trips of tripsTable1 will be extracted
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united_name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
@@ -575,7 +575,7 @@ compareModalDistanceDistribution <- function(tripsTable1,tripsTable2, unite.colu
 #' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united_name(by default 'united')
 #'
 #' @rdname matsimr-deprecated
-#' @param tripsTable tible of trips_output (from \link{read_output_trips})
+#' @param tripsTable tibble of trips_output (from \link{read_output_trips})
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united_name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
@@ -631,7 +631,7 @@ plotTripDistanceByMode <- function(tripsTable,
 #'
 #' @rdname matsimr-deprecated
 #'
-#' @param tripsTable tible of trips_output (from \link{read_output_trips})
+#' @param tripsTable tibble of trips_output (from \link{read_output_trips})
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united_name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
@@ -705,7 +705,7 @@ plotTripCountByDepTime <- function(tripsTable, unite.columns = character(0), uni
 #'
 #' @rdname matsimr-deprecated
 #'
-#' @param tripsTable tible of trips_output (from \link{read_output_trips})
+#' @param tripsTable tibble of trips_output (from \link{read_output_trips})
 #' @param unite.columns vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united_name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name character string, if columns were united, you can specify name for the resulting column in chart
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
@@ -976,7 +976,7 @@ plotDepartureTimesPerTripPurpose <- function(tripsTable, unite.columns = charact
 #'
 #' @rdname matsimr-deprecated
 #'
-#' @param tripsTable tible of trips_output (from \link{read_output_trips})
+#' @param tripsTable tibble of trips_output (from \link{read_output_trips})
 #' @param shapeTable sf object(data.frame with geometries), can be received by using st_read(path_to_geographical_file)
 #' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
 #' @param dump.output.to folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored
@@ -1021,8 +1021,8 @@ plotTripDistancedByType <- function(tripsTable,shapeTable,crs,dump.output.to = m
 #'
 #' @rdname matsimr-deprecated
 #'
-#' @param tripsTable1 tible of trips_output (from \link{read_output_trips})
-#' @param tripsTable2 tible of trips_output (from \link{read_output_trips})
+#' @param tripsTable1 tibble of trips_output (from \link{read_output_trips})
+#' @param tripsTable2 tibble of trips_output (from \link{read_output_trips})
 #' @param show.onlyChanges boolean, if it is set to TRUE => sankey diagram only contains changes on axes
 #' @param unite.columns vector of character string, changes name of all transport modes in the tibble copy to united_name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name if columns were united, you can specify name for the resulting column in plot
@@ -1089,8 +1089,8 @@ plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FA
 #' Using parameter unite.columns transport modes that match PATTERN in unite.columns can be united in 1 transport mode type (by default united_name is "united")
 #' Using parameter show.onlyChanges
 #' @rdname matsimr-deprecated
-#' @param tripsTable1 tible of trips_output (from \link{read_output_trips})
-#' @param tripsTable2 tible of trips_output (from \link{read_output_trips})
+#' @param tripsTable1 tibble of trips_output (from \link{read_output_trips})
+#' @param tripsTable2 tibble of trips_output (from \link{read_output_trips})
 #' @param unite.columns vector of character string, changes name of all transport modes in the tibble copy to united_name = "united" that matches PATTERNS given in unite.columns
 #' @param united.name if columns were united, you can specify name for the resulting column in plot
 #' @param dump.output.to folder that saves and configures yaml for simwrapper. folder where png of plot is stored
@@ -2355,17 +2355,17 @@ read_output_trips <- function(input_path = ".", n_max = Inf) {
 
 #' Plot the distribution of modes as a pie chart
 #'
-#' Uses the dataframe trips_output (from \link{read_output_trips}),
-#' to plot a pie chart of the modal split using the column main_mode
+#' Takes the tibble created by \link{read_output_trips}
+#' to plot a pie chart of the modal split using the column main_mode.
 #'
 #' The function automatically detects the modes plots a pie chart.
 #' Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
-#' @param unite_modes vector of character strings,
+#' @param unite_modes optional, vector of character strings,
 #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 #' using the function (\link{process_rename_mainmodes})
-#' @param united_name character string, specifies the name of the united mode
+#' @param united_name optional, character string, specifies the name of the united mode
 #'
 #' @return pie chart plot of transport mode distribution, values given in percent
 #'
@@ -2396,7 +2396,7 @@ plot_mainmode_piechart <- function(trips_table,
 
 #' Plot the distribution of modes as a bar chart
 #'
-#' Takes the data frame trips_output (from \link{read_output_trips})
+#' Takes the tibble created by \link{read_output_trips}
 #' to plot a bar chart of the modal split using the column main_mode.
 #'
 #' The modal shares are given in percentages.
@@ -2405,13 +2405,13 @@ plot_mainmode_piechart <- function(trips_table,
 #'
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
-#' @param unite_modes vector of character strings,
+#' @param unite_modes optional, vector of character strings,
 #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 #' using the function (\link{process_rename_mainmodes})
-#' @param united_name character string, specifies the name of the united mode
-#' @param percentage boolean, by default FALSE, sets if output is given in percentage
+#' @param united_name optional, character string, specifies the name of the united mode
+#' @param percentage boolean, by default FALSE, when TRUE output is given in percentage
 #'
-#' @return Bar Chart plot of transport mode distribution, values given in percents
+#' @return Bar chart plot of transport mode distribution, values given either as count or percent
 #'
 #' @export
 plot_mainmode_barchart <- function(trips_table,
@@ -2440,20 +2440,20 @@ plot_mainmode_barchart <- function(trips_table,
 
 #' Plot travel and wait time for each mode as a bar chart
 #'
-#' Takes the data frame trips_output (from \link{read_output_trips}),
+#' Takes the tibble created by \link{read_output_trips}
 #' to plot a bar chart of travel and wait times.
 #' Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 #'
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
-#' @param unite_modes vector of character strings,
+#' @param unite_modes optional, vector of character strings,
 #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 #' using the function (\link{process_rename_mainmodes})
-#' @param united_name character string, specifies the name of the united mode
-#' @param time_format A character string indicating the desired time format for the output.
+#' @param united_name optional, character string, specifies the name of the united mode
+#' @param time_format character string, indicating the desired time format for the output.
 #' The options are "minute", "hour", or "second". The default is "minute".
 #'
-#' @return Bar Chart plot of average time spent on travel/wait
+#' @return Bar chart plot of average time spent on travel/wait
 #'
 #' @export
 plot_travelwaittime_mean_barchart <- function(trips_table,
@@ -2483,27 +2483,22 @@ plot_travelwaittime_mean_barchart <- function(trips_table,
 }
 
 
-
-
-
-
-
-#' Bar Chart with distance traveled on x-axis and number of trips on y-axis
+#' Plot bar chart with distance traveled on x-axis and number of trips on y-axis
 #'
-#' Takes the data frame trips_output (from \link{read_output_trips}) and categorizes the traveled distances into pre-defined bins
+#' Takes the tibble created by \link{read_output_trips} and categorizes the traveled distances into pre-defined bins
 #' to plot a histogram of the traveled distances. (Bins: 1000,2000,5000,10000,20000,50000,100000 (m))
 #' Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 #'
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
-#' @param unite_modes vector of character strings,
+#' @param unite_modes optional, vector of character strings,
 #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 #' using the function (\link{process_rename_mainmodes})
-#' @param united_name character string, specifies the name of the united mode
-#' @param dist_column A character string specifying the column name in the trips_table tibble that contains the distance categories.
-#' @param distances_array A numeric vector defining the distance thresholds for creating distance categories.
+#' @param united_name optional, character string, specifies the name of the united mode
+#' @param dist_column character string specifying the column name in the trips_table tibble that contains the distance categories
+#' @param distances_array numeric vector defining the distance thresholds for creating distance categories
 #'
-#' @return Plotly bar Chart of count of trips among distance travelled
+#' @return Plotly bar Chart of count of trips among distance traveled
 #'
 #' @export
 plot_distcat_by_mainmode_barchart <- function(trips_table,
@@ -2534,21 +2529,21 @@ plot_distcat_by_mainmode_barchart <- function(trips_table,
 
 }
 
-#' Bar chart with average distance traveled for each mode on x-axis and number of trips on y-axis
+#' Plot bar chart with average distance traveled for each mode on x-axis and number of trips on y-axis
 #'
-#' Takes the data frame trips_output (from \link{read_output_trips}),
+#' Takes the tibble created by \link{read_output_trips}
 #' to plot a bar chart of the average distance traveled for each main mode,
 #' Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 #'
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
-#' @param unite_modes vector of character strings,
+#' @param unite_modes optional, vector of character strings,
 #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 #' using the function (\link{process_rename_mainmodes})
-#' @param united_name character string, specifies the name of the united mode
-#' @param euclidean Logical value indicating whether to calculate the average as euclidean distance or as travel distance. Default is FALSE, which calculates the average traveled distance.
+#' @param united_name optional, character string, specifies the name of the united mode
+#' @param euclidean optional, boolean indicating whether to calculate the average as euclidean distance or as travel distance. Default is FALSE, which calculates the average traveled distance.
 #'
-#' @return Bar Chart plot of distance traveled per mode
+#' @return Bar chart plot of distance traveled per mode
 #'
 #' @export
 plot_distance_by_mainmode_barchart <- function(trips_table,
@@ -2584,10 +2579,19 @@ plot_distance_by_mainmode_barchart <- function(trips_table,
 }
 
 
-#' Plots distribution of every type of trip(inside, outside, origin and destinating) as a pie chart
+#' Plots distribution of trips by spatial type as a pie chart
+#'
+#' Takes the tibble created by \link{read_output_trips} and an sf object (can be created using the function st_read())
+#' to first use the function \link{process_append_spatialcat} to categorize all trips into the following spatial categories:
+#' - inside: trips that start and end inside the given shape
+#' - originating: trips that start inside the shape and end outside of the shape
+#' - destinating: trips that end inside the shape and start outside of the shape
+#' - outside: trips that start and end outside of the shape
+#'
+#' In a next step the results are summarized in a pie chart.
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
-#' @param shape_Table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
+#' @param shape_table sf object (data frame with geometries), can be created using st_read(), is used to categorize the trips.
 #' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates,
 #' can be found in network file from output directory of MATSim simulation
 #'
@@ -2614,19 +2618,24 @@ plot_spatialtype_by_shape_piechart <- function(trips_table, shape_table, crs) {
 
 }
 
-#' Bar Chart with tripType on x-axis and travelled distance on y-axis
+#' Plots a bar chart with spatial type on x-axis and traveled distance on y-axis
 #'
-#' Takes Table trips_output (from \link{read_output_trips}),
-#' to plot bar chart with with values that represent
-#' travelled distance of each tripType related to the shapeTable
+#' Takes the tibble created by \link{read_output_trips} and an sf object (can be created using the function st_read())
+#' to first use the function \link{process_append_spatialcat} to categorize all trips into the following spatial categories:
+#' - inside: trips that start and end inside the given shape
+#' - originating: trips that start inside the shape and end outside of the shape
+#' - destinating: trips that end inside the shape and start outside of the shape
+#' - outside: trips that start and end outside of the shape
 #'
+#' In a next step a bar chart of the sum of traveled distance for each trip type is created.
 #'
-#' @param trips_table tible of trips_output (from \link{read_output_trips})
-#' @param shape_Table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
-#' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
-#' @param euclidean Logical value indicating whether to calculate the average as euclidean distance or as travel distance. Default is FALSE, which calculates the average traveled distance.
+#' @param trips_table tibble of trips_output (from \link{read_output_trips})
+#' @param shape_table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
+#' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates,
+#' can be found in network file from output directory of MATSim simulation
+#' @param euclidean boolean indicating whether to calculate the average as euclidean distance or as travel distance. Default is FALSE, which calculates the average traveled distance.
 #'
-#' @return Bar Chart plot of distance traveled by spatial type
+#' @return Bar chart plot of distance traveled by spatial type
 #'
 #' @export
 plot_distance_by_spatialcat_barchart <- function(trips_table, shape_table, crs, euclidean = FALSE) {
@@ -2634,27 +2643,27 @@ plot_distance_by_spatialcat_barchart <- function(trips_table, shape_table, crs, 
   #processing
 
   trips_table<- process_append_spatialcat(trips_table,shape_table, crs = crs)
-  travelled = trips_table %>% group_by(spatial_category) %>% summarize(travelled = sum(traveled_distance)/1000)
+  traveled = trips_table %>% group_by(spatial_category) %>% summarize(traveled = sum(traveled_distance)/1000)
 
   #For plotting
-  fig = plot_ly(data = travelled,x = ~spatial_category,y = ~travelled,type = 'bar',name = "Distance travelled by trip Type")
-  fig = fig %>% layout(yaxis = list(title = "Distance travelled (in kms)"),barmode = "group")
+  fig = plot_ly(data = traveled,x = ~spatial_category,y = ~traveled,type = 'bar',name = "Distance traveled by trip type")
+  fig = fig %>% layout(yaxis = list(title = "Distance traveled (in kms)"),barmode = "group")
   fig
   return(fig)
 }
 
-#' Line plot with departure time  on x-axis and number of trips on y-axis
+#' Creates a line plot with departure time on x-axis and number of trips on y-axis
 #'
-#' Takes data frame trips_output (from \link{read_output_trips}),
+#' Takes the tibble created by \link{read_output_trips}
 #' to create a line plot of the number of trips for a specific departure time by main_mode
 #' Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 #'
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
-#' @param unite_modes vector of character strings,
+#' @param unite_modes optional, vector of character strings,
 #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 #' using the function (\link{process_rename_mainmodes})
-#' @param united_name character string, specifies the name of the united mode
+#' @param united_name optional, character string, specifies the name of the united mode
 #' @return Line plot of trips count by departure time per mode
 #'
 #' @export
@@ -2685,17 +2694,18 @@ plot_trips_count_by_deptime_and_mainmode_linechart <- function(trips_table,
 }
 
 
-#' Plot Arrival Time by Activity
+#' Create a line plot of arrival time by activity
 #'
-#' \strong{plot_arrtime_by_act} - Takes Table trips_output (from \link{read_output_trips}()),
-#' to make line plot with with values that represent
+#' Takes the tibble created by \link{read_output_trips}
+#' to create a line plot of the
 #' count of destination activities for a specific arrival time
-#' Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united_name(by default 'united')
+#' Using the parameter unite_activities, specific activities can be renamed into one with the name specified with united_name (by default 'united')
 #'
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
-#' @param unite_activities vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united_name = "united" that matches PATTERNS given in unite.columns
-#' @param united_name character string, if columns were united, you can specify name for the resulting column in plot
+#' @param unite_activities optional, vector of character strings,
+#' changes names of chosen categories to a new specified name (i.e. school and university to education)
+#' @param united_name optional, character string, specifies the new name of the united activities
 #'
 #' @return A plotly object representing the line plot of arrival time by activity.
 #'
@@ -2734,14 +2744,17 @@ plot_arrtime_by_act <- function(trips_table, unite_activities = character(0), un
 }
 
 
-#' Plot Departure Time by Activity
+#' Create a line plot of departure time by activity
 #'
-#' The \code{plot_deptime_by_act} function generates a line plot to visualize the departure time of trips by activity in a given trips_table tibble.
-#' It provides insights into the number of trips starting at different times for each activity.
+#' Takes the tibble created by \link{read_output_trips}
+#' to create a line plot of the
+#' count of destination activities for a specific departure time
+#' Using the parameter unite_activities, specific activities can be renamed into one with the name specified with united_name (by default 'united')
 #'
-#' @param tripsTable tibble of trips_output (from \link{read_output_trips})
-#' @param unite_activities vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united_name = "united" that matches PATTERNS given in unite_columns
-#' @param united_name character string, if columns were united, you can specify name for the resulting column in plot
+#' @param trips_table tibble of trips_output (from \link{read_output_trips})
+#' @param unite_activities optional, vector of character strings,
+#' changes names of chosen categories to a new specified name (i.e. school and university to education)
+#' @param united_name optional, character string, specifies the new name of the united activities
 #'
 #' @return A plotly object representing the line plot of departure time by activity.
 #'
@@ -2778,23 +2791,23 @@ plot_deptime_by_act <- function(trips_table, unite_activities = character(0), un
 
 ###### Compare ######
 
-#' Bar chart comparing distance traveled on x-axis and number of trips on y-axis for two different runs
+#' Create a bar chart comparing distance traveled on x-axis and number of trips on y-axis for two different runs
 
-#' Takes two data frames (from \link{read_output_trips}), categorizes the traveled distances into pre-defined bins
+#' Takes two tibbles from \link{read_output_trips}, categorizes the traveled distances into pre-defined bins
 #' and plots the difference in number of trips for each bin. (Bins: 1000,2000,5000,10000,20000,50000,100000 (m))
 #' Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 #'
 #'
-#' @param trips_table1 tibble of trips_output (from \link{read_output_trips}), number of trips of this table will be extracted from number of trips of tripsTable1
-#' @param trips_table2 tibble of trips_output (from \link{read_output_trips}), from number of trips of this table number of trips of tripsTable1 will be extracted
-#' @param unite_modes vector of character strings,
+#' @param trips_table1 tibble of trips_output (from \link{read_output_trips}), number of trips of this table will be extracted from number of trips of trips_table1
+#' @param trips_table2 tibble of trips_output (from \link{read_output_trips}), from number of trips of this table number of trips of trips_table1 will be extracted
+#' @param unite_modes optional, vector of character strings,
 #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 #' using the function (\link{process_rename_mainmodes})
-#' @param united_name character string, specifies the name of the united mode
-#' @param dist_column A character string specifying the column name in the trips_table tibble that contains the distance categories.
-#' @param distances_array A numeric vector defining the distance thresholds for creating distance categories.
+#' @param united_name optional, character string, specifies the name of the united mode
+#' @param dist_column character string specifying the column name in the trips_table tibble that contains the distance categories.
+#' @param distances_array numeric vector defining the distance thresholds for creating distance categories.
 #'
-#' @return Bar Chart plot of count of trips among distance travelled
+#' @return Bar chart plot of count of trips for each distance traveled
 #'
 #' @export
 plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
@@ -2845,20 +2858,18 @@ plot_compare_distcat_by_mainmode_barchart <- function(trips_table1,trips_table2,
 
 #' Plot bar chart of changes in modal split
 #'
-#' Takes two data frames (from \link{read_output_trips}), calculates the
+#' Takes two tibbles from \link{read_output_trips}, calculates the
 #' changes in mode shares and plots them as a bar chart
 #' Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 #'
-#'
-#'
 #' @param trips_table1 tibble of trips_output (from \link{read_output_trips})
 #' @param trips_table2 tibble of trips_output (from \link{read_output_trips})
-#' @param unite_modes vector of character strings,
+#' @param unite_modes optional, vector of character strings,
 #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 #' using the function (\link{process_rename_mainmodes})
-#' @param united_name character string, specifies the name of the united mode
+#' @param united_name optional, character string, specifies the name of the united mode
 #'
-#' @return plots bar chart of changes in modal split
+#' @return Bar chart of changes in modal split
 #'
 #' @export
 plot_compare_mainmode_barchart <- function(trips_table1, trips_table2,
@@ -2889,17 +2900,17 @@ plot_compare_mainmode_barchart <- function(trips_table1, trips_table2,
 
 #' Plot alluvial/sankey diagram of transport mode changes
 #'
-#' Takes two data frames (from \link{read_output_trips}) and compares the mode choice for each agent and summarizes the results, showing the modal shift.
+#' Takes two tibbles from \link{read_output_trips} and compares the mode choice for each agent and summarizes the results, showing the modal shift.
 #' Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 #' The parameter show.onlyChanges allows the visualization of only the mode shift (excluding the trips that do not change mode). Standard value is FALSE.
 #'
 #' @param trips_table1 tibble of trips_output (from read_output_trips())
 #' @param trips_table2 tibble of trips_output (from read_output_trips())
 #' @param show_onlychanges boolean, if it is set to TRUE the sankey diagram only shows the mode shift
-#' @param unite_modes vector of character strings,
+#' @param unite_modes optional, vector of character strings,
 #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 #' using the function (\link{process_rename_mainmodes})
-#' @param united_name character string, specifies the name of the united mode
+#' @param united_name optional, character string, specifies the name of the united mode
 #'
 #' @return Alluvial diagram that represents changes in transport mode distribution
 #'
@@ -2974,20 +2985,21 @@ plot_compare_mainmode_sankey <- function(trips_table1, trips_table2,
   return(fig)
 }
 
-#' Comparison bar chart with main_mode on x-axis and average travel/wait time on y-axis
+#' Create comparison bar chart with main_mode on x-axis and average travel/wait time on y-axis
 #'
-#' Takes the data frame trips_output (from \link{read_output_trips}),
-#' to plot a bar chart of the traveling/waiting time
+#' Takes two tibbles from \link{read_output_trips},
+#' to plot a comparison bar chart of the traveling/waiting time.
 #' Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 #'
 #'
 #' @param trips_table1 tibble of trips_output (from \link{read_output_trips})
 #' @param trips_table2 tibble of trips_output (from \link{read_output_trips})
-#' @param unite_modes vector of character strings,
+#' @param unite_modes optional, vector of character strings,
 #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 #' using the function (\link{process_rename_mainmodes})
-#' @param united_name character string, specifies the name of the united mode
-#' @param time_format character string, defines time format to be used(takes "hour", "minute", "second")
+#' @param united_name optional, character string, specifies the name of the united mode
+#' @param time_format character string, indicating the desired time format for the output.
+#' The options are "minute", "hour", or "second". The default is "minute".
 #'
 #' @return Bar chart plot of average travel/wait time
 #'
@@ -3044,21 +3056,18 @@ plot_compare_travelwaittime_by_mainmode_barchart <- function(trips_table1,trips_
 
 
 
-#' Plot Comparison of Count by Spatial Category (Bar Chart)
+#' Plot comparison bar chart of count by spatial category
 #'
-#' The \code{plot_compare_count_by_spatialcat_barchart}
-#' function generates a bar chart to compare the count of trips between two trips_table
-#' tibbles across different spatial categories.
-#' It provides insights into the distribution of trips across spatial categories for each table.
+#' Takes two tibbles from \link{read_output_trips} to
+#' generate a bar chart comparing the number of trips across different spatial categories.
 #'
-#'
-#' @param trips_table1 tible of trips_output (from \link{read_output_trips})
-#' @param trips_table2 tible of trips_output (from \link{read_output_trips})
-#' @param shape_table A spatial shapefile or spatial polygons data frame used to create the spatial categories.
+#' @param trips_table1 tibble of trips_output (from \link{read_output_trips})
+#' @param trips_table2 tibble of trips_output (from \link{read_output_trips})
+#' @param shape_table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
 #' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates,
 #' can be found in network file from output directory of MATSim simulation
 #'
-#' @return A plotly object representing the bar chart of the comparison of count by spatial category.
+#' @return Bar chart comparing the number of trips by spatial category.
 #'
 #' @export
 plot_compare_count_by_spatialcat_barchart <- function(trips_table1,trips_table2, shape_table ,crs) {
@@ -3082,20 +3091,21 @@ plot_compare_count_by_spatialcat_barchart <- function(trips_table1,trips_table2,
 
 }
 
-#' Bar Chart comparing two runs with main_mode on x-axis and average travel/wait time on y-axis
+#' Creates comparison bar chart with main_mode on x-axis and average travel/wait time on y-axis
 #'
-#' Takes two data frames (from \link{read_output_trips}),
+#' Takes two tibbles from \link{read_output_trips}
 #' to plot a comparison bar chart of travel and wait times.
 #' Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 #'
 #'
 #' @param trips_table1 tibble of trips_output (from \link{read_output_trips})
 #' @param trips_table2 tibble of trips_output (from \link{read_output_trips})
-#' @param unite_modes vector of character strings,
+#' @param unite_modes optional, vector of character strings,
 #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 #' using the function (\link{process_rename_mainmodes})
-#' @param united_name character string, specifies the name of the united mode#'
-#' @param time_format character string, defines time format to be used(takes "hour", "minute", "second")
+#' @param united_name optional, character string, specifies the name of the united mode
+#' @param time_format character string, indicating the desired time format for the output.
+#' The options are "minute", "hour", or "second". The default is "minute".
 #'
 #' @return Bar chart plot comparing average time spent on travel/wait of two runs
 #'
@@ -3156,14 +3166,14 @@ plot_compare_travelwaittime_by_mainmode <- function(trips_table1,trips_table2,
 
 
 
-#' Plots start and end coordinates of the given trips table on an osm map
+#' Plot start and end coordinates of the given trips table on an osm map
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
 #'
-#' @param shape_table spatial
-#' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates, can be found in network file from output directory of MATSim simulation
-#' @param shape_table A spatial shapefile or spatial polygons data frame used as a background. By default NULL.
-#' @param optimized bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot
+#' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates,
+#' can be found in network file from output directory of MATSim simulation
+#' @param shape_table optional, sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips, used as a background, default is NULL
+#' @param optimized optional, boolean, by default FALSE and creates interactive plot using leaflet, if TRUE uses ggplot
 #'
 #'
 #' @return leaflet/ggplot plot with trips start-, end- points
@@ -3299,7 +3309,7 @@ plot_map_trips <- function(trips_table, crs,optimized = FALSE,
 
 
 
-#' Plots every type of trips(inside, outside, origin and destinating) on map
+#' Plot every spatial trip type (inside, outside, origin and destinating) on map
 #'
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
@@ -3311,7 +3321,7 @@ plot_map_trips <- function(trips_table, crs,optimized = FALSE,
 #' @param optimized bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot
 #'
 #' @param table tibble of output_trips (from read_output_trips())
-#' @param shape_Table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
+#' @param shape_table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
 #' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system
 #'  of the trip coordinates, can be found in network file from output directory of MATSim simulation
 #' @param optimized bool, by default FALSE and gives interactive plot using leaflet, if TRUE creates image with ggplot
@@ -3544,13 +3554,11 @@ plot_map_trips_by_spatialcat <- function(trips_table, shape_table,
 #####Processing#####
 
 
-#' Replace Matching Categories of main_mode with United Name in Tibble
+#' Replace two or more modes in the column main_mode with a new joint mode
 #'
-#' The process_rename_mainmodes function takes a tibble, trips_table,
-#' as input and replaces all occurrences in column main_mode of categories
-#' that match a given template with another name provided in united_name.
-#' The function provides the flexibility to specify multiple category templates
-#' to be united into a single name.
+#' The function process_rename_mainmodes takes the tibble trips_table
+#' as input and replaces all occurrences of the specified modes in column main_mode
+#' with another name provided in united_name.
 #'
 #' @param trips_table tibble of output_trips (from \link{\code{read_output_trips}})
 #' @param unite_modes vector of character strings,
@@ -3570,17 +3578,16 @@ process_rename_mainmodes<-function(trips_table,
 }
 
 
-#' Replace Matching Categories of any column with United Name in Tibble
+#' Replace two or more named categories of any column with a new joint category name
 #'
-#' The \code{process_rename_category} function takes a tibble, trips_table,
-#' as input and replaces all occurrences of categories
-#' that match a given template with another name provided in united_name.
-#' The function provides the flexibility to specify multiple category templates
-#' to be united into a single name.
+#' The function process_rename_category takes a tibble
+#' as input and replaces all occurrences of the specified categories in a column
+#' with another name provided in united_name.
 #'
-#' @param trips_table tible of output_trips (from \link{\code{read_output_trips}})
-#' @param unite_template vector of character string, representing pattern to match categories
-#' @param united_name character string, to represent new category for all occurrences matched unite_modes
+#' @param trips_table tibble of output_trips (from \link{\code{read_output_trips}})
+#' @param unite_template vector of character strings,
+#' changes names of chosen categories to a new specified name (i.e. drtNorth and drtSouth to drt)
+#' @param united_name character string, specifies the name of the united categories
 #' @param column tibble column name, which will be used in occurrences renaming
 #'
 #' @return modified trips table tibble
@@ -3598,16 +3605,16 @@ process_rename_category<-function(trips_table,
 
 #' Calculates main mode distribution
 #'
-#' The process_get_mainmode_distribution function calculates the distribution of main modes in a given trips_table.\cr
+#' The function process_get_mainmode_distribution calculates the distribution of main modes in a given trips_table.\cr
 #' It provides insights into the frequency or percentage of each main mode within the dataset.
 #'
-#' By default, the function counts the occurrences of each main mode in the trips_table tibble and returns the counts for each unique main mode. \cr
-#' Alternatively, when the percentage parameter is set to TRUE, the function normalizes the counts to represent the percentage distribution of each main mode within the dataset.
+#' By default the function counts the occurrences of each unique main mode in the trips_table tibble and returns the counts. \cr
+#' Alternatively, when the percentage parameter is set to TRUE, the function normalizes the counts to represent the percentage distribution of each main mode within the data set.
 #'
-#' @param trips_table tible of output_trips (from \link{read_output_trips})
-#' @param percentage boolean, by default FALSE, sets if output should be given in percentage
+#' @param trips_table tibble of output_trips (from \link{read_output_trips})
+#' @param percentage boolean, by default FALSE, sets if output should be given as a percentage
 #'
-#' @return tibble that provides the distribution of main modes in the input trips_table.
+#' @return tibble of the distribution of main modes in the input trips_table.
 #'
 #' @export
 process_get_mainmode_distribution<-function(trips_table,percentage = FALSE){
@@ -3622,14 +3629,17 @@ process_get_mainmode_distribution<-function(trips_table,percentage = FALSE){
 }
 
 
-#' Get Travel Distance Distribution by Main Mode
+#' Calculates the travel distance distribution by main mode
 #'
-#' The \code{process_get_travdistance_distribution} function calculates the distribution of travel distances based on main modes in a given trips_table tibble. It provides insights into the average distance traveled for each main mode.
+#' The function process_get_travdistance_distribution calculates the distribution of travel distances based on main modes in a given trips_table tibble.
+#' It provides insights into the average distance traveled for each main mode.
+#'
+#' The distance can also be calculated by using the euclidean distance between origin and destination. To use the euclidean distance set the parameter euclidean as TRUE.
 #'
 #' @param trips_table A tibble of output_trips (from \link{\code{read_output_trips}})
-#' @param euclidean Logical value indicating whether to calculate the average as euclidean distance or as travel distance. Default is FALSE, which calculates the average traveled distance.
+#' @param euclidean boolean, standard value FALSE, if set to TRUE uses euclidean distance.
 #'
-#' @return A tibble containing the main_mode column representing unique main modes and the avg_dist column representing the average travel distance for each main mode.
+#' @return tibble with two columns, main_mode containing the mode and avg_dist containing the average distance traveled by that mode
 #'
 #' @export
 process_get_travdistance_distribution<-function(trips_table,euclidean = FALSE){
@@ -3642,14 +3652,14 @@ process_get_travdistance_distribution<-function(trips_table,euclidean = FALSE){
 }
 
 
-#' Get Travel and Wait Time by Main Mode
+#' Calculates travel and wait time by main mode
 #'
-#' The \code{process_get_travelwaittime_by_mainmode} function calculates the average travel time and average wait time for each main mode in a given trips_table tibble.
+#' The function process_get_travelwaittime_by_mainmode calculates the average travel time and average wait time for each main mode in a given trips_table tibble.
 #'
 #' @param trips_table A tibble of output_trips (from \link{\code{read_output_trips}})
 #' @param time_format A character string indicating the desired time format for the output. The options are "minute", "hour", or "second". The default is "minute".
 #'
-#' @return A tibble containing the main_mode column representing unique main modes, trav_time_avg column representing the average travel time for each main mode, and wait_time_avg column representing the average wait time for each main mode.
+#' @return A tibble containing the columns main_mode containing the main modes, trav_time_avg containing the average travel time for each main mode, and the column wait_time_avg containing the average wait time for each main mode.
 #'
 #' @export
 process_get_travelwaittime_by_mainmode<-function(trips_table,
@@ -3672,13 +3682,13 @@ process_get_travelwaittime_by_mainmode<-function(trips_table,
 #' Adds additional \strong{dist_cat} column based on the \strong{distances_array} parameter
 #'
 #' Categorizes each trip into a distance bin based on traveled distance.
-#' E.g. distance traveled is 1500, distances array is (1000,2000), then the category is "1000-2000".
+#' E.g. the distance traveled is 1500, distances_array is (1000,2000), then the category is "1000-2000".
 #'
 #' @param trips_table tibble of output_trips (from \link{read_output_trips})
-#' @param distances_array numeric vector, represents segments for distance categories ordered (in meters),
+#' @param distances_array numeric vector, contains ordered distance segments (in meters),
 #' standard value: c(1000,2000,5000,10000,20000,50000,100000)
 #'
-#' @return trips table with added the added column dist_cat
+#' @return tibble, containing the added column dist_cat
 #' @export
 process_append_distcat <- function(trips_table,distances_array = c(1000,2000,5000,10000,20000,50000,100000)){
 
@@ -3703,19 +3713,19 @@ process_append_distcat <- function(trips_table,distances_array = c(1000,2000,500
   return(result_table)
 }
 
-#' Converts time column specified in \strong{time_column} to numeric representation of minutes, hours or seconds
+#' Converts a time column to a numeric representation of minutes, hours or seconds
 #'
-#' Default output_trips table time columns(\strong{dep_time}, \strong{trav_time}, \strong{wait_time}) are in 'hms' format.
-#' To convert this type to numeric, specify \strong{time_column} to be converted,
-#' and the unit \strong{time_format}. Acceptable units are "hour", "minute" and "second".
+#' The default output_trips time columns(\strong{dep_time}, \strong{trav_time}, \strong{wait_time}) are in 'hms' format.
+#' To convert this type to numeric, specify \strong{time_column} to be converted as well as the \strong{time_format}.
+#' Acceptable units are "hour", "minute" and "second".
 #'
 #' @param trips_table tibble of output_trips (from \link{read_output_trips})
 #'
-#' @param time_format char, defines time unit to be used ("hour", "minute", "second")
+#' @param time_format character, defines time unit to be used ("hour", "minute", "second")
 #'
-#' @param time_column char, name of the column from table to be converted (\strong{dep_time}, \strong{trav_time}, \strong{wait_time})
+#' @param time_column character, name of the column to be converted (\strong{dep_time}, \strong{trav_time}, \strong{wait_time})
 #'
-#' @return tibble, containing column with specified time_format
+#' @return tibble, containing the converted column with specified time format
 #'
 #' @export
 process_convert_time <- function(trips_table,time_format = "hour",time_column = "dep_time"){
@@ -3741,9 +3751,9 @@ process_convert_time <- function(trips_table,time_format = "hour",time_column = 
 ######Spatial######
 
 
-#' Filters trips_table(from ,\link{read_output_trips}) depending by location using a shapefile
+#' Filters trips_table(from \link{read_output_trips}) by location using a shapefile
 #'
-#' Uses output_trips and an sf object (can be created using the function st_read()),
+#' takes output_trips and an sf object (can be created using the function st_read()),
 #' transforms both objects to match a mutual coordinate system (crs)
 #' and filters the trips from output_trips depending on their spatial type:\cr
 #' if spatial_type="inside" returns a table that contains trips inside given shape\cr
@@ -3753,12 +3763,12 @@ process_convert_time <- function(trips_table,time_format = "hour",time_column = 
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
 #'
-#' @param shape_Table sf object(data frame with geometries), can be created using st_read()
+#' @param shape_table sf object(data frame with geometries), can be created using st_read()
 #' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system
 #'  of the trip coordinates, can be found in network file from output directory of MATSim simulation
-#' @param spatial_type bool, defines trips to conclude (see description)
+#' @param spatial_type boolean, defines trips to conclude (see description)
 #'
-#' @return tibble, with filtered trips depending on shapeTable and spatial types (see description)
+#' @return tibble, with filtered trips depending on shape_table and spatial types (see description)
 #'
 #' @export
 process_filter_by_shape <- function(trips_table,
@@ -3832,11 +3842,11 @@ process_filter_by_shape <- function(trips_table,
 #' destinating: trips that end inside the shape and start outside of the shape
 #' outside: trips that start and end outside of the shape
 #'
-#' Please be aware that this \link{process_filter_by_shape} currently only works, when one geometry is loaded.)
+#' Please be aware that this \link{process_filter_by_shape} only works when a geometry is loaded.
 #'
 #' @param trips_table tibble of output_trips (from read_output_trips())
 #'
-#' @param shape_Table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
+#' @param shape_table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
 #' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system
 #'  of the trip coordinates, can be found in network file from output directory of MATSim simulation
 #'
@@ -3963,7 +3973,7 @@ process_get_od_matrix<- function(trips_table,
 
   #if tripstable given as folder/file
   if(sum(class(trips_table) %in% c("tbl_df","tbl","data.frame"))<1){
-    tripsTable <- read_output_trips(trips_table)
+    trips_table <- read_output_trips(trips_table)
   }
 
   sfTable <- transformToSf(trips_table,crs,geometry.type = st_point())
