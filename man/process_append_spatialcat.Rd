@@ -25,5 +25,5 @@ destinating: trips that end inside the shape and start outside of the shape
 outside: trips that start and end outside of the shape
 }
 \details{
-Please be aware that this \link{process_filter_by_shape} currently only works, when one geometry is loaded.)
+Please be aware that this \link{process_filter_by_shape} only works when a geometry is loaded.
 }

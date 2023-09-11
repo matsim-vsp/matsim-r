@@ -12,9 +12,9 @@ plot_compare_count_by_spatialcat_barchart(
 )
 }
 \arguments{
-\item{trips_table1}{tible of trips_output (from \link{read_output_trips})}
+\item{trips_table1}{tibble of trips_output (from \link{read_output_trips})}
 
-\item{trips_table2}{tible of trips_output (from \link{read_output_trips})}
+\item{trips_table2}{tibble of trips_output (from \link{read_output_trips})}
 
 \item{shape_table}{A spatial shapefile or spatial polygons data frame used to create the spatial categories.}
 
