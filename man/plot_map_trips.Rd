@@ -11,7 +11,7 @@ plot_map_trips(trips_table, crs, optimized = FALSE, shape_table = NULL)
 
 \item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates, can be found in network file from output directory of MATSim simulation}
 
-\item{optimized}{bool, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot}
+\item{optimized}{boolean, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot}
 
 \item{shape_table}{A spatial shapefile or spatial polygons data frame used as a background. By default NULL.}
 }

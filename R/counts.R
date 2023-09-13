@@ -10,9 +10,10 @@
 #'
 #'@description \strong{readCounts} - Loads a MATSim Counts XML-file as tibble into memory
 #'
-#' @rdname matsimr-deprecated
+#'@rdname matsimr-deprecated
 #'
 #'@param file File to load. Must be an .xml file
+#'@param output.name test
 #'
 #'@return \strong{readCounts} - tibble with MATSim link id ("loc_id") as key
 #'
@@ -888,6 +889,7 @@ plot_count_scatterplot <- function(joined_frame, ll = ~ x * 0.8 - 200, ul = ~ x 
 #'
 #' @param base base for log
 #' @param thr threshold from which data is scaled to log
+#' @param scale scale
 #'
 #' @export
 symlog_trans <- function(base = 10, thr = 1, scale = 1){

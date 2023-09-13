@@ -12,6 +12,8 @@ symlog_trans(base = 10, thr = 1, scale = 1)
 \item{base}{base for log}
 
 \item{thr}{threshold from which data is scaled to log}
+
+\item{scale}{scale}
 }
 \description{
 A function to create symlog scaling for a plot

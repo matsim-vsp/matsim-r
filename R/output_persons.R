@@ -171,7 +171,7 @@ read_output_persons <- function(input_path = ".",  n_max = Inf) {
 #'
 #' @export
 #'
-plot_compare_score_boxplot <- function(personTibble_base, personTibble_policy){
+plot_compare_score_boxplot <- function(person_tibble1, person_tibble2){
 
   joined <- inner_join(personTibble_base, personTibble_policy, by = "person", suffix = c("_base", "_policy")) %>%
     select(person,

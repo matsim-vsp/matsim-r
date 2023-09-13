@@ -2587,7 +2587,7 @@ plot_distance_by_mainmode_barchart <- function(trips_table,
 #' Plots distribution of every type of trip(inside, outside, origin and destinating) as a pie chart
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
-#' @param shape_Table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
+#' @param shape_table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
 #' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates,
 #' can be found in network file from output directory of MATSim simulation
 #'
@@ -2622,7 +2622,7 @@ plot_spatialtype_by_shape_piechart <- function(trips_table, shape_table, crs) {
 #'
 #'
 #' @param trips_table tibble of trips_output (from \link{read_output_trips})
-#' @param shape_Table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
+#' @param shape_table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
 #' @param crs numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation
 #' @param euclidean Logical value indicating whether to calculate the average as euclidean distance or as travel distance. Default is FALSE, which calculates the average traveled distance.
 #'
@@ -2739,7 +2739,7 @@ plot_arrtime_by_act <- function(trips_table, unite_activities = character(0), un
 #' The \code{plot_deptime_by_act} function generates a line plot to visualize the departure time of trips by activity in a given trips_table tibble.
 #' It provides insights into the number of trips starting at different times for each activity.
 #'
-#' @param tripsTable tibble of trips_output (from \link{read_output_trips})
+#' @param trips_table tibble of trips_output (from \link{read_output_trips})
 #' @param unite_activities vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united_name = "united" that matches PATTERNS given in unite_columns
 #' @param united_name character string, if columns were united, you can specify name for the resulting column in plot
 #'
@@ -3310,8 +3310,7 @@ plot_map_trips <- function(trips_table, crs,optimized = FALSE,
 #'
 #' @param optimized boolean, by default FALSE and gives interactive plot using leaflet, if TRUE using image with ggplot
 #'
-#' @param table tibble of output_trips (from read_output_trips())
-#' @param shape_Table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
+#' @param shape_table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
 #' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system
 #'  of the trip coordinates, can be found in network file from output directory of MATSim simulation
 #' @param optimized boolean, by default FALSE and gives interactive plot using leaflet, if TRUE creates image with ggplot
@@ -3550,7 +3549,7 @@ plot_map_trips_by_spatialcat <- function(trips_table, shape_table,
 #' as input and replaces all occurrences of the specified modes in column main_mode
 #' with another name provided in united_name.
 #'
-#' @param trips_table tibble of output_trips (from \link{\code{read_output_trips}})
+#' @param trips_table tibble of output_trips (from \code{\link{read_output_trips}})
 #' @param unite_modes vector of character strings,
 #' changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt)
 #' @param united_name character string, specifies the name of the united mode
@@ -3574,7 +3573,7 @@ process_rename_mainmodes<-function(trips_table,
 #' as input and replaces all occurrences of the specified categories in a column
 #' with another name provided in united_name.
 #'
-#' @param trips_table tibble of output_trips (from \link{\code{read_output_trips}})
+#' @param trips_table tibble of output_trips (from \code{\link{read_output_trips}})
 #' @param unite_template vector of character strings, changes names of chosen categories to a new specified name (i.e. drtNorth and drtSouth to drt)
 #' @param united_name character string, specifies the name of the united categories
 #' @param column tibble column name, which will be used in occurrences renaming
@@ -3600,7 +3599,7 @@ process_rename_category<-function(trips_table,
 #' By default, the function counts the occurrences of each unique main mode in the trips_table tibble and returns the counts for each unique main mode. \cr
 #' Alternatively, when the percentage parameter is set to TRUE, the function normalizes the counts to represent the percentage distribution of each main mode within the data set.
 #'
-#' @param trips_table tibble of output_trips (from \link{read_output_trips})
+#' @param trips_table tibble of output_trips (from \code{\link{read_output_trips}})
 #' @param percentage boolean, by default FALSE, sets if output should be given as a percentage
 #'
 #' @return tibble of the distribution of main modes in the input trips_table.
@@ -3624,7 +3623,7 @@ process_get_mainmode_distribution<-function(trips_table,percentage = FALSE){
 #' It provides insights into the average distance traveled for each main mode.
 #' The distance can also be calculated by using the euclidean distance between origin and destination. To use the euclidean distance set the parameter euclidean as TRUE.
 #'
-#' @param trips_table tibble of output_trips (from \link{\code{read_output_trips}})
+#' @param trips_table tibble of output_trips (from \code{\link{read_output_trips}})
 #' @param euclidean boolean, standard value FALSE, if set to TRUE uses euclidean distance.
 #'
 #' @return tibble with two columns, main_mode containing the mode and avg_dist containing the average distance traveled by that mode
@@ -3644,7 +3643,7 @@ process_get_travdistance_distribution<-function(trips_table,euclidean = FALSE){
 #'
 #' The function process_get_travelwaittime_by_mainmode calculates the average travel time and average wait time for each main mode in a given trips_table tibble.#'
 #'
-#' @param trips_table tibble of output_trips (from \link{\code{read_output_trips}})
+#' @param trips_table tibble of output_trips (from \code{\link{read_output_trips}})
 #' @param time_format character string indicating the desired time format for the output. The options are "minute", "hour", or "second". The default is "minute".
 #'
 #' @return A tibble containing the columns main_mode containing the main modes, trav_time_avg containing the average travel time for each main mode, and the column wait_time_avg containing the average wait time for each main mode.
@@ -3834,7 +3833,7 @@ process_filter_by_shape <- function(trips_table,
 #'
 #' @param trips_table tibble of output_trips (from read_output_trips())
 #'
-#' @param shape_Table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
+#' @param shape_table sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.
 #' @param crs numeric representation of the EPSG code or proj4string for the corresponding coordinate system
 #'  of the trip coordinates, can be found in network file from output directory of MATSim simulation
 #'

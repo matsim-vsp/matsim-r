@@ -2,20 +2,19 @@
 % Please edit documentation in R/output_persons.R
 \name{plot_compare_score_boxplot}
 \alias{plot_compare_score_boxplot}
-\title{Boxplot of Score Differences}
+\title{Create a boxplot of score differences}
 \usage{
-plot_compare_score_boxplot(personTibble_base, personTibble_policy)
+plot_compare_score_boxplot(person_tibble1, person_tibble2)
 }
 \arguments{
-\item{personTibble_base}{persons tibble of the base case, can be loaded with readPersonsTable.}
+\item{person_tibble1}{persons tibble of the base case, can be loaded with read_output_persons.}
 
-\item{personTibble_policy}{persons tibble of the policy case, can be loaded with readPersonsTable.}
+\item{person_tibble2}{persons tibble of the policy case, can be loaded with read_output_persons.}
 }
 \value{
 ggplot boxplot of the distribution of the score differences
 }
 \description{
-The \code{boxplotScoreDifferences} function generates a boxplot to compare the score differences between two sets of data
-represented by personTibble_base and personTibble_policy tibbles.
-It provides insights into the distribution of score differences between the two sets of data.
+Takes two tibbles created by \link{read_output_persons}
+to calculate the score difference and create a boxplot.
 }

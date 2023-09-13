@@ -12,13 +12,13 @@ process_append_distcat(
 \arguments{
 \item{trips_table}{tibble of output_trips (from \link{read_output_trips})}
 
-\item{distances_array}{numeric vector, represents segments for distance categories ordered (in meters),
+\item{distances_array}{numeric vector, contains ordered distance segments (in meters),
 standard value: c(1000,2000,5000,10000,20000,50000,100000)}
 }
 \value{
-trips table with added the added column dist_cat
+tibble, containing the added column dist_cat
 }
 \description{
 Categorizes each trip into a distance bin based on traveled distance.
-E.g. distance traveled is 1500, distances array is (1000,2000), then the category is "1000-2000".
+E.g. the distance traveled is 1500, distances_array is (1000,2000), then the category is "1000-2000".
 }

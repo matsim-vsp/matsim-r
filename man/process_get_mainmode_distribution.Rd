@@ -7,18 +7,18 @@
 process_get_mainmode_distribution(trips_table, percentage = FALSE)
 }
 \arguments{
-\item{trips_table}{tible of output_trips (from \link{read_output_trips})}
+\item{trips_table}{tibble of output_trips (from \code{\link{read_output_trips}})}
 
-\item{percentage}{boolean, by default FALSE, sets if output should be given in percentage}
+\item{percentage}{boolean, by default FALSE, sets if output should be given as a percentage}
 }
 \value{
-tibble that provides the distribution of main modes in the input trips_table.
+tibble of the distribution of main modes in the input trips_table.
 }
 \description{
-The process_get_mainmode_distribution function calculates the distribution of main modes in a given trips_table.\cr
+The function process_get_mainmode_distribution calculates the distribution of main modes in a given trips_table.\cr
 It provides insights into the frequency or percentage of each main mode within the dataset.
 }
 \details{
-By default, the function counts the occurrences of each main mode in the trips_table tibble and returns the counts for each unique main mode. \cr
-Alternatively, when the percentage parameter is set to TRUE, the function normalizes the counts to represent the percentage distribution of each main mode within the dataset.
+By default, the function counts the occurrences of each unique main mode in the trips_table tibble and returns the counts for each unique main mode. \cr
+Alternatively, when the percentage parameter is set to TRUE, the function normalizes the counts to represent the percentage distribution of each main mode within the data set.
 }

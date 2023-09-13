@@ -2,22 +2,22 @@
 % Please edit documentation in R/output_trips.R
 \name{process_filter_by_shape}
 \alias{process_filter_by_shape}
-\title{Filters trips_table(from ,\link{read_output_trips}) depending by location using a shapefile}
+\title{Filters trips_table(from \link{read_output_trips}) by location using a shapefile}
 \usage{
 process_filter_by_shape(trips_table, shape_table, crs, spatial_type = "inside")
 }
 \arguments{
 \item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
 
+\item{shape_table}{sf object(data frame with geometries), can be created using st_read()}
+
 \item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system
 of the trip coordinates, can be found in network file from output directory of MATSim simulation}
 
-\item{spatial_type}{bool, defines trips to conclude (see description)}
-
-\item{shape_Table}{sf object(data frame with geometries), can be created using st_read()}
+\item{spatial_type}{boolean, defines trips to conclude (see description)}
 }
 \value{
-tibble, with filtered trips depending on shapeTable and spatial types (see description)
+tibble, with filtered trips depending on shape_table and spatial types (see description)
 }
 \description{
 Uses output_trips and an sf object (can be created using the function st_read()),

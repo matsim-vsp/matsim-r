@@ -2,18 +2,18 @@
 % Please edit documentation in R/output_trips.R
 \name{process_get_travelwaittime_by_mainmode}
 \alias{process_get_travelwaittime_by_mainmode}
-\title{Get Travel and Wait Time by Main Mode}
+\title{Calculates travel and wait time by main mode}
 \usage{
 process_get_travelwaittime_by_mainmode(trips_table, time_format = "minute")
 }
 \arguments{
-\item{trips_table}{A tibble of output_trips (from \link{\code{read_output_trips}})}
+\item{trips_table}{tibble of output_trips (from \code{\link{read_output_trips}})}
 
-\item{time_format}{A character string indicating the desired time format for the output. The options are "minute", "hour", or "second". The default is "minute".}
+\item{time_format}{character string indicating the desired time format for the output. The options are "minute", "hour", or "second". The default is "minute".}
 }
 \value{
-A tibble containing the main_mode column representing unique main modes, trav_time_avg column representing the average travel time for each main mode, and wait_time_avg column representing the average wait time for each main mode.
+A tibble containing the columns main_mode containing the main modes, trav_time_avg containing the average travel time for each main mode, and the column wait_time_avg containing the average wait time for each main mode.
 }
 \description{
-The \code{process_get_travelwaittime_by_mainmode} function calculates the average travel time and average wait time for each main mode in a given trips_table tibble.
+The function process_get_travelwaittime_by_mainmode calculates the average travel time and average wait time for each main mode in a given trips_table tibble.#'
 }
