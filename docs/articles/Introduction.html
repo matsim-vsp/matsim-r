@@ -187,10 +187,7 @@ applying a transformation to our loaded data:
 CORRECT? - filter by shape?? XXXX -->
 </p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Filter the trips data to include only weekday trips</span></span>
-<span><span class="va">weekday_trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/process_filter_by_shape.html">process_filter_by_shape</a></span><span class="op">(</span><span class="va">trips_data</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Calculate the average trip duration</span></span>
+<code class="sourceCode R"><span><span class="co"># Calculate the average trip duration</span></span>
 <span><span class="va">average_duration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/process_get_travelwaittime_by_mainmode.html">process_get_travelwaittime_by_mainmode</a></span><span class="op">(</span><span class="va">weekday_trips</span><span class="op">)</span></span></code></pre></div>
 <p>Feel free to explore the different processing functions available in
 the package to suit your specific analysis requirements.</p>
