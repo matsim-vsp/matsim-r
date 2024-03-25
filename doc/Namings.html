@@ -241,13 +241,13 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="overview" class="section level4">
 <h4>Overview</h4>
-<p>All function names are built using the same naming template.
-Functions start with a specific verb (e.g. read, plot, process) that
-describes their main usage. They are sorted into [function types]
-according to this usage.</p>
-<p>This, and all following naming elements are followed by an
-underscore. The second element is optional. It further specifies the
-type of action that is performed and can be used to distinguish similar
+<p>All function names are created following the same pattern. They start
+with a specific verb (e.g. read, plot, process) that describes their
+main function. They are sorted into [function types] according to this
+usage. This, and all following naming elements are followed by an
+underscore.</p>
+<p>The second element is optional. It further specifies the type of
+action that is performed and can be used to distinguish similar
 functions. In the following guide this element is called
 [clarification]. An example for this element is [compare], which is used
 in all functions that compare two data sets.</p>
@@ -264,7 +264,7 @@ plot.</p>
 </div>
 <div id="template" class="section level4">
 <h4>Template</h4>
-<p>So to summarize every naming template looks similar to:</p>
+<p>So to summarize, every naming template looks similar to:</p>
 <p><strong>[function_type]_{clarification}_[data]_{by}_{category}_{and}_…_{output_type}</strong></p>
 <p><strong>[function_type]</strong>: Describes the type of the function,
 indicating its primary purpose or operation. For example, “plot” to plot
@@ -298,7 +298,7 @@ data, etc.</p>
 function is handling or manipulating. Examples include “arrtime”
 (arrival time), “distance” (distance traveled), “mainmode” (main
 transportation mode). Can be read with the function
-<code>str()</code></p>
+<code>str()</code>.</p>
 <p><strong>{by}</strong>: This part is optional and indicates that the
 data is filtered or grouped by a specific category or factor. It serves
 as a connector between the [data] and [category] components.</p>

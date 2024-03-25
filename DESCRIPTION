@@ -1,7 +1,7 @@
 Package: matsim
 Type: Package
 Title: R library for interfacing with MATSim agent-based microsimulation model
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(
   person("Billy", "Charlton", email = "charlton@vsp.tu-berlin.de", role=c("aut","cre")),
   person("Oleksandr", "Soboliev", role="aut"),

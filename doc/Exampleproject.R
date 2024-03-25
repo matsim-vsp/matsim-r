@@ -1,4 +1,4 @@
-## ---- include=FALSE-----------------------------------------------------------
+## ----include=FALSE------------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -20,10 +20,10 @@ knitr::opts_chunk$set(
 ## ----eval=FALSE---------------------------------------------------------------
 #   plot_mainmode_barchart(output_trips)
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  trips_originating <- process_filter_by_shape(output_trips, leipzig_shp, crs = 25832, spatial_type = "originating" )
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  #loading the scenario data
 #  output_trips_scenario <- read_output_trips(trips_file_scenario_path, n_max = 5000)
 #  
