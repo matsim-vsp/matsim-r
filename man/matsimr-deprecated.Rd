@@ -35,6 +35,7 @@
 \alias{deriveODMatrix}
 \alias{getCrsFromConfig}
 \alias{transformToSf}
+\alias{plotStartActCountByDepTime}
 \title{Deprecated Function}
 \usage{
 readCounts(file)
@@ -222,6 +223,14 @@ deriveODMatrix(
 getCrsFromConfig(folder)
 
 transformToSf(table, crs, geometry.type = st_multipoint())
+
+plotStartActCountByDepTime(
+  tripsTable,
+  unite.columns = character(0),
+  united.name = "united",
+  dump.output.to = matsimDumpOutputDirectory,
+  only.files = FALSE
+)
 }
 \arguments{
 \item{file}{File to load. Must be an .xml file}
@@ -236,13 +245,13 @@ transformToSf(table, crs, geometry.type = st_multipoint())
 
 \item{personTibble_policy}{persons tibble of the policy case, can be loaded with readPersonsTable.}
 
-\item{tripsTable}{table of output trips(from \link{read_output_trips}) or path to trips_output file}
+\item{tripsTable}{tible of trips_output (from readTripsTable())}
 
-\item{unite.columns}{vector of character string, changes name of all transport modes in the tibble copy to united_name = "united" that matches PATTERNS given in unite.columns}
+\item{unite.columns}{vector of character strings, that represent patterns of columns to be united, changes name of all transport modes in the tibble copy to united.name = "united" that matches PATTERNS given in unite.columns}
 
-\item{united.name}{if columns were united, you can specify name for the resulting column in plot}
+\item{united.name}{character string, if columns were united, you can specify name for the resulting column in chart}
 
-\item{dump.output.to}{path to a folder to save csv file of ODMatrix}
+\item{dump.output.to}{folder that saves and configures yaml for simwrapper dashboard. folder where png of plot is stored}
 
 \item{only.files}{boolean, that represent if plotting inside project is needed, by default FALSE - means function gives out a plot by plot_ly}
 
@@ -347,6 +356,8 @@ tibble of output_trips with distance category column
 \strong{getCrsFromConfig} - code of coordinate reference system
 
 \strong{transformToSf} - sf object (data.frame with geometries depending to geometry.type)
+
+Bar Chart plot of distance traveled per mode
 }
 \description{
 \strong{readCounts} - Loads a MATSim Counts XML-file as tibble into memory
@@ -493,6 +504,11 @@ Added column/columns projected to given CRS (coordinate reference system),
 that can be taken from network file of MATSimOutputDirectory\cr
 Function also sets attribute geometry.type to resulting table to character value of "POINT","MULTIPOINT","LINESTRING"
 to get which type of table was generated, if it is needed
+
+Takes Table trips_output (from readTripsTable()),
+to plot scatter plot with with values that represent
+count of start activities for a specific departure time by main_mode
+Using parameters unite.columns, specific columns could be given, to unite them in 1 mode with the name united.name(by default 'united')
 }
 \section{Details}{
 

@@ -11,10 +11,10 @@ Description: MATSim support package for R
     for large-scale transport simulations. This package mimics the functionality 
     of the Python matsim-tools package. 
  .
-              Developed with support from the Tecbrowhnische Universität Berlin's
+               Developed with support from the Tecbrowhnische Universität Berlin's
     VSP Transport Planning and Transport Telematics department. 
  .
-              This project is under ongoing development and submissions are welcome!
+               This project is under ongoing development and submissions are welcome!
 License: GPL (>= 3)
 Encoding: UTF-8
 Imports: 
@@ -40,7 +40,7 @@ Imports:
 LazyData: true
 URL: https://github.com/matsim-vsp/matsim-r
 BugReports: https://github.com/matsim-vsp/matsim-r/issues
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Suggests: 
     knitr,
     rmarkdown,

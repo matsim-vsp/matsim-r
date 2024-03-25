@@ -917,10 +917,7 @@ plot_count_scatterplot <- function(joined_frame, ll = ~ x * 0.8 - 200, ul = ~ x 
 #'
 #' @param base base for log
 #' @param thr threshold from which data is scaled to log
-<<<<<<< HEAD
-=======
 #' @param scale scale
->>>>>>> test_docs
 #'
 #' @export
 symlog_trans <- function(base = 10, thr = 1, scale = 1){
@@ -954,7 +951,3 @@ symlog_trans <- function(base = 10, thr = 1, scale = 1){
   }
   trans_new(paste("symlog", thr, base, scale, sep = "-"), trans, inv, breaks)
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> test_docs

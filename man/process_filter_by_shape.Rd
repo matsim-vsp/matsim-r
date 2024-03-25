@@ -15,14 +15,12 @@ process_filter_by_shape(trips_table, shape_table, crs, spatial_type = "inside")
 of the trip coordinates, can be found in network file from output directory of MATSim simulation}
 
 \item{spatial_type}{boolean, defines trips to conclude (see description)}
-
-\item{shape_Table}{sf object(data frame with geometries), can be created using st_read()}
 }
 \value{
 tibble, with filtered trips depending on shape_table and spatial types (see description)
 }
 \description{
-Uses output_trips and an sf object (can be created using the function st_read()),
+takes output_trips and an sf object (can be created using the function st_read()),
 transforms both objects to match a mutual coordinate system (crs)
 and filters the trips from output_trips depending on their spatial type:\cr
 if spatial_type="inside" returns a table that contains trips inside given shape\cr

@@ -2,14 +2,14 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_spatialtype_by_shape_piechart}
 \alias{plot_spatialtype_by_shape_piechart}
-\title{Plots distribution of every type of trip(inside, outside, origin and destinating) as a pie chart}
+\title{Plots distribution of trips by spatial type as a pie chart}
 \usage{
 plot_spatialtype_by_shape_piechart(trips_table, shape_table, crs)
 }
 \arguments{
 \item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
 
-\item{shape_table}{sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.}
+\item{shape_table}{sf object (data frame with geometries), can be created using st_read(), is used to categorize the trips.}
 
 \item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates,
 can be found in network file from output directory of MATSim simulation}
@@ -18,5 +18,13 @@ can be found in network file from output directory of MATSim simulation}
 Pie chart showing the percentage of each type of trip
 }
 \description{
-Plots distribution of every type of trip(inside, outside, origin and destinating) as a pie chart
+Takes the tibble created by \link{read_output_trips} and an sf object (can be created using the function st_read())
+to first use the function \link{process_append_spatialcat} to categorize all trips into the following spatial categories:
+- inside: trips that start and end inside the given shape
+- originating: trips that start inside the shape and end outside of the shape
+- destinating: trips that end inside the shape and start outside of the shape
+- outside: trips that start and end outside of the shape
+}
+\details{
+In a next step the results are summarized in a pie chart.
 }

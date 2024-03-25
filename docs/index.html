@@ -8,29 +8,27 @@
 <meta name="description" content="MATSim support package for R
     MATSim &lt;https://matsim.org&gt; is an agent-based microsimulation package 
     for large-scale transport simulations. This package mimics the functionality 
-    of the Python matsim-tools package, and thus supports reading standard 
-    MATSim networks and soon, plans and events as well. 
+    of the Python matsim-tools package. 
 
-              Developed with support from the Technische Universität Berlin's
+               Developed with support from the Tecbrowhnische Universität Berlin's
     VSP Transport Planning and Transport Telematics department. 
 
-              This project is under ongoing development and submissions are welcome!">
+               This project is under ongoing development and submissions are welcome!">
 <title>R library for interfacing with MATSim agent-based microsimulation model • matsim</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="R library for interfacing with MATSim agent-based microsimulation model">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="R library for interfacing with MATSim agent-based microsimulation model">
 <meta property="og:description" content="MATSim support package for R
     MATSim &lt;https://matsim.org&gt; is an agent-based microsimulation package 
     for large-scale transport simulations. This package mimics the functionality 
-    of the Python matsim-tools package, and thus supports reading standard 
-    MATSim networks and soon, plans and events as well. 
+    of the Python matsim-tools package. 
 
-              Developed with support from the Technische Universität Berlin's
+               Developed with support from the Tecbrowhnische Universität Berlin's
     VSP Transport Planning and Transport Telematics department. 
 
-              This project is under ongoing development and submissions are welcome!">
+               This project is under ongoing development and submissions are welcome!">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -86,9 +84,9 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="matsim-r-support-package">MATSIM R support package<a class="anchor" aria-label="anchor" href="#matsim-r-support-package"></a>
 </h1></div>
-<p>MATSim <a href="https://matsim.org" class="external-link uri">https://matsim.org</a> is an agent-based microsimulation package for large-scape transport simulations.</p>
+<p><a href="https://matsim.org" class="external-link">MATSim</a> is an agent-based microsimulation package for large-scale transport simulations. It’s free software under the terms of the GNU General Public License. The user guide to MATSim can be found <a href="https://matsim.org/docs/userguide/" class="external-link">here</a> and more information regarding the license <a href="https://github.com/matsim-org/matsim-libs/blob/master/matsim/LICENSE" class="external-link">here</a>.</p>
 <p>This package mimics the functionality of the <a href="https://pypi.org/project/matsim-tools" class="external-link">Python matsim-tools</a> package, and will eventually support standard MATSim networks, plans and events.</p>
-<p>Currently network files are supported, and many summarization plots based on the MATSim standard output_trips file.</p>
+<p>Currently network files as well as many summarization plots based on the MATSim standard output_trips file, counts file and output_persons file are supported.</p>
 <p>This work is preliminary and ongoing – submissions are welcome!</p>
 <hr>
 <div class="section level2">
@@ -103,11 +101,11 @@
 </li>
 <li>Then run:
 <ul>
-<li><code>devtools::install_github("matsim-vsp/matsim-r")</code></li>
+<li><code>devtools::install_github("matsim-vsp/matsim-r", build_vignettes = TRUE)</code></li>
 </ul>
 </li>
 </ul>
-<p>To install the package from a specific branch use: <code>devtools::install_github("matsim-vsp/matsim-r",ref="{name of the branch}")</code></p>
+<p>To install the package from a specific branch use: <code>devtools::install_github("matsim-vsp/matsim-r",ref="{name of the branch}", build_vignettes = TRUE)</code></p>
 <div class="section level3">
 <h3 id="installing-from-gz-archive">Installing from .gz archive<a class="anchor" aria-label="anchor" href="#installing-from-gz-archive"></a>
 </h3>
@@ -129,6 +127,12 @@
 <li>
 <code><a href="https://pkgdown.r-lib.org/reference/build_site.html" class="external-link">pkgdown::build_site()</a></code> builds the HTML docs</li>
 </ul>
+</div>
+<div class="section level2">
+<h2 id="vignettes">Vignettes<a class="anchor" aria-label="anchor" href="#vignettes"></a>
+</h2>
+<p>The package includes several vignettes containing short guides and some examples. To access them make sure to build the vignettes during the installation process using <code>build_vignettes=TRUE</code>.</p>
+<p><code>browseVignettes(package = "matsim")</code> will open a list of currently available vignettes.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -160,6 +164,7 @@
 <ul class="list-unstyled">
 <li>Billy Charlton <br><small class="roles"> Author, maintainer </small>  </li>
 <li>Oleksandr Soboliev <br><small class="roles"> Author </small>  </li>
+<li>Johanna Bänsch <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
@@ -171,12 +176,12 @@
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Billy Charlton, Oleksandr Soboliev.</p>
+<p>Developed by Billy Charlton, Oleksandr Soboliev, Johanna Bänsch.</p>
 </div>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
     </footer>

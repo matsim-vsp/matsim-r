@@ -2,8 +2,8 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_compare_distcat_by_mainmode_barchart}
 \alias{plot_compare_distcat_by_mainmode_barchart}
-\title{Bar chart comparing distance traveled on x-axis and number of trips on y-axis for two different runs
-Takes two data frames (from \link{read_output_trips}), categorizes the traveled distances into pre-defined bins
+\title{Create a bar chart comparing distance traveled on x-axis and number of trips on y-axis for two different runs
+Takes two tibbles from \link{read_output_trips}, categorizes the traveled distances into pre-defined bins
 and plots the difference in number of trips for each bin. (Bins: 1000,2000,5000,10000,20000,50000,100000 (m))
 Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')}
 \usage{
@@ -17,26 +17,26 @@ plot_compare_distcat_by_mainmode_barchart(
 )
 }
 \arguments{
-\item{trips_table1}{tibble of trips_output (from \link{read_output_trips}), number of trips of this table will be extracted from number of trips of tripsTable1}
+\item{trips_table1}{tibble of trips_output (from \link{read_output_trips}), number of trips of this table will be extracted from number of trips of trips_table1}
 
-\item{trips_table2}{tibble of trips_output (from \link{read_output_trips}), from number of trips of this table number of trips of tripsTable1 will be extracted}
+\item{trips_table2}{tibble of trips_output (from \link{read_output_trips}), from number of trips of this table number of trips of trips_table1 will be extracted}
 
-\item{unite_modes}{vector of character strings,
+\item{unite_modes}{optional, vector of character strings,
 changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 using the function (\link{process_rename_mainmodes})}
 
-\item{united_name}{character string, specifies the name of the united mode}
+\item{united_name}{optional, character string, specifies the name of the united mode}
 
-\item{dist_column}{A character string specifying the column name in the trips_table tibble that contains the distance categories.}
+\item{dist_column}{character string specifying the column name in the trips_table tibble that contains the distance categories.}
 
-\item{distances_array}{A numeric vector defining the distance thresholds for creating distance categories.}
+\item{distances_array}{numeric vector defining the distance thresholds for creating distance categories.}
 }
 \value{
-Bar Chart plot of count of trips among distance travelled
+Bar chart plot of count of trips for each distance traveled
 }
 \description{
-Bar chart comparing distance traveled on x-axis and number of trips on y-axis for two different runs
-Takes two data frames (from \link{read_output_trips}), categorizes the traveled distances into pre-defined bins
+Create a bar chart comparing distance traveled on x-axis and number of trips on y-axis for two different runs
+Takes two tibbles from \link{read_output_trips}, categorizes the traveled distances into pre-defined bins
 and plots the difference in number of trips for each bin. (Bins: 1000,2000,5000,10000,20000,50000,100000 (m))
 Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 }

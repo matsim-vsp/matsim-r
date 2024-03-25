@@ -2,7 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_map_trips_by_spatialcat}
 \alias{plot_map_trips_by_spatialcat}
-\title{Plots every type of trips(inside, outside, origin and destinating) on map}
+\title{Plot every spatial trip type (inside, outside, origin and destinating) on map}
 \usage{
 plot_map_trips_by_spatialcat(trips_table, shape_table, crs, optimized = FALSE)
 }
@@ -15,10 +15,12 @@ plot_map_trips_by_spatialcat(trips_table, shape_table, crs, optimized = FALSE)
 of the trip coordinates, can be found in network file from output directory of MATSim simulation}
 
 \item{optimized}{boolean, by default FALSE and gives interactive plot using leaflet, if TRUE creates image with ggplot}
+
+\item{table}{tibble of output_trips (from read_output_trips())}
 }
 \value{
 plot that contains every trip with defined trip type
 }
 \description{
-Plots every type of trips(inside, outside, origin and destinating) on map
+Plot every spatial trip type (inside, outside, origin and destinating) on map
 }

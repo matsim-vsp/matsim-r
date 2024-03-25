@@ -7,7 +7,7 @@
 process_get_travdistance_distribution(trips_table, euclidean = FALSE)
 }
 \arguments{
-\item{trips_table}{tibble of output_trips (from \code{\link{read_output_trips}})}
+\item{trips_table}{A tibble of output_trips (from \link{\code{read_output_trips}})}
 
 \item{euclidean}{boolean, standard value FALSE, if set to TRUE uses euclidean distance.}
 }

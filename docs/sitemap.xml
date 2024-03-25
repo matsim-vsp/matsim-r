@@ -25,12 +25,6 @@
     <loc>https://vsp.berlin/matsim-r/index.html</loc>
   </url>
   <url>
-    <loc>https://vsp.berlin/matsim-r/reference/boxplotScoreDifferences.html</loc>
-  </url>
-  <url>
-    <loc>https://vsp.berlin/matsim-r/reference/createCountScatterPlot.html</loc>
-  </url>
-  <url>
     <loc>https://vsp.berlin/matsim-r/reference/generateXYHexagonYaml.html</loc>
   </url>
   <url>
@@ -38,9 +32,6 @@
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/matsimr-deprecated.html</loc>
-  </url>
-  <url>
-    <loc>https://vsp.berlin/matsim-r/reference/mergeCountsAndLinks.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/plot_arrtime_by_act.html</loc>
@@ -65,6 +56,9 @@
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/plot_compare_travelwaittime_by_mainmode_barchart.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/plot_count_scatterplot.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/plot_deptime_by_act.html</loc>
@@ -109,12 +103,6 @@
     <loc>https://vsp.berlin/matsim-r/reference/prepareSimwrapperDashboardFromTable.html</loc>
   </url>
   <url>
-    <loc>https://vsp.berlin/matsim-r/reference/processDtvEstimationQuality.html</loc>
-  </url>
-  <url>
-    <loc>https://vsp.berlin/matsim-r/reference/processLinkStatsDtvDistribution.html</loc>
-  </url>
-  <url>
     <loc>https://vsp.berlin/matsim-r/reference/process_append_distcat.html</loc>
   </url>
   <url>
@@ -133,6 +121,12 @@
     <loc>https://vsp.berlin/matsim-r/reference/process_get_crs_from_config.html</loc>
   </url>
   <url>
+    <loc>https://vsp.berlin/matsim-r/reference/process_get_dtv_distribution_by_linktype.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/process_get_dtv_estimation_quality.html</loc>
+  </url>
+  <url>
     <loc>https://vsp.berlin/matsim-r/reference/process_get_mainmode_distribution.html</loc>
   </url>
   <url>
@@ -145,22 +139,22 @@
     <loc>https://vsp.berlin/matsim-r/reference/process_get_travelwaittime_by_mainmode.html</loc>
   </url>
   <url>
+    <loc>https://vsp.berlin/matsim-r/reference/process_join_counts_and_links.html</loc>
+  </url>
+  <url>
     <loc>https://vsp.berlin/matsim-r/reference/process_rename_category.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/process_rename_mainmodes.html</loc>
   </url>
   <url>
-    <loc>https://vsp.berlin/matsim-r/reference/readCounts.html</loc>
-  </url>
-  <url>
-    <loc>https://vsp.berlin/matsim-r/reference/readLinkStats.html</loc>
-  </url>
-  <url>
-    <loc>https://vsp.berlin/matsim-r/reference/readPersonsTable.html</loc>
-  </url>
-  <url>
     <loc>https://vsp.berlin/matsim-r/reference/read_config.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/read_counts.html</loc>
+  </url>
+  <url>
+    <loc>https://vsp.berlin/matsim-r/reference/read_linkstats.html</loc>
   </url>
   <url>
     <loc>https://vsp.berlin/matsim-r/reference/read_network.html</loc>

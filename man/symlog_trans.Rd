@@ -2,10 +2,8 @@
 % Please edit documentation in R/counts.R
 \name{symlog_trans}
 \alias{symlog_trans}
-\title{Deprecated Function}
+\title{A function to create symlog scaling for a plot}
 \usage{
-symlog_trans(base = 10, thr = 1, scale = 1)
-
 symlog_trans(base = 10, thr = 1, scale = 1)
 }
 \arguments{
@@ -16,14 +14,6 @@ symlog_trans(base = 10, thr = 1, scale = 1)
 \item{scale}{scale}
 }
 \description{
-A function to create symlog scaling for a plot
-
-Can be used to symlog scale the axis of a ggplot object. Is called in createCountScatterPlot.
-Note that this function is taken from Stackoverflow!
-For more informations, see the thread here:
-https://stackoverflow.com/questions/14613355/how-to-get-something-like-matplotlibs-symlog-scale-in-ggplot-or-lattice
- @rdname matsimr-deprecated
-
 Can be used to symlog scale the axis of a ggplot object. Is called in plot_count_scatterplot.
 Note that this function is taken from Stackoverflow!
 For more informations, see the thread here:

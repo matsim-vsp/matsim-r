@@ -2,16 +2,20 @@
 % Please edit documentation in R/counts.R
 \name{read_counts}
 \alias{read_counts}
-\title{Load a MATSim Counts file into memory}
+\title{Load a MATSim Counts file into memory
+
+Loads a MATSim Counts XML-file as tibble into memory}
 \usage{
-read_counts(file)
+read_counts(input_path)
 }
 \arguments{
-\item{file}{File to load. Must be an .xml file}
+\item{input_path}{character string, file path to the .xml file}
 }
 \value{
-tibble with MATSim link id ("loc_id") as key
+tibble of the counts file with the link id ("loc_id") as key
 }
 \description{
+Load a MATSim Counts file into memory
+
 Loads a MATSim Counts XML-file as tibble into memory
 }
