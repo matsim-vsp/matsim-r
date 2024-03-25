@@ -10,9 +10,10 @@
 #'
 #'@description \strong{readCounts} - Loads a MATSim Counts XML-file as tibble into memory
 #'
-#' @rdname matsimr-deprecated
+#'@rdname matsimr-deprecated
 #'
 #'@param file File to load. Must be an .xml file
+#'@param output.name test
 #'
 #'@return \strong{readCounts} - tibble with MATSim link id ("loc_id") as key
 #'
@@ -67,7 +68,7 @@ readCounts <- function(file){
 #' Counts can be provided for any qsim mode. The argument networkModes is used to
 #' select and filter the columns.
 #'
-#'
+#' @rdname matsimr-deprecated
 #'@param file File to load. Must be an .csv or .tsv file with comma separator
 #'
 #'@param run_id Id to tag columns with DTV
@@ -123,7 +124,7 @@ readLinkStats <- function(run_id, file, sampleSize = 0.25){
 #'Function to join counts, linkstats and network links. Data can be aggregated
 #'and filtered by time or mode.
 #'
-#'
+#' @rdname matsimr-deprecated
 #'@param counts Tibble with counts data
 #'
 #'@param network Tibble with network nodes and links
@@ -452,7 +453,7 @@ createCountScatterPlot <- function(joinedFrame, ll = ~ x * 0.8 - 200, ul = ~ x *
 #' Note that this function is taken from Stackoverflow!
 #' For more informations, see the thread here:
 #' https://stackoverflow.com/questions/14613355/how-to-get-something-like-matplotlibs-symlog-scale-in-ggplot-or-lattice
-#'
+#'  @rdname matsimr-deprecated
 #' @param base base for log
 #' @param thr threshold from which data is scaled to log
 #'
@@ -916,6 +917,10 @@ plot_count_scatterplot <- function(joined_frame, ll = ~ x * 0.8 - 200, ul = ~ x 
 #'
 #' @param base base for log
 #' @param thr threshold from which data is scaled to log
+<<<<<<< HEAD
+=======
+#' @param scale scale
+>>>>>>> test_docs
 #'
 #' @export
 symlog_trans <- function(base = 10, thr = 1, scale = 1){
@@ -949,3 +954,7 @@ symlog_trans <- function(base = 10, thr = 1, scale = 1){
   }
   trans_new(paste("symlog", thr, base, scale, sep = "-"), trans, inv, breaks)
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> test_docs

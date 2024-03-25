@@ -7,15 +7,13 @@
 read_output_persons(input_path = ".", n_max = Inf)
 }
 \arguments{
-\item{input_path}{is a character string, path to the local MATSim output directory, to the persons csv directly, or a http link to the file.}
+\item{input_path}{character string, path to the MATSim output directory or http link to the file}
 
-\item{n_max}{integer, maximum number of lines to read within output_persons}
+\item{n_max}{optional, integer, maximum number of lines to read, standard value is Inf}
 }
 \value{
 tibble of output_persons
 }
 \description{
-Loads a MATSim CSV output_persons from file or archive,
-creating a tibble with columns as in csv file
-copied + adopted code from readTripsTable in tripsOutput.R
+Loads a MATSim CSV output_persons from file or archive creating a tibble.
 }

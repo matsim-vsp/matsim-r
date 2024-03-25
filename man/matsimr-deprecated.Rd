@@ -256,6 +256,8 @@ transformToSf(table, crs, geometry.type = st_multipoint())
 
 \item{show.onlyChanges}{boolean, if it is set to TRUE => sankey diagram only contains changes on axes}
 
+\item{output.name}{test}
+
 \item{table}{tibble of trips_output (from \link{read_output_trips})}
 
 \item{start.inshape}{bool, defines trips to conclude (see Description)}

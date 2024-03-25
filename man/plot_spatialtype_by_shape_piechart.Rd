@@ -9,10 +9,10 @@ plot_spatialtype_by_shape_piechart(trips_table, shape_table, crs)
 \arguments{
 \item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
 
+\item{shape_table}{sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.}
+
 \item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates,
 can be found in network file from output directory of MATSim simulation}
-
-\item{shape_Table}{sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.}
 }
 \value{
 Pie chart showing the percentage of each type of trip

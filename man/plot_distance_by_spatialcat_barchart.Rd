@@ -17,8 +17,6 @@ plot_distance_by_spatialcat_barchart(
 \item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
 
 \item{euclidean}{Logical value indicating whether to calculate the average as euclidean distance or as travel distance. Default is FALSE, which calculates the average traveled distance.}
-
-\item{shape_Table}{sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.}
 }
 \value{
 Bar Chart plot of distance traveled by spatial type

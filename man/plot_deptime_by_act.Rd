@@ -11,11 +11,11 @@ plot_deptime_by_act(
 )
 }
 \arguments{
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
+
 \item{unite_activities}{vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united_name = "united" that matches PATTERNS given in unite_columns}
 
 \item{united_name}{character string, if columns were united, you can specify name for the resulting column in plot}
-
-\item{tripsTable}{tibble of trips_output (from \link{read_output_trips})}
 }
 \value{
 A plotly object representing the line plot of departure time by activity.

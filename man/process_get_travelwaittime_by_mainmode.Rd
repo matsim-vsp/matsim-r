@@ -7,9 +7,9 @@
 process_get_travelwaittime_by_mainmode(trips_table, time_format = "minute")
 }
 \arguments{
-\item{trips_table}{A tibble of output_trips (from \link{\code{read_output_trips}})}
+\item{trips_table}{tibble of output_trips (from \code{\link{read_output_trips}})}
 
-\item{time_format}{A character string indicating the desired time format for the output. The options are "minute", "hour", or "second". The default is "minute".}
+\item{time_format}{character string indicating the desired time format for the output. The options are "minute", "hour", or "second". The default is "minute".}
 }
 \value{
 A tibble containing the columns main_mode containing the main modes, trav_time_avg containing the average travel time for each main mode, and the column wait_time_avg containing the average wait time for each main mode.
