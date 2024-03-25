@@ -115,4 +115,4 @@ plot_map_trips(trips_originating, crs = 25832)
 
 The result is an interactive map using leaflet, showing the places of origin in blue and the destinations in red. (The following image is a screenshot)
 
-![Leipzig - originating trips](../inst/extdata/Leipzig_map.png)
+![Leipzig - originating trips](./Leipzig_map.png)

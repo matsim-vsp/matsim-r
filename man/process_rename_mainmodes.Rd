@@ -2,7 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{process_rename_mainmodes}
 \alias{process_rename_mainmodes}
-\title{Replace Matching Categories of main_mode with United Name in Tibble}
+\title{Replace two or more modes in the column main_mode with a new joint mode}
 \usage{
 process_rename_mainmodes(
   trips_table,
@@ -22,9 +22,7 @@ changes names of chosen modes in the column main_mode to a new chosen name (i.e.
 tibble with new main_mode representation
 }
 \description{
-The process_rename_mainmodes function takes a tibble, trips_table,
-as input and replaces all occurrences in column main_mode of categories
-that match a given template with another name provided in united_name.
-The function provides the flexibility to specify multiple category templates
-to be united into a single name.
+The function process_rename_mainmodes takes the tibble trips_table
+as input and replaces all occurrences of the specified modes in column main_mode
+with another name provided in united_name.
 }

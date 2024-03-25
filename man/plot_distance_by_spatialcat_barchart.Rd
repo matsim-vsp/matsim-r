@@ -12,7 +12,7 @@ plot_distance_by_spatialcat_barchart(
 )
 }
 \arguments{
-\item{trips_table}{tible of trips_output (from \link{read_output_trips})}
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
 
 \item{crs}{numeric of EPSG code or proj4string, can be found in network file from output directory of MATSim simulation}
 
