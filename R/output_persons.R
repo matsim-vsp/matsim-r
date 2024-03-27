@@ -37,7 +37,6 @@ readPersonsTable <- function(input_path = ".",  n_max = Inf) {
   }
 
   persons_output_table <- read_delim(persons_file,
-                                     delim = ";",
                                      locale = locale(decimal_mark = "."),
                                      n_max = n_max,
                                      col_types = cols(
@@ -134,7 +133,6 @@ read_output_persons <- function(input_path = ".",  n_max = Inf) {
   }
 
   persons_output_table <- read_delim(persons_file,
-                                     delim = ";",
                                      locale = locale(decimal_mark = "."),
                                      n_max = n_max,
                                      col_types = cols(
