@@ -38,3 +38,4 @@ test/
 dashboard_test/
 .sentinel*
 inst/doc
+.idea
