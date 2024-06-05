@@ -2425,7 +2425,6 @@ read_output_trips <- function(input_path = ".", n_max = Inf) {
   }
 
   trips_output_table <- read_delim(trips_file,
-                                   delim = ";",
                                    locale = locale(decimal_mark = "."),
                                    n_max = n_max,
                                    col_types = cols(
