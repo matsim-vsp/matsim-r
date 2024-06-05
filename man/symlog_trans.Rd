@@ -10,9 +10,11 @@ symlog_trans(base = 10, thr = 1, scale = 1)
 \item{base}{base for log}
 
 \item{thr}{threshold from which data is scaled to log}
+
+\item{scale}{scale}
 }
 \description{
-Can be used to symlog scale the axis of a ggplot object. Is called in createCountScatterPlot.
+Can be used to symlog scale the axis of a ggplot object. Is called in plot_count_scatterplot.
 Note that this function is taken from Stackoverflow!
 For more informations, see the thread here:
 https://stackoverflow.com/questions/14613355/how-to-get-something-like-matplotlibs-symlog-scale-in-ggplot-or-lattice

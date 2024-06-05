@@ -2,7 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_deptime_by_act}
 \alias{plot_deptime_by_act}
-\title{Plot Departure Time by Activity}
+\title{Create a line plot of departure time by activity}
 \usage{
 plot_deptime_by_act(
   trips_table,
@@ -11,16 +11,19 @@ plot_deptime_by_act(
 )
 }
 \arguments{
-\item{unite_activities}{vector of character strings, that represent patterns of columns to be united, changes name of all activity types in the tibble copy to united_name = "united" that matches PATTERNS given in unite_columns}
+\item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
 
-\item{united_name}{character string, if columns were united, you can specify name for the resulting column in plot}
+\item{unite_activities}{optional, vector of character strings,
+changes names of chosen categories to a new specified name (i.e. school and university to education)}
 
-\item{tripsTable}{tibble of trips_output (from \link{read_output_trips})}
+\item{united_name}{optional, character string, specifies the new name of the united activities}
 }
 \value{
 A plotly object representing the line plot of departure time by activity.
 }
 \description{
-The \code{plot_deptime_by_act} function generates a line plot to visualize the departure time of trips by activity in a given trips_table tibble.
-It provides insights into the number of trips starting at different times for each activity.
+Takes the tibble created by \link{read_output_trips}
+to create a line plot of the
+count of destination activities for a specific departure time
+Using the parameter unite_activities, specific activities can be renamed into one with the name specified with united_name (by default 'united')
 }

@@ -1,14 +1,10 @@
 # MATSIM R support package
 
-MATSim <https://matsim.org> is an agent-based microsimulation package for large-scape transport simulations. 
+[MATSim](https://matsim.org) is an agent-based microsimulation package for large-scale transport simulations. It's free software under the terms of the GNU General Public License. The user guide to MATSim can be found [here](https://matsim.org/docs/userguide/) and more information regarding the license [here](https://github.com/matsim-org/matsim-libs/blob/master/matsim/LICENSE).
 
 This package mimics the functionality of the [Python matsim-tools](https://pypi.org/project/matsim-tools) package, and will eventually support standard MATSim networks, plans and events. 
 
-Currently network files are supported, and many summarization plots based on the MATSim standard output_trips file.
-
-One very useful command builds a [SimWrapper](https://vsp.berlin/simwrapper) dashboard from the standard MATSim `output_trips.xml.gz` file:
-
-- `R -e "matsim::prepareSimwrapperDashboardFromFolder()"`
+Currently network files as well as many summarization plots based on the MATSim standard output_trips file, counts file and output_persons file are supported.
 
 This work is preliminary and ongoing -- submissions are welcome!
 
@@ -22,10 +18,10 @@ You can install the package right now:
   - `install.packages("devtools")`
 
 - Then run: 
-  - `devtools::install_github("matsim-vsp/matsim-r")`
+  - `devtools::install_github("matsim-vsp/matsim-r", build_vignettes = TRUE)`
 
 To install the package from a specific branch use:
-`devtools::install_github("matsim-vsp/matsim-r",ref="{name of the branch}")`
+`devtools::install_github("matsim-vsp/matsim-r",ref="{name of the branch}", build_vignettes = TRUE)`
 
 ### Installing from .gz archive
 
@@ -44,3 +40,8 @@ Or, build yourself:
 - `devtools::document()` builds docs and NAMESPACE
 - `pkgdown::build_site()` builds the HTML docs
 
+## Vignettes
+
+The package includes several vignettes containing short guides and some examples. To access them make sure to build the vignettes during the installation process using `build_vignettes=TRUE`.
+
+`browseVignettes(package = "matsim")` will open a list of currently available vignettes.

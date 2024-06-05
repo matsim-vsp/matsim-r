@@ -2,7 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_trips_count_by_deptime_and_mainmode_linechart}
 \alias{plot_trips_count_by_deptime_and_mainmode_linechart}
-\title{Line plot with departure time  on x-axis and number of trips on y-axis}
+\title{Creates a line plot with departure time on x-axis and number of trips on y-axis}
 \usage{
 plot_trips_count_by_deptime_and_mainmode_linechart(
   trips_table,
@@ -13,17 +13,17 @@ plot_trips_count_by_deptime_and_mainmode_linechart(
 \arguments{
 \item{trips_table}{tibble of trips_output (from \link{read_output_trips})}
 
-\item{unite_modes}{vector of character strings,
+\item{unite_modes}{optional, vector of character strings,
 changes names of chosen modes in the column main_mode to a new chosen name (i.e. drtNorth and drtSouth to drt),
 using the function (\link{process_rename_mainmodes})}
 
-\item{united_name}{character string, specifies the name of the united mode}
+\item{united_name}{optional, character string, specifies the name of the united mode}
 }
 \value{
 Line plot of trips count by departure time per mode
 }
 \description{
-Takes data frame trips_output (from \link{read_output_trips}),
+Takes the tibble created by \link{read_output_trips}
 to create a line plot of the number of trips for a specific departure time by main_mode
 Using the parameter unite_modes, specific modes can be renamed into one with the name specified with united_name (by default 'united')
 }

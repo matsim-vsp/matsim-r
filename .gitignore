@@ -37,5 +37,8 @@ kelheim/
 test/
 dashboard_test/
 .sentinel*
-inst/doc
 .idea
+inst/doc
+/doc/
+/Meta/
+

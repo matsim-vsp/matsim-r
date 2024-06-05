@@ -2,7 +2,7 @@
 % Please edit documentation in R/output_trips.R
 \name{plot_compare_count_by_spatialcat_barchart}
 \alias{plot_compare_count_by_spatialcat_barchart}
-\title{Plot Comparison of Count by Spatial Category (Bar Chart)}
+\title{Plot comparison bar chart of count by spatial category}
 \usage{
 plot_compare_count_by_spatialcat_barchart(
   trips_table1,
@@ -12,21 +12,19 @@ plot_compare_count_by_spatialcat_barchart(
 )
 }
 \arguments{
-\item{trips_table1}{tible of trips_output (from \link{read_output_trips})}
+\item{trips_table1}{tibble of trips_output (from \link{read_output_trips})}
 
-\item{trips_table2}{tible of trips_output (from \link{read_output_trips})}
+\item{trips_table2}{tibble of trips_output (from \link{read_output_trips})}
 
-\item{shape_table}{A spatial shapefile or spatial polygons data frame used to create the spatial categories.}
+\item{shape_table}{sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.}
 
 \item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system of the trip coordinates,
 can be found in network file from output directory of MATSim simulation}
 }
 \value{
-A plotly object representing the bar chart of the comparison of count by spatial category.
+Bar chart comparing the number of trips by spatial category.
 }
 \description{
-The \code{plot_compare_count_by_spatialcat_barchart}
-function generates a bar chart to compare the count of trips between two trips_table
-tibbles across different spatial categories.
-It provides insights into the distribution of trips across spatial categories for each table.
+Takes two tibbles from \link{read_output_trips} to
+generate a bar chart comparing the number of trips across different spatial categories.
 }

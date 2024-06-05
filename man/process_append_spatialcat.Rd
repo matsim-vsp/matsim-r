@@ -9,10 +9,10 @@ process_append_spatialcat(trips_table, shape_table, crs)
 \arguments{
 \item{trips_table}{tibble of output_trips (from read_output_trips())}
 
+\item{shape_table}{sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.}
+
 \item{crs}{numeric representation of the EPSG code or proj4string for the corresponding coordinate system
 of the trip coordinates, can be found in network file from output directory of MATSim simulation}
-
-\item{shape_Table}{sf object(data frame with geometries), can be created using st_read(), is used to categorize the trips.}
 }
 \value{
 tibble, with additional column containing the trip type
@@ -25,5 +25,5 @@ destinating: trips that end inside the shape and start outside of the shape
 outside: trips that start and end outside of the shape
 }
 \details{
-Please be aware that this \link{process_filter_by_shape} currently only works, when one geometry is loaded.)
+Please be aware that this \link{process_filter_by_shape} only works when a geometry is loaded.
 }
