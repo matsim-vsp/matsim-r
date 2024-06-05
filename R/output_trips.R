@@ -1048,7 +1048,7 @@ plotModalShiftSankey <- function(tripsTable1, tripsTable2, show.onlyChanges = FA
     group_by(base_mode, policy_mode) %>%
     count()
 
-  return(joined)
+
   # If the unite.commercials flag is set to TRUE, then join all commercials under 1 name commercial
   if (length(unite.columns) != 0) {
     joined$base_mode[grep(paste0(unite.columns, collapse = "|"), joined$base_mode)] <- united.name
@@ -2866,11 +2866,11 @@ plot_compare_mainmode_barchart <- function(trips_table1, trips_table2,
                                            united_name = "united") {
   # renaming/uniting of modes
 
-  trips_table1 <- process_rename_mainmodes(trips_table = trips_table,
+  trips_table1 <- process_rename_mainmodes(trips_table = trips_table1,
                                            unite_modes = unite_modes,
                                            united_name = united_name)
 
-  trips_table2 <- process_rename_mainmodes(trips_table = trips_table,
+  trips_table2 <- process_rename_mainmodes(trips_table = trips_table2,
                                            unite_modes = unite_modes,
                                            united_name = united_name)
 
@@ -2933,13 +2933,14 @@ plot_compare_mainmode_sankey <- function(trips_table1, trips_table2,
     count()
 
   modes = unique(c(joined$base_mode,joined$policy_mode))
+  num_modes <- length(modes)
 
   joined$base_mode <- as.numeric(factor(joined$base_mode,levels = modes))
   joined$policy_mode <- as.numeric(factor(joined$policy_mode,levels = modes))
 
 
   #plotting
-  palette <- colorRampPalette( c( "blue", "red" ) )( 7 )
+  palette <- colorRampPalette( c( "blue", "yellow", "red" ) )( num_modes )
 
 
   fig <- plot_ly(
@@ -2959,7 +2960,7 @@ plot_compare_mainmode_sankey <- function(trips_table1, trips_table2,
 
     link = list(
       source = joined$base_mode-1,
-      target = joined$policy_mode+6,
+      target = joined$policy_mode + num_modes -1,
       value =  joined$n
     )
   )
