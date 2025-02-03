@@ -42,6 +42,6 @@ Or, build yourself:
 
 ## Vignettes
 
-The package includes several vignettes containing short guides and some examples. To access them make sure to build the vignettes during the installation process using `build_vignettes=TRUE`.
+The package includes several vignettes containing short guides and some examples. To access them make sure to build the vignettes during the installation process using `build_vignettes=TRUE`. To build with Vignettes, [pandoc](https://pandoc.org/) needs to be installed on your computer. 
 
 `browseVignettes(package = "matsim")` will open a list of currently available vignettes.
